@@ -21,5 +21,19 @@
       <version>3.8.1</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+    	<groupId>processing</groupId>
+    	<artifactId>core</artifactId>
+    	<version>1.5.1</version>
+    	<systemPath>${project.basedir}/lib/core.jar</systemPath>
+    	<scope>system</scope>
+    </dependency>
+    <dependency>
+    	<groupId>SimpleOpenNI</groupId>
+    	<artifactId>SimpleOpenNI</artifactId>
+    	<scope>system</scope>
+    	<systemPath>${project.basedir}/lib/SimpleOpenNI.jar</systemPath>
+    	<version>0.27</version>
+    </dependency>
   </dependencies>
 </project>
