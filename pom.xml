@@ -29,11 +29,32 @@
     	<scope>system</scope>
     </dependency>
     <dependency>
-    	<groupId>SimpleOpenNI</groupId>
-    	<artifactId>SimpleOpenNI</artifactId>
+    	<groupId>edu.mines.acmX.exhibit</groupId>
+    	<artifactId>interfacesdk</artifactId>
+    	<version>0.0.1</version>
     	<scope>system</scope>
-    	<systemPath>${project.basedir}/lib/SimpleOpenNI.jar</systemPath>
-    	<version>0.27</version>
+    	<systemPath>${project.basedir}/lib/interfacesdk-0.0.1.jar</systemPath>
+    </dependency>
+    <dependency>
+    	<groupId>openni</groupId>
+    	<artifactId>openni</artifactId>
+    	<version>1.5.4.0</version>
+    	<scope>system</scope>
+    	<systemPath>${project.basedir}/lib/org.OpenNI.jar</systemPath>
     </dependency>
   </dependencies>
+  
+  <build>
+      <plugins>
+          <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-compiler-plugin</artifactId>
+              <configuration>
+                  <source>1.5</source>
+                  <target>1.5</target>
+              </configuration>
+          </plugin>
+      </plugins>
+  </build>
+
 </project>
