@@ -2,6 +2,9 @@ package edu.mines.acmX.exhibit.modules.home_screen;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
 
@@ -29,6 +32,7 @@ public class ProcessingExample extends PApplet {
 	private PImage cursor_image;
 	
 	private double screenScale = 1.0;
+	private Backdrop backDrop;
 	
 	private ModuleList moduleList;
 	private ModuleListView moduleListView;
@@ -46,6 +50,8 @@ public class ProcessingExample extends PApplet {
 		
 		screenScale = EXPECTED_WIDTH / (float) screenWidth;
 		
+		backDrop = new GridBackdrop(this);
+		
 		moduleList = new ModuleList();
 		moduleListView = new ModuleListView(this, 0, MODULE_OFFSETY, screenScale, moduleList);
 		
@@ -54,6 +60,8 @@ public class ProcessingExample extends PApplet {
 	}
 	
 	public void update() {
+		
+		backDrop.update();
 		moduleListView.update();
 
 	}
@@ -61,7 +69,8 @@ public class ProcessingExample extends PApplet {
 	public void draw() {
 		update();
 		
-		background(51, 204, 255, 50);
+		background(255, 255, 255);
+		backDrop.draw();
 		// draw the leftmost module
 		moduleListView.draw();
 		
@@ -70,7 +79,6 @@ public class ProcessingExample extends PApplet {
 	
 	public void mouseMoved() {
 		moduleListView.mouseMoved();
-		
 	}
 	
     public static void main( String[] args )
