@@ -13,7 +13,6 @@ public class GridBackdrop extends Backdrop {
 	
 	private int frameTick = 0;
 	boolean tiles[][];
-	int neighbors[][];
 	
 	private int size_w;
 	private int size_h;
@@ -25,7 +24,6 @@ public class GridBackdrop extends Backdrop {
 		size_h = (int) (Math.floor(p.screenHeight / SIZE));
 		
 		tiles = new boolean[size_w][size_h];
-		neighbors = new int[size_w][size_h];
 		setup();
 		getNumNeighbors(25, 25);
 	}
@@ -49,30 +47,29 @@ public class GridBackdrop extends Backdrop {
 		for (int i = 0; i < size_w; ++i) {
 			for (int j = 0; j < size_h; ++j) {
 				tiles[i][j] = false;
-				neighbors[i][j] = 0;
 				
 				if (r.nextInt(100) < RAND_TILE_ALIVE) {
 					setTile(i, j, true);
-					//addNeighbors(i, j);
 				}
 				
 			}
 		}
 	}
-	
+
 	public void nextGeneration() {
 		boolean nextGeneration[][] = new boolean[size_w][size_h];
 		for (int i = 0; i < size_w; ++i) {
 			for (int j = 0; j < size_h; ++j) {
-				boolean isAlive = isAlive(i, j);
+				
 				int numNeighbors = getNumNeighbors(i, j);
 				nextGeneration[i][j] = false;
 				
 				if (numNeighbors > 3 || numNeighbors < 2) {
 					nextGeneration[i][j] = false;
-					System.out.println("Changing (" + i + ", " + j + ")");
 				}
-				if (numNeighbors == 3) nextGeneration[i][j] = true;
+				if (numNeighbors == 3) {
+					nextGeneration[i][j] = true;
+				}
 //				
 //				if (!isAlive) {
 //					if (numNeighbors == 3) nextGeneration[i][j] = true;

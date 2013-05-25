@@ -13,10 +13,11 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
  * Cleaning out the unnecessary crap DONE
  * Detect screen ratios DONE
  * Start the Home Screen Skeleton (visual skeleton) DONE
- * Implement one functioning backdrop
+ * Implement one functioning backdrop DONE
  * Hand tracking
  * Getting the feeds working
  * Connecting the Home Screen to the Module API
+ * 
  */
 public class ProcessingExample extends PApplet {
 	
