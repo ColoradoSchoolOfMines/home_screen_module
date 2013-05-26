@@ -3,8 +3,8 @@ package edu.mines.acmX.exhibit.modules.home_screen.view;
 import java.util.HashMap;
 import java.util.Map;
 
-import processing.core.PApplet;
 import processing.core.PImage;
+import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 
@@ -35,7 +35,7 @@ public class ModuleListView extends DisplayElement {
 	private boolean inLeftArrowRegion = false;
 	private int inLeftArrowStartTime = 0;
 
-	public ModuleListView(PApplet par, int origin_x, int origin_y,
+	public ModuleListView(HomeScreen par, int origin_x, int origin_y,
 			double screenScale, ModuleList data) {
 		
 		super(par, origin_x, origin_y, screenScale);
@@ -50,10 +50,15 @@ public class ModuleListView extends DisplayElement {
 	public void draw() {
 		for (int i = 0; i < NUM_MODULES_VISIBLE; ++i) {
 			parent.fill(255, 255, 255);
-			parent.rect(MODULE_OFFSETX + i * (MODULE_WIDTH + MODULE_MARGIN), originY, MODULE_WIDTH, MODULE_HEIGHT);
-			parent.image(getModuleImage(i + modulePanelOffset),
-					MODULE_OFFSETX + i * (MODULE_WIDTH + MODULE_MARGIN), originY,
-					MODULE_WIDTH, MODULE_HEIGHT);
+			int scaledModuleX = (int) scale(MODULE_OFFSETX + i * (MODULE_WIDTH + MODULE_MARGIN));
+			int scaledModuleY = (int) scale(originY);
+			int scaledModuleWidth = (int) scale(MODULE_HEIGHT);
+			int scaledModuleHeight = (int) scale(MODULE_HEIGHT);
+			
+			parent.rect(scaledModuleX, scaledModuleY, scaledModuleWidth, scaledModuleHeight);
+			parent.image(getModuleImage(i + modulePanelOffset), 
+					scaledModuleX, scaledModuleY,
+					scaledModuleWidth, scaledModuleHeight);
 			parent.fill(50);
 //			parent.text("" + (i + modulePanelOffset),
 //					(float) (MODULE_OFFSETX + i * (MODULE_WIDTH + MODULE_MARGIN) + .5 * (MODULE_WIDTH)),
@@ -62,16 +67,23 @@ public class ModuleListView extends DisplayElement {
 		
 		parent.stroke(0, 0, 0);
 		parent.fill(255, 255, 255);
+		int scaledArrowX1 = (int) scale(10);
+		int scaledArrowY1 = (int) scale(originY + (.5 * MODULE_HEIGHT));
+		
+		int scaledArrowX2 = (int) scale(80);
+		int scaledArrowY2 = (int) scale(originY + (.25 * MODULE_HEIGHT));
+		
+		int scaledArrowY3 = (int) scale(originY + (.75 * MODULE_HEIGHT));
 		if ((modulePanelOffset - 1) >= 0) {
-			parent.triangle((float) 10, (float) (originY + .5 * (MODULE_HEIGHT)),
-					(float) 80, (float) (originY + .25 * (MODULE_HEIGHT)),
-					(float) 80, (float) (originY + .75 * (MODULE_HEIGHT)));
+			parent.triangle(scaledArrowX1, scaledArrowY1,
+							scaledArrowX2, scaledArrowY2,
+							scaledArrowX2, scaledArrowY3);
 		}
 		
 		if ((modulePanelOffset + NUM_MODULES_VISIBLE) < list.size()) {
-			parent.triangle((float) (parent.screenWidth - 10), (float) (originY + .5 * (MODULE_HEIGHT)),
-					(float) (parent.screenWidth - 80), (float) (originY + .25 * (MODULE_HEIGHT)),
-					(float) (parent.screenWidth - 80), (float) (originY + .75 * (MODULE_HEIGHT)));
+			parent.triangle(parent.screenWidth - scaledArrowX1, scaledArrowY1,
+							parent.screenWidth - scaledArrowX2, scaledArrowY2,
+							parent.screenWidth - scaledArrowX2, scaledArrowY3);
 		}
 	}
 

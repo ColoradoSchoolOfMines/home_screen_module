@@ -2,7 +2,7 @@ package edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife;
 
 import java.util.Random;
 
-import processing.core.PApplet;
+import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 
 public class GridBackdrop extends Backdrop {
@@ -17,8 +17,8 @@ public class GridBackdrop extends Backdrop {
 	private int size_w;
 	private int size_h;
 	
-	public GridBackdrop(PApplet p) {
-		super(p);
+	public GridBackdrop(HomeScreen p, double screenScale) {
+		super(p, screenScale);
 		
 		size_w = (int) (Math.floor(p.screenWidth / SIZE));
 		size_h = (int) (Math.floor(p.screenHeight / SIZE));

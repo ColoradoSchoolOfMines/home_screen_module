@@ -24,7 +24,7 @@ public class Bubble {
 	public void update() {
 		++tick;
 		y -= BOUYANCY;
-		x = x + (int) (rand_amplitude * Math.sin(tick));		
+		x = x + (int) (rand_amplitude * Math.sin(tick));	
 	}
 	
 	public int getX() {
