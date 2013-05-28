@@ -9,7 +9,10 @@ import org.OpenNI.ScriptNode;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import edu.mines.acmX.exhibit.input_services.InputEvent;
+import edu.mines.acmX.exhibit.input_services.InputReceiver;
 import edu.mines.acmX.exhibit.input_services.openni.HandTracker;
+import edu.mines.acmX.exhibit.input_services.openni.OpenNIHandTrackerInputDriver;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.*;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
@@ -26,9 +29,10 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
  * Connecting the Home Screen to the Module API
  * 
  * TODO
- * Should scaling for the screen size be abstracted away from the user?
+ * Should scaling for the screen size be abstracted away from the user? Seems infeasible
  */
-public class HomeScreen extends PApplet {
+public class HomeScreen extends PApplet 
+	implements InputReceiver {
 	
 	public static final int EXPECTED_WIDTH = 1920;
 	public static final int EXPECTED_HEIGHT = 1080;
@@ -47,13 +51,17 @@ public class HomeScreen extends PApplet {
 	private ModuleList moduleList;
 	private ModuleListView moduleListView;
 	
-	private HandTracker handTracker;
-	
+	private OpenNIHandTrackerInputDriver kinect;
+	public static final boolean DEBUG_KINECT = false;
+	private int handX, handY;
+
+		
 	public void setup() {
 		
 		size(screenWidth, screenHeight);
 		
 		cursor_image = loadImage(CURSOR_FILENAME);
+		cursor_image.resize(32, 32);
 		
 		if (Math.abs((screenWidth / (float) screenHeight) - EXPECTED_ASPECT_RATIO) > .1) {
 			// Screen size is not the ideal aspect ratio.
@@ -71,7 +79,7 @@ public class HomeScreen extends PApplet {
 		moduleListView = new ModuleListView(this, 0, MODULE_OFFSETY, screenScale, moduleList);
 		
 		// Ideally the hand tracker will take over displaying the 'cursor'
-		// noCursor();
+		noCursor();
 		
 		
 		// TODO Verify on the box whether this HandTracker works!
@@ -83,18 +91,20 @@ public class HomeScreen extends PApplet {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		try {
-			ctx = Context.createFromXmlFile("openni_config.xml", scriptNode);
-			handTracker = new HandTracker(ctx);
-		} catch (GeneralException e) {
-			e.printStackTrace();
-		}
+		
+		kinect = new OpenNIHandTrackerInputDriver();
+		if (DEBUG_KINECT)
+			kinect.installInto(null);
 	}
 	
 	public void update() {
 		
 		backDrop.update();
 		moduleListView.update();
+		
+		if (DEBUG_KINECT)
+		kinect.pumpInput(this);
+		
 
 	}
 	
@@ -107,15 +117,28 @@ public class HomeScreen extends PApplet {
 		moduleListView.draw();
 		
 		line (0, STATUSBAR_Y, screenWidth, STATUSBAR_Y);
+		
+		image(cursor_image, handX, handY);
 	}
 	
 	public void mouseMoved() {
 		moduleListView.mouseMoved();
+		
+		if (!DEBUG_KINECT) {
+			handX = mouseX;
+			handY = mouseY;
+		}
+		
 	}
 	
     public static void main( String[] args )
     {
         PApplet.main(new String[] {"HomeScreen"});
     }
+
+	public void receiveInput(InputEvent e) {
+		handX = (int) e.x;
+		handY = (int) e.y;
+	}
    
 }

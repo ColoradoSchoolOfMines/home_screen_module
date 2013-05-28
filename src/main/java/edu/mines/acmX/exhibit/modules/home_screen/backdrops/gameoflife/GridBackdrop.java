@@ -8,7 +8,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 public class GridBackdrop extends Backdrop {
 	
 	public static final int SIZE = 20;
-	public static final int FRAME_DELAY = 15;
+	public static final int FRAME_DELAY = 50;
 	public static final int RAND_TILE_ALIVE = 20;
 	
 	private int frameTick = 0;
@@ -62,7 +62,7 @@ public class GridBackdrop extends Backdrop {
 			for (int j = 0; j < size_h; ++j) {
 				
 				int numNeighbors = getNumNeighbors(i, j);
-				nextGeneration[i][j] = false;
+				nextGeneration[i][j] = tiles[i][j];
 				
 				if (numNeighbors > 3 || numNeighbors < 2) {
 					nextGeneration[i][j] = false;

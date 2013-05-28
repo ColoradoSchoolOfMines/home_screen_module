@@ -28,12 +28,6 @@ public class ModuleListView extends DisplayElement {
 	
 	private VirtualRectClick rightArrowClick;
 	private VirtualRectClick leftArrowClick;
-	
-	private boolean inRightArrowRegion = false;
-	private int inRightArrowStartTime = 0;
-	
-	private boolean inLeftArrowRegion = false;
-	private int inLeftArrowStartTime = 0;
 
 	public ModuleListView(HomeScreen par, int origin_x, int origin_y,
 			double screenScale, ModuleList data) {
