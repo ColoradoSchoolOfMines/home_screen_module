@@ -1,6 +1,6 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view;
 
-import processing.core.PApplet;
+import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 
 public class StatusBarDisplay extends DisplayElement {
 
@@ -12,7 +12,7 @@ public class StatusBarDisplay extends DisplayElement {
 	 * AboutDisplay
 	 */
 	
-	public StatusBarDisplay(PApplet par, int originX, int originY,
+	public StatusBarDisplay(HomeScreen par, int originX, int originY,
 			double screenScale) {
 		super(par, originX, originY, screenScale);
 		

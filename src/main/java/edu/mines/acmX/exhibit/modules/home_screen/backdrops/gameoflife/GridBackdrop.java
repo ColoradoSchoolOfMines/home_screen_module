@@ -2,13 +2,13 @@ package edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife;
 
 import java.util.Random;
 
-import processing.core.PApplet;
+import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 
 public class GridBackdrop extends Backdrop {
 	
 	public static final int SIZE = 20;
-	public static final int FRAME_DELAY = 10;
+	public static final int FRAME_DELAY = 50;
 	public static final int RAND_TILE_ALIVE = 20;
 	
 	private int frameTick = 0;
@@ -17,14 +17,15 @@ public class GridBackdrop extends Backdrop {
 	private int size_w;
 	private int size_h;
 	
-	public GridBackdrop(PApplet p) {
-		super(p);
+	public GridBackdrop(HomeScreen p, double screenScale) {
+		super(p, screenScale);
 		
 		size_w = (int) (Math.floor(p.screenWidth / SIZE));
 		size_h = (int) (Math.floor(p.screenHeight / SIZE));
 		
 		tiles = new boolean[size_w][size_h];
 		setup();
+		getNumNeighbors(25, 25);
 	}
 	
 	public boolean isAlive(int x, int y) {
@@ -54,21 +55,27 @@ public class GridBackdrop extends Backdrop {
 			}
 		}
 	}
-	
+
 	public void nextGeneration() {
 		boolean nextGeneration[][] = new boolean[size_w][size_h];
 		for (int i = 0; i < size_w; ++i) {
 			for (int j = 0; j < size_h; ++j) {
-				boolean isAlive = isAlive(i, j);
+				
 				int numNeighbors = getNumNeighbors(i, j);
-				nextGeneration[i][j] = false;
-				if (!isAlive) {
-					if (numNeighbors < 2 || numNeighbors > 3) nextGeneration[i][j] = false;
-					else nextGeneration[i][j] = true;
-				} else {
-					if (numNeighbors == 3) nextGeneration[i][j] = true;
-					else nextGeneration[i][j] = false;
+				nextGeneration[i][j] = tiles[i][j];
+				
+				if (numNeighbors > 3 || numNeighbors < 2) {
+					nextGeneration[i][j] = false;
 				}
+				if (numNeighbors == 3) {
+					nextGeneration[i][j] = true;
+				}
+//				
+//				if (!isAlive) {
+//					if (numNeighbors == 3) nextGeneration[i][j] = true;
+//				} else {
+//					if (!(numNeighbors == 3 || numNeighbors == 2)) nextGeneration[i][j] = false;
+//				}
 			}
 		}
 		for (int i = 0; i < size_w; ++i) {
@@ -82,11 +89,11 @@ public class GridBackdrop extends Backdrop {
 	}
 	
 	public int getNumNeighbors(int x, int y) {
-		int OFFSETS[][] = { {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0} };
+		int offsets[][] = { {1, 1}, {0, 1}, {-1, 1}, {-1, 0}, {-1, -1}, {0, -1}, {1, -1}, {1, 0} };
 		int ret = 0;
-		for (int i = 0; i < 8; ++i) {
-			int tx = i + OFFSETS[i][0];
-			int ty = y + OFFSETS[i][1];
+		for (int i = 0; i < offsets.length; ++i) {
+			int tx = x + offsets[i][0];
+			int ty = y + offsets[i][1];
 			if (tileExists(tx, ty)) {
 				if (isAlive(tx, ty)) ++ret;
 			}
@@ -97,8 +104,10 @@ public class GridBackdrop extends Backdrop {
 	@Override
 	public void update() {
 		++frameTick;
-		if (frameTick == FRAME_DELAY)
+		if (frameTick == FRAME_DELAY) {
+			frameTick = 0;
 			nextGeneration();
+		}
 		
 	}
 
