@@ -1,7 +1,11 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view;
 
+import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.imageio.ImageIO;
 
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
@@ -102,7 +106,17 @@ public class ModuleListView extends DisplayElement {
 	private PImage getModuleImage(int index) {
 		if (moduleImageCache.containsKey(index)) {
 			return moduleImageCache.get(index);
-		}
+		} 
+		/*
+		BufferedImage img;
+		String name = list.getModuleImageFilename(index);
+        try {
+            img = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(name));
+        } catch (IOException e) {
+            throw new RuntimeException("File error: " + name);
+        }
+		PImage loadedImage = HomeScreen.buffImagetoPImage(img);
+		*/
 		PImage loadedImage = parent.loadImage(list.getModuleImageFilename(index));
 		moduleImageCache.put(index, loadedImage);
 		return loadedImage;

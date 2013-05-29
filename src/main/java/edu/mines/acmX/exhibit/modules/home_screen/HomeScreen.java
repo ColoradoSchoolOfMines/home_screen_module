@@ -1,12 +1,16 @@
 package edu.mines.acmX.exhibit.modules.home_screen;
 
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import org.OpenNI.Context;
 import org.OpenNI.OutArg;
 import org.OpenNI.ScriptNode;
 
-import processing.core.PApplet;
+import processing.core.PConstants;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.input_services.InputEvent;
 import edu.mines.acmX.exhibit.input_services.InputReceiver;
@@ -59,7 +63,20 @@ public class HomeScreen extends ProcessingModule
 		
 		size(screenWidth, screenHeight);
 		
+		//cursor_image = loadImage(CURSOR_FILENAME);
+        /*BufferedImage img;
+        try {
+        	//System.out.println("class loader: " + this.getClass().getClassLoader().getResource(CURSOR_FILENAME).toString());
+            img = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(CURSOR_FILENAME));
+        } catch (IOException e) {
+            throw new RuntimeException("File error: " + CURSOR_FILENAME);
+        }
+		cursor_image = buffImagetoPImage(img);
+		*/
 		cursor_image = loadImage(CURSOR_FILENAME);
+		if(cursor_image == null) {
+			System.out.println("Cursor image is null!");
+		}
 		cursor_image.resize(32, 32);
 		
 		if (Math.abs((screenWidth / (float) screenHeight) - EXPECTED_ASPECT_RATIO) > .1) {
@@ -135,5 +152,4 @@ public class HomeScreen extends ProcessingModule
 		handX = (int) e.x;
 		handY = (int) e.y;
 	}
-   
 }
