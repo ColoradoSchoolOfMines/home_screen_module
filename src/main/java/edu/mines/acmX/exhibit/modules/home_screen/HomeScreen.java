@@ -3,7 +3,6 @@ package edu.mines.acmX.exhibit.modules.home_screen;
 import java.io.IOException;
 
 import org.OpenNI.Context;
-import org.OpenNI.GeneralException;
 import org.OpenNI.OutArg;
 import org.OpenNI.ScriptNode;
 
@@ -11,9 +10,9 @@ import processing.core.PApplet;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.input_services.InputEvent;
 import edu.mines.acmX.exhibit.input_services.InputReceiver;
-import edu.mines.acmX.exhibit.input_services.openni.HandTracker;
 import edu.mines.acmX.exhibit.input_services.openni.OpenNIHandTrackerInputDriver;
-import edu.mines.acmX.exhibit.modules.home_screen.backdrops.*;
+import edu.mines.acmX.exhibit.module_manager.ProcessingModule;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
@@ -31,7 +30,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
  * TODO
  * Should scaling for the screen size be abstracted away from the user? Seems infeasible
  */
-public class HomeScreen extends PApplet 
+public class HomeScreen extends ProcessingModule 
 	implements InputReceiver {
 	
 	public static final int EXPECTED_WIDTH = 1920;
@@ -67,7 +66,7 @@ public class HomeScreen extends PApplet
 			// Screen size is not the ideal aspect ratio.
 			// TODO Fall back to different configuration?
 			// -Would this have to be a config driven UI?
-			destroy();
+			//destroy();
 		}
 		
 		screenScale = screenWidth / (double) EXPECTED_WIDTH;
@@ -79,7 +78,7 @@ public class HomeScreen extends PApplet
 		moduleListView = new ModuleListView(this, 0, MODULE_OFFSETY, screenScale, moduleList);
 		
 		// Ideally the hand tracker will take over displaying the 'cursor'
-		noCursor();
+		//noCursor();
 		
 		
 		// TODO Verify on the box whether this HandTracker works!
@@ -92,9 +91,10 @@ public class HomeScreen extends PApplet
 			e1.printStackTrace();
 		}
 		
-		kinect = new OpenNIHandTrackerInputDriver();
-		if (DEBUG_KINECT)
+		if (DEBUG_KINECT) {
+			kinect = new OpenNIHandTrackerInputDriver();
 			kinect.installInto(null);
+		}
 	}
 	
 	public void update() {
@@ -131,11 +131,6 @@ public class HomeScreen extends PApplet
 		
 	}
 	
-    public static void main( String[] args )
-    {
-        PApplet.main(new String[] {"HomeScreen"});
-    }
-
 	public void receiveInput(InputEvent e) {
 		handX = (int) e.x;
 		handY = (int) e.y;

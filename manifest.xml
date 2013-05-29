@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest
     package="edu.mines.acmX.exhibit.modules.home_screen"
-    class="ProcessingLauncher" >
+    class="HomeScreen" >
     <uses-sdk
         minSdkVersion="0"
         targetSdkVersion="0" />
