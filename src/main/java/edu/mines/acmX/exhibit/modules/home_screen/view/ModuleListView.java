@@ -32,6 +32,9 @@ public class ModuleListView extends DisplayElement {
 	
 	private VirtualRectClick rightArrowClick;
 	private VirtualRectClick leftArrowClick;
+	private VirtualRectClick startModule;
+	private VirtualRectClick infoBox;
+	private VirtualRectClick activationBox;
 
 	public ModuleListView(HomeScreen par, int origin_x, int origin_y,
 			double screenScale, ModuleList data) {
@@ -41,8 +44,13 @@ public class ModuleListView extends DisplayElement {
 		moduleImageCache = new HashMap<Integer, PImage>();
 		rightArrowClick = new VirtualRectClick(2000, (parent.width - ARROW_WIDTH - ARROW_OFFSETX), originY, ARROW_WIDTH, MODULE_HEIGHT);
 		leftArrowClick = new VirtualRectClick(2000, originX, originY, ARROW_WIDTH, MODULE_HEIGHT);
-		
+		//activationBox = new VirtualRectClick(1, );
 	}
+	
+	public int normalizeModuleOffset(int i) {
+		return (modulePanelOffset + i) % list.size();
+	}
+	
 
 	@Override
 	public void draw() {
@@ -54,7 +62,8 @@ public class ModuleListView extends DisplayElement {
 			int scaledModuleHeight = (int) scale(MODULE_HEIGHT);
 			
 			parent.rect(scaledModuleX, scaledModuleY, scaledModuleWidth, scaledModuleHeight);
-			parent.image(getModuleImage(i + modulePanelOffset), 
+			normalizeModuleOffset(i);
+			parent.image(getModuleImage(normalizeModuleOffset(i)), 
 					scaledModuleX, scaledModuleY,
 					scaledModuleWidth, scaledModuleHeight);
 			parent.fill(50);
@@ -72,31 +81,29 @@ public class ModuleListView extends DisplayElement {
 		int scaledArrowY2 = (int) scale(originY + (.25 * MODULE_HEIGHT));
 		
 		int scaledArrowY3 = (int) scale(originY + (.75 * MODULE_HEIGHT));
-		if ((modulePanelOffset - 1) >= 0) {
-			parent.triangle(scaledArrowX1, scaledArrowY1,
-							scaledArrowX2, scaledArrowY2,
-							scaledArrowX2, scaledArrowY3);
-		}
-		
-		if ((modulePanelOffset + NUM_MODULES_VISIBLE) < list.size()) {
-			parent.triangle(parent.width - scaledArrowX1, scaledArrowY1,
-							parent.width - scaledArrowX2, scaledArrowY2,
-							parent.width - scaledArrowX2, scaledArrowY3);
-		}
+		parent.triangle(scaledArrowX1, scaledArrowY1,
+						scaledArrowX2, scaledArrowY2,
+						scaledArrowX2, scaledArrowY3);
+		parent.triangle(parent.width - scaledArrowX1, scaledArrowY1,
+						parent.width - scaledArrowX2, scaledArrowY2,
+						parent.width - scaledArrowX2, scaledArrowY3);
 	}
 
 	@Override
 	public void update() {
 		int millis = parent.millis();
-
+		boolean moved = false;
 		if (rightArrowClick.durationCompleted(millis)) {
-			if ((modulePanelOffset + NUM_MODULES_VISIBLE) < list.size()) {
 				++modulePanelOffset;
-			}
+				moved = true;
 		}
 		if (leftArrowClick.durationCompleted(millis)) {
-			if (modulePanelOffset > 0) {
 				--modulePanelOffset;
+				moved = true;
+		}
+		if (moved) {
+			while (modulePanelOffset < 0) {
+				modulePanelOffset = modulePanelOffset + list.size();
 			}
 		}
 	}
