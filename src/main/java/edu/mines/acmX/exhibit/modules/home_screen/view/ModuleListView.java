@@ -90,10 +90,14 @@ public class ModuleListView extends DisplayElement {
 		int millis = parent.millis();
 
 		if (rightArrowClick.durationCompleted(millis)) {
-			if ((modulePanelOffset + NUM_MODULES_VISIBLE) < list.size()) ++modulePanelOffset;
+			if ((modulePanelOffset + NUM_MODULES_VISIBLE) < list.size()) {
+				++modulePanelOffset;
+			}
 		}
 		if (leftArrowClick.durationCompleted(millis)) {
-			if ((modulePanelOffset + NUM_MODULES_VISIBLE) >= 0) --modulePanelOffset;
+			if (modulePanelOffset > 0) {
+				--modulePanelOffset;
+			}
 		}
 	}
 	
@@ -107,16 +111,7 @@ public class ModuleListView extends DisplayElement {
 		if (moduleImageCache.containsKey(index)) {
 			return moduleImageCache.get(index);
 		} 
-		/*
-		BufferedImage img;
-		String name = list.getModuleImageFilename(index);
-        try {
-            img = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(name));
-        } catch (IOException e) {
-            throw new RuntimeException("File error: " + name);
-        }
-		PImage loadedImage = HomeScreen.buffImagetoPImage(img);
-		*/
+		
 		PImage loadedImage = parent.loadImage(list.getModuleImageFilename(index));
 		moduleImageCache.put(index, loadedImage);
 		return loadedImage;

@@ -14,6 +14,19 @@
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
+  <repositories>
+    <!-- This repo just hosts 3rd party jar files wrapped up as mavens -->
+    <repository>
+      <url>https://s3-us-west-2.amazonaws.com/jar.download.andrewdemaria.com/libs</url>
+      <id>additional_libraries</id>
+    </repository>
+    <!-- This repo holds the releases for the interface sdk library -->
+    <repository>
+      <url>https://s3-us-west-2.amazonaws.com/acmx.mines.edu/release</url>
+      <id>interface_sdk_library</id>
+    </repository>
+  </repositories>
+
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -25,23 +38,19 @@
     	<groupId>processing</groupId>
     	<artifactId>core</artifactId>
     	<version>1.5.1</version>
-    	<systemPath>${project.basedir}/lib/core.jar</systemPath>
-    	<scope>system</scope>
+    	<scope>compile</scope>
     </dependency>
     <dependency>
     	<groupId>edu.mines.acmX.exhibit</groupId>
     	<artifactId>interfacesdk</artifactId>
     	<version>0.0.1</version>
-    	<scope>system</scope>
-    	<systemPath>${project.basedir}/lib/interfacesdk-0.0.1.jar</systemPath>
     </dependency>
     <dependency>
-    	<groupId>openni</groupId>
-    	<artifactId>openni</artifactId>
-    	<version>1.5.4.0</version>
-    	<scope>system</scope>
-    	<systemPath>${project.basedir}/lib/org.OpenNI.jar</systemPath>
-    </dependency>
+      <groupId>org.OpenNI</groupId>
+      <artifactId>OpenNI</artifactId>
+      <version>1.5.4.0</version>
+      <scope>compile</scope>
+		</dependency>
   </dependencies>
   
   <build>

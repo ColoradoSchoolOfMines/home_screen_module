@@ -62,18 +62,8 @@ public class HomeScreen extends ProcessingModule
 	public void setup() {
 		
 		size(screenWidth, screenHeight);
-		
-		//cursor_image = loadImage(CURSOR_FILENAME);
-        /*BufferedImage img;
-        try {
-        	//System.out.println("class loader: " + this.getClass().getClassLoader().getResource(CURSOR_FILENAME).toString());
-            img = ImageIO.read(this.getClass().getClassLoader().getResourceAsStream(CURSOR_FILENAME));
-        } catch (IOException e) {
-            throw new RuntimeException("File error: " + CURSOR_FILENAME);
-        }
-		cursor_image = buffImagetoPImage(img);
-		*/
 		cursor_image = loadImage(CURSOR_FILENAME);
+		
 		if(cursor_image == null) {
 			System.out.println("Cursor image is null!");
 		}
@@ -95,7 +85,7 @@ public class HomeScreen extends ProcessingModule
 		moduleListView = new ModuleListView(this, 0, MODULE_OFFSETY, screenScale, moduleList);
 		
 		// Ideally the hand tracker will take over displaying the 'cursor'
-		//noCursor();
+		noCursor();
 		
 		
 		// TODO Verify on the box whether this HandTracker works!
