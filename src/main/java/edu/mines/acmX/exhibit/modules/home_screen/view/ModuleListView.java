@@ -14,6 +14,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectCl
 
 public class ModuleListView extends DisplayElement {
 	
+	
 	public static final int MODULE_OFFSETX = 125;
 	public static final int MODULE_WIDTH = 500;
 	public static final int MODULE_HEIGHT = 500;
@@ -42,8 +43,8 @@ public class ModuleListView extends DisplayElement {
 		super(par, origin_x, origin_y, screenScale);
 		this.list = data;
 		moduleImageCache = new HashMap<Integer, PImage>();
-		rightArrowClick = new VirtualRectClick(2000, (parent.width - ARROW_WIDTH - ARROW_OFFSETX), originY, ARROW_WIDTH, MODULE_HEIGHT);
-		leftArrowClick = new VirtualRectClick(2000, originX, originY, ARROW_WIDTH, MODULE_HEIGHT);
+		rightArrowClick = new VirtualRectClick(TRANSITION_MODULE_DELAY, (parent.width - ARROW_WIDTH - ARROW_OFFSETX), originY, ARROW_WIDTH, MODULE_HEIGHT);
+		leftArrowClick = new VirtualRectClick(TRANSITION_MODULE_DELAY, originX, originY, ARROW_WIDTH, MODULE_HEIGHT);
 		//activationBox = new VirtualRectClick(1, );
 	}
 	
@@ -51,6 +52,9 @@ public class ModuleListView extends DisplayElement {
 		return (modulePanelOffset + i) % list.size();
 	}
 	
+	public void drawModuleElement() {
+		
+	}
 
 	@Override
 	public void draw() {
