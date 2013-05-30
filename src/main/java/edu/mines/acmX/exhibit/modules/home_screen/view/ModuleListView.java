@@ -39,7 +39,7 @@ public class ModuleListView extends DisplayElement {
 		super(par, origin_x, origin_y, screenScale);
 		this.list = data;
 		moduleImageCache = new HashMap<Integer, PImage>();
-		rightArrowClick = new VirtualRectClick(2000, (parent.screenWidth - ARROW_WIDTH - ARROW_OFFSETX), originY, ARROW_WIDTH, MODULE_HEIGHT);
+		rightArrowClick = new VirtualRectClick(2000, (parent.width - ARROW_WIDTH - ARROW_OFFSETX), originY, ARROW_WIDTH, MODULE_HEIGHT);
 		leftArrowClick = new VirtualRectClick(2000, originX, originY, ARROW_WIDTH, MODULE_HEIGHT);
 		
 	}
@@ -79,9 +79,9 @@ public class ModuleListView extends DisplayElement {
 		}
 		
 		if ((modulePanelOffset + NUM_MODULES_VISIBLE) < list.size()) {
-			parent.triangle(parent.screenWidth - scaledArrowX1, scaledArrowY1,
-							parent.screenWidth - scaledArrowX2, scaledArrowY2,
-							parent.screenWidth - scaledArrowX2, scaledArrowY3);
+			parent.triangle(parent.width - scaledArrowX1, scaledArrowY1,
+							parent.width - scaledArrowX2, scaledArrowY2,
+							parent.width - scaledArrowX2, scaledArrowY3);
 		}
 	}
 
@@ -108,13 +108,14 @@ public class ModuleListView extends DisplayElement {
 	}
 	
 	private PImage getModuleImage(int index) {
-		if (moduleImageCache.containsKey(index)) {
-			return moduleImageCache.get(index);
-		} 
-		
-		PImage loadedImage = parent.loadImage(list.getModuleImageFilename(index));
-		moduleImageCache.put(index, loadedImage);
-		return loadedImage;
+//		if (moduleImageCache.containsKey(index)) {
+//			return moduleImageCache.get(index);
+//		} 
+//		
+//		PImage loadedImage = parent.loadImage(list.getModuleImageFilename(index));
+//		moduleImageCache.put(index, loadedImage);
+//		return loadedImage;
+		return list.getModuleImage(index);
 	}
 	
 }

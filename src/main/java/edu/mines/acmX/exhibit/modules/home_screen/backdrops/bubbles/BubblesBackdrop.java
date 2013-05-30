@@ -23,6 +23,9 @@ public class BubblesBackdrop extends Backdrop {
 		bubbles = new ArrayList<Bubble>();
 		rand = new Random();
 		img = parent.loadImage(BUBBLE_IMAGE);
+		if (img == null) {
+			System.out.println("BUBBLE LOAD ERROR!");
+		}
 	}
 
 	@Override
