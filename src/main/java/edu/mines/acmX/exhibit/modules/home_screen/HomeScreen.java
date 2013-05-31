@@ -23,6 +23,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
 import edu.mines.acmX.exhibit.modules.home_screen.view.Side;
+import edu.mines.acmX.exhibit.modules.home_screen.view.SpaceElement;
 
 /*
  * TODO (in order)
@@ -64,7 +65,7 @@ public class HomeScreen extends ProcessingModule
 	private OpenNIHandTrackerInputDriver kinect;
 	public static final boolean DEBUG_KINECT = false;
 	private int handX, handY;
-	private LinearLayout linearLayout;
+	private LinearLayout rootLayout;
 
 		
 	public void setup() {
@@ -129,30 +130,31 @@ public class HomeScreen extends ProcessingModule
 
 		moduleList = new ModuleList(moduleElements);
 		
-		linearLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0, 1.0);
+		rootLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0, 1.0);
 		
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
 		moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
 		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.LEFT));
 		//modules.add(moduleListView);		
 		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.RIGHT));
-		
-		linearLayout.add(modules);
+		rootLayout.add(new SpaceElement(this, 1.0, 80.0));
+		rootLayout.add(modules);
 		
 		LinearLayout statusBarLayout = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 20.0);
 
-		linearLayout.add(statusBarLayout);
-		linearLayout.setOriginX(0);
-		linearLayout.setOriginY(0);
-		linearLayout.setHeight(height);
-		linearLayout.setWidth(width);
+		rootLayout.add(statusBarLayout);
+		// set default settings for root layout
+		rootLayout.setOriginX(0);
+		rootLayout.setOriginY(0);
+		rootLayout.setHeight(height);
+		rootLayout.setWidth(width);
 	}
 	
 	public void update() {
 		
 		backDrop.update();
 		//moduleListView.update(0, 0);
-		linearLayout.update(0, 0);
+		rootLayout.update(0, 0);
 		
 		if (DEBUG_KINECT) {
 			kinect.pumpInput(this);
@@ -167,7 +169,7 @@ public class HomeScreen extends ProcessingModule
 		backDrop.draw();
 		// draw the leftmost module
 		//moduleListView.draw();
-		linearLayout.draw();
+		rootLayout.draw();
 		
 		//temporary place holder for twitter, weather and time feeds.
 		line (0, STATUSBAR_Y, width, STATUSBAR_Y);
