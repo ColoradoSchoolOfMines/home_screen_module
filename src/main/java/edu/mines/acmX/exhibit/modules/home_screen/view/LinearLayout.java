@@ -12,8 +12,8 @@ public class LinearLayout extends DisplayElement {
 	private List<DisplayElement> elements;
 	private double totalWeight;
 	
-	public LinearLayout(int width, int height, Orientation ori, PApplet parent, double scale, double weight) {
-		super(parent, scale, weight, width, height);
+	public LinearLayout( Orientation ori, PApplet parent, double scale, double weight) {
+		super(parent, scale, weight);
 		this.orientation = ori;
 		this.elements = new ArrayList<DisplayElement>();
 		this.totalWeight = 0;

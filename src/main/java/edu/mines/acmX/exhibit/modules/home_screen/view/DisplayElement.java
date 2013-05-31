@@ -12,13 +12,11 @@ public abstract class DisplayElement extends Scalable {
 	protected int width;
 	protected int height;
 	
-	public DisplayElement(PApplet par, double scale, double weight, int width, int height) {
+	public DisplayElement(PApplet par, double scale, double weight) {
 		super(scale);
 		this.parent = par;
 		this.weight = weight;
 		this.scale = scale;
-		this.width = width;
-		this.height = height;
 	}
 	
 	public abstract void update(int x, int y);

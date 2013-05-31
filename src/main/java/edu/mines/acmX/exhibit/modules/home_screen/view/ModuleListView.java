@@ -30,10 +30,9 @@ public class ModuleListView extends DisplayElement {
 	private VirtualRectClick infoBox;
 	private VirtualRectClick activationBox;
 
-	public ModuleListView(PApplet par, int origin_x, int origin_y,
-			double screenScale, ModuleList data, double weight, int width, int height) {
+	public ModuleListView(PApplet par, double screenScale, ModuleList data, double weight) {
 		
-		super(par, screenScale, weight, width, height);
+		super(par, screenScale, weight);
 		this.list = data;
 		moduleImageCache = new HashMap<Integer, PImage>();
 		rightArrowClick = new VirtualRectClick(TRANSITION_MODULE_DELAY, (parent.width - ARROW_WIDTH - ARROW_OFFSETX), originY, ARROW_WIDTH, HomeScreen.MODULE_HEIGHT);

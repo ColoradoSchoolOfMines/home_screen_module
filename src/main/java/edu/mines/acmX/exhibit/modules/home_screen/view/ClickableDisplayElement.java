@@ -7,9 +7,8 @@ public abstract class ClickableDisplayElement extends DisplayElement {
 
 	VirtualRectClick click;
 	
-	public ClickableDisplayElement(PApplet par, int originX, int originY,
-			double scale, double weight, int width, int height, VirtualRectClick click) {
-		super(par, scale, weight, width, height);
+	public ClickableDisplayElement(PApplet par, double scale, double weight, VirtualRectClick click) {
+		super(par, scale, weight);
 		this.click = click;
 	}
 

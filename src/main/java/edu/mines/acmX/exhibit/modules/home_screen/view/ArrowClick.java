@@ -7,9 +7,8 @@ public class ArrowClick extends ClickableDisplayElement {
 
 	private Side side;
 	
-	public ArrowClick(PApplet par, int originX, int originY, double scale,
-			double weight, int width, int height, VirtualRectClick click, Side side) {
-		super(par, originX, originY, scale, weight, width, height, click);
+	public ArrowClick(PApplet par, double scale, double weight, VirtualRectClick click, Side side) {
+		super(par, scale, weight, click);
 		this.side = side;
 	}
 
@@ -22,6 +21,8 @@ public class ArrowClick extends ClickableDisplayElement {
 
 	@Override
 	public void draw() {
+		System.out.println("arrow draw");
+		System.out.println("x: " + originX + " y: " + originY);
 		parent.fill(255, 0, 0);
 		if (side == Side.LEFT) {
 			float x1 = (float) (originX + (width / 6.0));

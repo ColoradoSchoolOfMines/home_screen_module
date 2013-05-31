@@ -122,23 +122,30 @@ public class HomeScreen extends ProcessingModule
 				tempImage = loadImage("question.jpg");
 			}
 			// storing icons and package names into their respective ModuleElements.
-			ModuleElement tempElement = new ModuleElement(this, screenScale, tempImage, packageNames[i], 1.0, 0, 0);
+			ModuleElement tempElement = new ModuleElement(this, screenScale, tempImage, packageNames[i], 1.0);
 			moduleElements.add(tempElement);
 			x += MODULE_WIDTH + MODULE_OFFSETX;
 		}
 
 		moduleList = new ModuleList(moduleElements);
 		
-		linearLayout = new LinearLayout( width, height, Orientation.VERTICAL, this, 1.0, 1.0);
-		LinearLayout modules = new LinearLayout( 0, 0, Orientation.HORIZONTAL, this, 1.0, 80.0);
-		moduleListView = new ModuleListView(this, 0, MODULE_OFFSETY, screenScale, moduleList, 60.0, 0, 0);
-		modules.add(new ArrowClick(this, 0, 0, 1.0, 20.0, 0, 0, null, Side.LEFT));
-		modules.add(moduleListView);		
-		modules.add(new ArrowClick(this, 0, 0, 1.0, 20.0, 0, 0, null, Side.RIGHT));
+		linearLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0, 1.0);
+		
+		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
+		moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
+		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.LEFT));
+		//modules.add(moduleListView);		
+		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.RIGHT));
+		
 		linearLayout.add(modules);
-		LinearLayout statusBarLayout = new LinearLayout( 0, 0, Orientation.HORIZONTAL, this, 1.0, 20.0);
+		
+		LinearLayout statusBarLayout = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 20.0);
 
 		linearLayout.add(statusBarLayout);
+		linearLayout.setOriginX(0);
+		linearLayout.setOriginY(0);
+		linearLayout.setHeight(height);
+		linearLayout.setWidth(width);
 	}
 	
 	public void update() {

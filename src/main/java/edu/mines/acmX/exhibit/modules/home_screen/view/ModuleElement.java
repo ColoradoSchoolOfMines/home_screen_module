@@ -9,8 +9,8 @@ public class ModuleElement extends DisplayElement {
 	private String packageName;
 	
 	public ModuleElement(HomeScreen par, double screenScale, PImage image,
-			String name, double weight, int width, int height) {
-		super(par, screenScale, weight, width, height);
+			String name, double weight) {
+		super(par, screenScale, weight);
 		icon = image;
 		packageName = name;
 	}
