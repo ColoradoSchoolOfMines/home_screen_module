@@ -8,15 +8,15 @@ public class ModuleElement extends DisplayElement {
 	private PImage icon;
 	private String packageName;
 	
-	public ModuleElement(HomeScreen par, int originX, int originY,
-			double screenScale, PImage image, String name) {
-		super(par, originX, originY, screenScale);
+	public ModuleElement(HomeScreen par, double screenScale, PImage image,
+			String name, double weight, int width, int height) {
+		super(par, screenScale, weight, width, height);
 		icon = image;
 		packageName = name;
 	}
 
 	@Override
-	public void update() {
+	public void update(int x, int y) {
 
 	}
 
