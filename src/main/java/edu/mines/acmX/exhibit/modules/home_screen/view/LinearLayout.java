@@ -17,16 +17,15 @@ public class LinearLayout extends DisplayElement {
 		this.orientation = ori;
 		this.elements = new ArrayList<DisplayElement>();
 		this.totalWeight = 0;
-		this.parent = parent;
 	}
 	
 	public void add (DisplayElement element) {
 		elements.add(element);
-		totalWeight += element.weight;
+		totalWeight += element.getWeight();
 	}
 	
 	public void pop() {
-		totalWeight -= elements.get(elements.size() - 1).weight;
+		totalWeight -= elements.get(elements.size() - 1).getWeight();
 		elements.remove(elements.size() - 1);
 	}
 	
