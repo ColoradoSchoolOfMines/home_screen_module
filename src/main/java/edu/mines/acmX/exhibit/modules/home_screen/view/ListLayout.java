@@ -10,6 +10,7 @@ public class ListLayout extends DisplayElement {
 
 	private Orientation orientation;
 	private List<DisplayElement> elements;
+	// TODO should the weight of an element have an effect on how the ratio works?
 	private double totalWeight;
 	// ratio width:height ex 3 = 3px width : 1px height
 	private double ratio;
@@ -41,6 +42,7 @@ public class ListLayout extends DisplayElement {
 		if (orientation == Orientation.HORIZONTAL) {
 			int spacing = (int) (height * ratio);
 			for (DisplayElement element: elements) {
+				System.out.println("setting element to x: " + xTemp + " y: " + yTemp);
 				element.setWidth(spacing);
 				element.setHeight(height);
 				element.update(xTemp, yTemp);
@@ -64,11 +66,11 @@ public class ListLayout extends DisplayElement {
 	public void draw() {
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {
-				if (element.originX - viewLength > this.originX &&
-					element.width + element.originX - viewLength < this.originX + this.height) {
+				if (element.originX + element.width - viewLength > this.originX) {
 					element.setOriginX(element.getOriginX() - viewLength);
 					element.setOriginY(element.getOriginY() - viewLength);
 					element.draw();
+					System.out.println("element drawn! x:" + element.getOriginX() + " y: " + element.getOriginY());
 				}
 			}
 		}

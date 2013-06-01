@@ -21,8 +21,6 @@ public class ArrowClick extends ClickableDisplayElement {
 
 	@Override
 	public void draw() {
-		System.out.println("arrow draw");
-		System.out.println("x: " + originX + " y: " + originY);
 		parent.fill(255, 0, 0);
 		if (side == Side.LEFT) {
 			float x1 = (float) (originX + (width / 6.0));

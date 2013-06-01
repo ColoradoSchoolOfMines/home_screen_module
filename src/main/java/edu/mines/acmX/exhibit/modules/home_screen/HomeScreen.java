@@ -8,6 +8,7 @@ import org.OpenNI.OutArg;
 import org.OpenNI.ScriptNode;
 
 import processing.core.PImage;
+
 import edu.mines.acmX.exhibit.input_services.InputEvent;
 import edu.mines.acmX.exhibit.input_services.InputReceiver;
 import edu.mines.acmX.exhibit.input_services.openni.OpenNIHandTrackerInputDriver;
@@ -20,6 +21,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackd
 import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ArrowClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
+import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
 import edu.mines.acmX.exhibit.modules.home_screen.view.Side;
@@ -109,6 +111,7 @@ public class HomeScreen extends ProcessingModule
 		ModuleManager manager;
 		String[] packageNames = null;
 		ArrayList<ModuleElement> moduleElements = new ArrayList<ModuleElement>();
+		ListLayout moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 50.0, 1.0);
 		try {
 			manager = ModuleManager.getInstance();
 			packageNames = manager.getAllAvailableModules();
@@ -129,6 +132,7 @@ public class HomeScreen extends ProcessingModule
 			// storing icons and package names into their respective ModuleElements.
 			ModuleElement tempElement = new ModuleElement(this, screenScale, tempImage, packageNames[i], 1.0);
 			moduleElements.add(tempElement);
+			moduleListLayout.add(tempElement);
 			x += MODULE_WIDTH + MODULE_OFFSETX;
 		}
 
@@ -136,13 +140,15 @@ public class HomeScreen extends ProcessingModule
 		
 		rootLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0, 1.0);
 		
-		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
 		moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
-		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.LEFT));
 		//modules.add(moduleListView);		
+		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
+		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.LEFT));
+		modules.add(moduleListLayout);
 		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.RIGHT));
-		rootLayout.add(new SpaceElement(this, 1.0, 80.0));
+		rootLayout.add(new SpaceElement(this, 1.0, 10.0));
 		rootLayout.add(modules);
+		rootLayout.add(new SpaceElement(this, 1.0, 50.0));
 		
 		LinearLayout statusBarLayout = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 20.0);
 

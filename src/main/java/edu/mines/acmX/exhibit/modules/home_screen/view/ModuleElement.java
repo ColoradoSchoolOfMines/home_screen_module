@@ -17,12 +17,13 @@ public class ModuleElement extends DisplayElement {
 
 	@Override
 	public void update(int x, int y) {
-
+		originX = x;
+		originY = y;
 	}
 
 	@Override
 	public void draw() {
-
+		parent.image(icon, originX, originY);
 	}
 	
 	public PImage getIcon() {
