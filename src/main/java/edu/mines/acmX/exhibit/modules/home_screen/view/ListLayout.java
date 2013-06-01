@@ -83,6 +83,14 @@ public class ListLayout extends DisplayElement {
 					element.originX + element.width < this.originX + this.width) {
 					element.draw();
 				}
+				/*
+				else if (element.originX < this.originX &&
+						element.originX + element.width > this.originX) {
+					ModuleElement tempElement = (ModuleElement) element;
+					tempElement.setLeft(true);
+					tempElement.setEdgeLength(originX - element.getOriginX());
+					tempElement.draw();
+				} */
 			}
 		}
 		else if (orientation == Orientation.VERTICAL) {
