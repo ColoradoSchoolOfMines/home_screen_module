@@ -25,17 +25,17 @@ public class ArrowClick extends ClickableDisplayElement {
 		if (side == Side.LEFT) {
 			float x1 = (float) (originX + (width / 6.0));
 			float y1 = (float) (originY + (height / 2.0));
-			float x2 = (float) (originX + (width / 2.0));
+			float x2 = (float) (originX + (5 * (width / 6.0)));
 			float y2 = (float) (originY + (height / 6.0));
-			float x3 = (float) (originX + (width / 2.0));
+			float x3 = (float) (originX + (5 * (width / 6.0)));
 			float y3 = (float) (originY + (5 * (height / 6.0)));
 			parent.triangle(x1, y1, x2, y2, x3, y3);
 		} else if (side == Side.RIGHT) {
 			float x1 = (float) (originX + (5 * (width / 6.0)));
 			float y1 = (float) (originY + (height / 2.0));
-			float x2 = (float) (originX + (width / 2.0));
+			float x2 = (float) (originX + (width / 6.0));
 			float y2 = (float) (originY + (height / 6.0));
-			float x3 = (float) (originX + (width / 2.0));
+			float x3 = (float) (originX + (width / 6.0));
 			float y3 = (float) (originY + (5 * (height / 6.0)));
 			parent.triangle(x1, y1, x2, y2, x3, y3);
 		}
