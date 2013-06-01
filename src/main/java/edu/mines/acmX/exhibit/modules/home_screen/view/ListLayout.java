@@ -8,6 +8,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.Orientation;
 
 public class ListLayout extends DisplayElement {
 
+	private static final boolean DEBUG = true;
 	private Orientation orientation;
 	private List<DisplayElement> elements;
 	// TODO should the weight of an element have an effect on how the ratio works?
@@ -71,11 +72,14 @@ public class ListLayout extends DisplayElement {
 
 	@Override
 	public void draw() {
-		parent.noFill();
-		parent.stroke(0);
-		parent.rect(originX, originY, width, height);
-		parent.noStroke();
-		parent.fill(0);
+		if (DEBUG) {
+			parent.noFill();
+			parent.stroke(0);
+			parent.strokeWeight(1);
+			parent.rect(originX, originY, width, height);
+			parent.noStroke();
+			parent.fill(0);
+		}
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {
 				if (element.originX  > this.originX &&
