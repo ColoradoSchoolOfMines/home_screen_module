@@ -62,8 +62,8 @@ public class HomeScreen extends ProcessingModule
 	private double screenScale = 1.0;
 	private Backdrop backDrop;
 	
-	private ModuleList moduleList;
-	private ModuleListView moduleListView;
+	//private ModuleList moduleList;
+	//private ModuleListView moduleListView;
 	
 	private OpenNIHandTrackerInputDriver kinect;
 	public static final boolean DEBUG_KINECT = false;
@@ -141,12 +141,11 @@ public class HomeScreen extends ProcessingModule
 			moduleListLayout.add(tempElement);
 			x += MODULE_WIDTH + MODULE_OFFSETX;
 		}
-		System.out.println("moduleListLayout size: " + moduleListLayout.size());
-		moduleList = new ModuleList(moduleElements);
+		//moduleList = new ModuleList(moduleElements);
 		
 		rootLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0, 1.0);
 		
-		moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
+		//moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
 		//modules.add(moduleListView);		
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
 		leftArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(500, 0, 0, 0, 0), Side.LEFT);
@@ -203,7 +202,7 @@ public class HomeScreen extends ProcessingModule
 	}
 	
 	public void mouseMoved() {
-		moduleListView.mouseMoved();
+		//moduleListView.mouseMoved();
 		rightArrow.getClick().update(mouseX, mouseY, millis());
 		leftArrow.getClick().update(mouseX, mouseY, millis());
 
