@@ -68,7 +68,7 @@ public class ModuleElement extends DisplayElement {
 		}
 
 		// draw hint if need be
-		if (drawHint) {
+		if (drawHint && !drawInfo) {
 			parent.noFill();
 			parent.stroke(0);
 			parent.strokeWeight(4);

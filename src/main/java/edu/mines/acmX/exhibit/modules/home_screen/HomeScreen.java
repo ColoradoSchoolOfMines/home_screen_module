@@ -117,7 +117,7 @@ public class HomeScreen extends ProcessingModule
 		ModuleManager manager;
 		String[] packageNames = null;
 		moduleElements = new ArrayList<ModuleElement>();
-		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 80.0, 1.0);
+		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 88.0, 1.0);
 		try {
 			manager = ModuleManager.getInstance();
 			packageNames = manager.getAllAvailableModules();
@@ -133,7 +133,7 @@ public class HomeScreen extends ProcessingModule
 		for (int i = 0; i < packageNames.length; ++i) {
 			PImage tempImage = loadImage("icon.png", packageNames[i]);
 			if (tempImage == null) {
-				tempImage = loadImage("question.jpg");
+				tempImage = loadImage("question.png");
 			}
 			// storing icons and package names into their respective ModuleElements.
 			ModuleElement tempElement = new ModuleElement(this, screenScale, tempImage, packageNames[i], 1.0);
@@ -148,8 +148,8 @@ public class HomeScreen extends ProcessingModule
 		//moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
 		//modules.add(moduleListView);		
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
-		leftArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.LEFT);
-		rightArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.RIGHT);
+		leftArrow = new ArrowClick(this, 1.0, 6.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.LEFT);
+		rightArrow = new ArrowClick(this, 1.0, 6.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.RIGHT);
 		modules.add(leftArrow);
 		modules.add(moduleListLayout);
 		modules.add(rightArrow);
