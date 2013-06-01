@@ -46,7 +46,6 @@ public class ListLayout extends DisplayElement {
 		int xTemp = x;
 		int yTemp = y;
 		// TODO debug line, remove
-		viewLength += 4;
 		if (orientation == Orientation.HORIZONTAL) {
 			xTemp -= viewLength;
 			int spacing = (int) (height * ratio);
@@ -98,6 +97,9 @@ public class ListLayout extends DisplayElement {
 		}
 	}
 
+	public void incrementViewLength(int inc) {
+		viewLength += inc;
+	}
 }
 
 

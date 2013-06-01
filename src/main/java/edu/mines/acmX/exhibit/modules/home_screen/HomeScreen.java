@@ -26,6 +26,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
 import edu.mines.acmX.exhibit.modules.home_screen.view.Side;
 import edu.mines.acmX.exhibit.modules.home_screen.view.SpaceElement;
+import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 
 /*
  * TODO (in order)
@@ -68,7 +69,12 @@ public class HomeScreen extends ProcessingModule
 	public static final boolean DEBUG_KINECT = false;
 	private int handX, handY;
 	private LinearLayout rootLayout;
-	private static final boolean DUAL_SCREEN = true;
+	private ListLayout moduleListLayout;
+	private ArrowClick leftArrow;
+	private ArrowClick rightArrow;
+	public static final boolean DUAL_SCREEN = true;
+	public static final int SCROLL_SPEED = 40;
+
 
 		
 	public void setup() {
@@ -111,7 +117,7 @@ public class HomeScreen extends ProcessingModule
 		ModuleManager manager;
 		String[] packageNames = null;
 		ArrayList<ModuleElement> moduleElements = new ArrayList<ModuleElement>();
-		ListLayout moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 80.0, 1.0);
+		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 80.0, 1.0);
 		try {
 			manager = ModuleManager.getInstance();
 			packageNames = manager.getAllAvailableModules();
@@ -143,9 +149,11 @@ public class HomeScreen extends ProcessingModule
 		moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
 		//modules.add(moduleListView);		
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
-		modules.add(new ArrowClick(this, 1.0, 10.0, null, Side.LEFT));
+		leftArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(500, 0, 0, 0, 0), Side.LEFT);
+		rightArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(500, 0, 0, 0, 0), Side.RIGHT);
+		modules.add(leftArrow);
 		modules.add(moduleListLayout);
-		modules.add(new ArrowClick(this, 1.0, 10.0, null, Side.RIGHT));
+		modules.add(rightArrow);
 		rootLayout.add(new SpaceElement(this, 1.0, 10.0));
 		rootLayout.add(modules);
 		rootLayout.add(new SpaceElement(this, 1.0, 50.0));
@@ -165,6 +173,13 @@ public class HomeScreen extends ProcessingModule
 		backDrop.update();
 		//moduleListView.update(0, 0);
 		rootLayout.update(0, 0);
+		int millis = millis();
+		if (leftArrow.completed(millis)) {
+			moduleListLayout.incrementViewLength(-SCROLL_SPEED);
+		}
+		if (rightArrow.completed(millis)) {
+			moduleListLayout.incrementViewLength(SCROLL_SPEED);
+		}
 		
 		if (DEBUG_KINECT) {
 			kinect.pumpInput(this);
@@ -189,6 +204,9 @@ public class HomeScreen extends ProcessingModule
 	
 	public void mouseMoved() {
 		moduleListView.mouseMoved();
+		rightArrow.getClick().update(mouseX, mouseY, millis());
+		leftArrow.getClick().update(mouseX, mouseY, millis());
+
 		
 		if (!DEBUG_KINECT) {
 			handX = mouseX;

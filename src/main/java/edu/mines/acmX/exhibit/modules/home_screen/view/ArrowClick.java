@@ -16,7 +16,7 @@ public class ArrowClick extends ClickableDisplayElement {
 	public void update(int x, int y) {
 		originX = x;
 		originY = y;
-
+		click.updateCoordinates(originX, originY, width, height);
 	}
 
 	@Override
@@ -42,4 +42,11 @@ public class ArrowClick extends ClickableDisplayElement {
 
 	}
 
+	public boolean completed(int millis) {
+		return click.durationCompleted(millis);
+	}
+
+	public VirtualRectClick getClick() {
+		return click;
+	}
 }
