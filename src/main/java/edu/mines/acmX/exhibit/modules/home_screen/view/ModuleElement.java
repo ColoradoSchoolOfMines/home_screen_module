@@ -10,6 +10,8 @@ public class ModuleElement extends DisplayElement {
 
 	public static final int MODULE_RUN_SPEED = 500;
 	public static final int HINT_SPEED = 1;
+	public static final int INFO_SPEED = 1;
+	public static final int RECT_CURVE = 6;
 	private PImage icon;
 	private String packageName;
 	private boolean leftEdge;
@@ -17,8 +19,10 @@ public class ModuleElement extends DisplayElement {
 	private int edgeLength;
 	private VirtualRectClick startGame;
 	private VirtualRectClick hint;
+	private VirtualRectClick info;
 	private boolean visible;
 	private boolean drawHint;
+	private boolean drawInfo;
 	
 	public ModuleElement(HomeScreen par, double screenScale, PImage image,
 			String name, double weight) {
@@ -28,8 +32,10 @@ public class ModuleElement extends DisplayElement {
 		edgeLength = 0;
 		startGame = new VirtualRectClick(MODULE_RUN_SPEED, 0, 0, 0, 0);
 		hint = new VirtualRectClick(HINT_SPEED, 0, 0, 0, 0);
+		info = new VirtualRectClick(INFO_SPEED, 0, 0, 0, 0);
 		visible = false;
 		drawHint = false;
+		drawInfo = false;
 	}
 
 	@Override
@@ -38,9 +44,11 @@ public class ModuleElement extends DisplayElement {
 		originY = y;
 		startGame.updateCoordinates(originX + (width / 4), originY + (height / 4), width / 2, height / 2);
 		hint.updateCoordinates(originX, originY, width, height);
+		info.updateCoordinates(originX + ( 3 * width / 4), originY, width / 4, height / 4);
 		if (visible) {
 			startGame.update(parent.mouseX, parent.mouseY, parent.millis());
 			hint.update(parent.mouseX, parent.mouseY, parent.millis());
+			info.update(parent.mouseX, parent.mouseY, parent.millis());
 		}
 		visible = false;
 	}
@@ -64,9 +72,14 @@ public class ModuleElement extends DisplayElement {
 			parent.noFill();
 			parent.stroke(0);
 			parent.strokeWeight(4);
-			parent.rect((float) startGame.getX(), (float) startGame.getY(), (float) startGame.getWidth(), (float) startGame.getHeight(), (float) (startGame.getWidth() / 6), (float) (startGame.getHeight() / 6));
+			parent.rect((float) startGame.getX(), (float) startGame.getY(), (float) startGame.getWidth(), (float) startGame.getHeight(), (float) (startGame.getWidth() / RECT_CURVE), (float) (startGame.getHeight() / RECT_CURVE));
+			parent.rect((float) info.getX(), (float) info.getY(), (float) info.getWidth(), (float) info.getHeight(), (float) (info.getWidth() / RECT_CURVE), (float) (info.getHeight() / RECT_CURVE));
 			parent.noStroke();
 			parent.fill(0);
+		}
+		if (drawInfo) {
+			parent.fill(135, 206, 250);
+			parent.rect((float) originX, (float) originY, (float) width, (float) height, (float) (width / RECT_CURVE), (float) (height / RECT_CURVE));
 		}
 		leftEdge = false;
 		rightEdge = false;
@@ -108,6 +121,12 @@ public class ModuleElement extends DisplayElement {
 		}
 		else {
 			drawHint = false;
+		}
+		if (info.durationCompleted(millis)) {
+			drawInfo = true;
+		}
+		else {
+			drawInfo = false;
 		}
 
 	}
