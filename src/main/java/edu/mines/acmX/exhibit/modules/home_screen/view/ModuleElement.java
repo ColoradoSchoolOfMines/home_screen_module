@@ -78,8 +78,14 @@ public class ModuleElement extends DisplayElement {
 			parent.fill(0);
 		}
 		if (drawInfo) {
+			// set color to blue
 			parent.fill(135, 206, 250);
+			// draw info box
 			parent.rect((float) originX, (float) originY, (float) width, (float) height, (float) (width / RECT_CURVE), (float) (height / RECT_CURVE));
+			// set color to black
+			parent.fill(0);
+			// draw packageName
+			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
 		}
 		leftEdge = false;
 		rightEdge = false;
