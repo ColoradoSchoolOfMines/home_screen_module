@@ -12,6 +12,7 @@ public class ModuleElement extends DisplayElement {
 	public static final int HINT_SPEED = 1;
 	public static final int INFO_SPEED = 1;
 	public static final int RECT_CURVE = 6;
+	public static final int INFO_FADE_SPEED = 5;
 	private PImage icon;
 	private String packageName;
 	private boolean leftEdge;
@@ -23,6 +24,7 @@ public class ModuleElement extends DisplayElement {
 	private boolean visible;
 	private boolean drawHint;
 	private boolean drawInfo;
+	private float infoAlpha;
 	
 	public ModuleElement(HomeScreen par, double screenScale, PImage image,
 			String name, double weight) {
@@ -36,6 +38,7 @@ public class ModuleElement extends DisplayElement {
 		visible = false;
 		drawHint = false;
 		drawInfo = false;
+		infoAlpha = (float) 0;
 	}
 
 	@Override
@@ -87,13 +90,28 @@ public class ModuleElement extends DisplayElement {
 		// if a click registers with the info click, draw the info
 		if (drawInfo) {
 			// set color to blue
-			parent.fill(135, 206, 250);
+			parent.fill(135, 206, 250, infoAlpha);
 			// draw info box
 			parent.rect((float) originX, (float) originY, (float) width, (float) height, (float) (width / RECT_CURVE), (float) (height / RECT_CURVE));
 			// set color to black
-			parent.fill(0);
+			parent.fill(0, infoAlpha);
 			// draw packageName
 			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
+			if (infoAlpha < 255) {
+				infoAlpha += INFO_FADE_SPEED;
+			}
+		}
+		// if the click was false, but the infoAlpha isn't zero, fade info away
+		else if (infoAlpha > 0) {
+			// set color to blue
+			parent.fill(135, 206, 250, infoAlpha);
+			// draw info box
+			parent.rect((float) originX, (float) originY, (float) width, (float) height, (float) (width / RECT_CURVE), (float) (height / RECT_CURVE));
+			// set color to black
+			parent.fill(0, infoAlpha);
+			// draw packageName
+			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
+			infoAlpha -= INFO_FADE_SPEED;
 		}
 		leftEdge = false;
 		rightEdge = false;
