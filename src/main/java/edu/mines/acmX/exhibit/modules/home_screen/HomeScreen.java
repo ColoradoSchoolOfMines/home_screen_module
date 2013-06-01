@@ -73,7 +73,8 @@ public class HomeScreen extends ProcessingModule
 	private ArrowClick leftArrow;
 	private ArrowClick rightArrow;
 	public static final boolean DUAL_SCREEN = true;
-	public static final int SCROLL_SPEED = 40;
+	public static final int SCROLL_SPEED = 20;
+	public static final int ARROW_CLICK_SPEED = 50;
 
 
 		
@@ -148,8 +149,8 @@ public class HomeScreen extends ProcessingModule
 		//moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
 		//modules.add(moduleListView);		
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
-		leftArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(500, 0, 0, 0, 0), Side.LEFT);
-		rightArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(500, 0, 0, 0, 0), Side.RIGHT);
+		leftArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.LEFT);
+		rightArrow = new ArrowClick(this, 1.0, 10.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.RIGHT);
 		modules.add(leftArrow);
 		modules.add(moduleListLayout);
 		modules.add(rightArrow);
