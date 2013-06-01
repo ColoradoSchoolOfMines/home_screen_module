@@ -17,6 +17,7 @@ public class ArrowClick extends ClickableDisplayElement {
 		originX = x;
 		originY = y;
 		click.updateCoordinates(originX, originY, width, height);
+		click.update(parent.mouseX, parent.mouseY, parent.millis());
 	}
 
 	@Override

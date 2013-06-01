@@ -75,11 +75,11 @@ public class HomeScreen extends ProcessingModule
 	public static final boolean DUAL_SCREEN = true;
 	public static final int SCROLL_SPEED = 20;
 	public static final int ARROW_CLICK_SPEED = 50;
-
+	private ArrayList<ModuleElement> moduleElements;
 
 		
 	public void setup() {
-		
+		// Allows for sane usage of dual monitors
 		if (DUAL_SCREEN) {
 			width = width / 2;
 		}
@@ -90,7 +90,6 @@ public class HomeScreen extends ProcessingModule
 		
 		// TODO Fall back to different configuration?
 		// -Would this have to be a config driven UI?
-		//destroy();
 		
 		screenScale = width / (double) EXPECTED_WIDTH;
 		
@@ -117,7 +116,7 @@ public class HomeScreen extends ProcessingModule
 		// get all module names
 		ModuleManager manager;
 		String[] packageNames = null;
-		ArrayList<ModuleElement> moduleElements = new ArrayList<ModuleElement>();
+		moduleElements = new ArrayList<ModuleElement>();
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 80.0, 1.0);
 		try {
 			manager = ModuleManager.getInstance();
@@ -180,6 +179,8 @@ public class HomeScreen extends ProcessingModule
 		if (rightArrow.completed(millis)) {
 			moduleListLayout.incrementViewLength(SCROLL_SPEED);
 		}
+
+		checkModulesForClicks();
 		
 		if (DEBUG_KINECT) {
 			kinect.pumpInput(this);
@@ -204,8 +205,8 @@ public class HomeScreen extends ProcessingModule
 	
 	public void mouseMoved() {
 		//moduleListView.mouseMoved();
-		rightArrow.getClick().update(mouseX, mouseY, millis());
-		leftArrow.getClick().update(mouseX, mouseY, millis());
+//		rightArrow.getClick().update(mouseX, mouseY, millis());
+//		leftArrow.getClick().update(mouseX, mouseY, millis());
 
 		
 		if (!DEBUG_KINECT) {
@@ -218,5 +219,12 @@ public class HomeScreen extends ProcessingModule
 	public void receiveInput(InputEvent e) {
 		handX = (int) e.x;
 		handY = (int) e.y;
+	}
+
+	public void checkModulesForClicks() {
+		int millis = millis();
+		for (ModuleElement element: moduleElements) {
+			element.checkClicks(millis);
+		}
 	}
 }
