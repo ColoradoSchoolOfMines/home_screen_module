@@ -35,14 +35,22 @@ public class ListLayout extends DisplayElement {
 		elements.remove(elements.size() - 1);
 	}
 
+	public int size() {
+		return elements.size();
+	}
+
 	@Override
 	public void update(int x, int y) {
+		originX = x;
+		originY = y;
 		int xTemp = x;
 		int yTemp = y;
+		// TODO debug line, remove
+		viewLength += 4;
 		if (orientation == Orientation.HORIZONTAL) {
+			xTemp -= viewLength;
 			int spacing = (int) (height * ratio);
 			for (DisplayElement element: elements) {
-				System.out.println("setting element to x: " + xTemp + " y: " + yTemp);
 				element.setWidth(spacing);
 				element.setHeight(height);
 				element.update(xTemp, yTemp);
@@ -64,13 +72,16 @@ public class ListLayout extends DisplayElement {
 
 	@Override
 	public void draw() {
+		parent.noFill();
+		parent.stroke(0);
+		parent.rect(originX, originY, width, height);
+		parent.noStroke();
+		parent.fill(0);
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {
-				if (element.originX + element.width - viewLength > this.originX) {
-					element.setOriginX(element.getOriginX() - viewLength);
-					element.setOriginY(element.getOriginY() - viewLength);
+				if (element.originX  > this.originX &&
+					element.originX + element.width < this.originX + this.width) {
 					element.draw();
-					System.out.println("element drawn! x:" + element.getOriginX() + " y: " + element.getOriginY());
 				}
 			}
 		}

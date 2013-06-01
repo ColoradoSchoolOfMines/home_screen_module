@@ -30,6 +30,8 @@ public class LinearLayout extends DisplayElement {
 	}
 	
 	public void update(int x, int y) {
+		originX = x;
+		originY = y;
 		int xTemp = x; 
 		int yTemp = y;
 		if (orientation == Orientation.HORIZONTAL) {

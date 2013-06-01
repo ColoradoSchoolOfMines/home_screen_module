@@ -111,7 +111,7 @@ public class HomeScreen extends ProcessingModule
 		ModuleManager manager;
 		String[] packageNames = null;
 		ArrayList<ModuleElement> moduleElements = new ArrayList<ModuleElement>();
-		ListLayout moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 50.0, 1.0);
+		ListLayout moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 1.0, 80.0, 1.0);
 		try {
 			manager = ModuleManager.getInstance();
 			packageNames = manager.getAllAvailableModules();
@@ -135,7 +135,7 @@ public class HomeScreen extends ProcessingModule
 			moduleListLayout.add(tempElement);
 			x += MODULE_WIDTH + MODULE_OFFSETX;
 		}
-
+		System.out.println("moduleListLayout size: " + moduleListLayout.size());
 		moduleList = new ModuleList(moduleElements);
 		
 		rootLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0, 1.0);
@@ -143,9 +143,9 @@ public class HomeScreen extends ProcessingModule
 		moduleListView = new ModuleListView(this, screenScale, moduleList, 60.0);
 		//modules.add(moduleListView);		
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 1.0, 80.0);
-		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.LEFT));
+		modules.add(new ArrowClick(this, 1.0, 10.0, null, Side.LEFT));
 		modules.add(moduleListLayout);
-		modules.add(new ArrowClick(this, 1.0, 20.0, null, Side.RIGHT));
+		modules.add(new ArrowClick(this, 1.0, 10.0, null, Side.RIGHT));
 		rootLayout.add(new SpaceElement(this, 1.0, 10.0));
 		rootLayout.add(modules);
 		rootLayout.add(new SpaceElement(this, 1.0, 50.0));

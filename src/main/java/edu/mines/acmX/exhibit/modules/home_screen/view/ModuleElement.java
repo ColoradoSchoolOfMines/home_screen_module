@@ -23,7 +23,7 @@ public class ModuleElement extends DisplayElement {
 
 	@Override
 	public void draw() {
-		parent.image(icon, originX, originY);
+		parent.image(icon, originX, originY, width, height);
 	}
 	
 	public PImage getIcon() {
