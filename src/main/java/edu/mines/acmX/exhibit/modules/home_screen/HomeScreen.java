@@ -66,10 +66,14 @@ public class HomeScreen extends ProcessingModule
 	public static final boolean DEBUG_KINECT = false;
 	private int handX, handY;
 	private LinearLayout rootLayout;
+	private static final boolean DUAL_SCREEN = true;
 
 		
 	public void setup() {
 		
+		if (DUAL_SCREEN) {
+			width = width / 2;
+		}
 		size(width, height);
 		
 		cursor_image = loadImage(CURSOR_FILENAME);
