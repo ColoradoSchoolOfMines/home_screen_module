@@ -8,7 +8,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectCl
 
 public class ModuleElement extends DisplayElement {
 
-	public static final int MODULE_RUN_SPEED = 500;
+	public static final int MODULE_RUN_SPEED = 750;
 	public static final int HINT_SPEED = 1;
 	public static final int INFO_SPEED = 1;
 	public static final int RECT_CURVE = 6;
@@ -42,9 +42,11 @@ public class ModuleElement extends DisplayElement {
 	public void update(int x, int y) {
 		originX = x;
 		originY = y;
+		// update coordinates for all VirtualRectClicks
 		startGame.updateCoordinates(originX + (width / 4), originY + (height / 4), width / 2, height / 2);
 		hint.updateCoordinates(originX, originY, width, height);
 		info.updateCoordinates(originX + ( 3 * width / 4), originY, width / 4, height / 4);
+		// if the module is visible, start checking for clicks
 		if (visible) {
 			startGame.update(parent.mouseX, parent.mouseY, parent.millis());
 			hint.update(parent.mouseX, parent.mouseY, parent.millis());
@@ -56,6 +58,8 @@ public class ModuleElement extends DisplayElement {
 	@Override
 	public void draw() {
 		visible = true;
+		// show part of an image if the full image doesn't fit.
+		// TODO DOESN'T WORK
 		if (leftEdge) {
 			PImage temp = icon.get(edgeLength, originY, width - edgeLength, height);
 			parent.image(temp, originX, originY, width, height);
@@ -63,6 +67,7 @@ public class ModuleElement extends DisplayElement {
 		else if (rightEdge) {
 			parent.image(icon, originX, originY, width, height);
 		}
+		// else show the icon normally
 		else {
 		parent.image(icon, originX, originY, width, height);
 		}
@@ -72,11 +77,14 @@ public class ModuleElement extends DisplayElement {
 			parent.noFill();
 			parent.stroke(0);
 			parent.strokeWeight(4);
+			// draw the start module hint rect
 			parent.rect((float) startGame.getX(), (float) startGame.getY(), (float) startGame.getWidth(), (float) startGame.getHeight(), (float) (startGame.getWidth() / RECT_CURVE), (float) (startGame.getHeight() / RECT_CURVE));
+			// draw the module info rect
 			parent.rect((float) info.getX(), (float) info.getY(), (float) info.getWidth(), (float) info.getHeight(), (float) (info.getWidth() / RECT_CURVE), (float) (info.getHeight() / RECT_CURVE));
 			parent.noStroke();
 			parent.fill(0);
 		}
+		// if a click registers with the info click, draw the info
 		if (drawInfo) {
 			// set color to blue
 			parent.fill(135, 206, 250);
@@ -111,7 +119,9 @@ public class ModuleElement extends DisplayElement {
 		return startGame;
 	}
 
+	// check all clicks registered to this ModuleElement for clicks
 	public void checkClicks(int millis) {
+		// check for a module start click
 		if (startGame.durationCompleted(millis)) {
 			try {
 				ModuleManager manager = ModuleManager.getInstance();
@@ -122,12 +132,14 @@ public class ModuleElement extends DisplayElement {
 				e.printStackTrace();
 			}
 		}
+		// check for a hint click
 		if (hint.durationCompleted(millis)) {
 			drawHint = true;
 		}
 		else {
 			drawHint = false;
 		}
+		// check for an info click
 		if (info.durationCompleted(millis)) {
 			drawInfo = true;
 		}

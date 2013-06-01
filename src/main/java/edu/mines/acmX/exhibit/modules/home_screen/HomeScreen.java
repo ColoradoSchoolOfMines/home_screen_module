@@ -68,13 +68,20 @@ public class HomeScreen extends ProcessingModule
 	private OpenNIHandTrackerInputDriver kinect;
 	public static final boolean DEBUG_KINECT = false;
 	private int handX, handY;
+	// root layout for module
 	private LinearLayout rootLayout;
+	// list layout to hold all module elements
 	private ListLayout moduleListLayout;
+	// arrows, to manipulate the moduleListLayout
 	private ArrowClick leftArrow;
 	private ArrowClick rightArrow;
+	// set to true if using 2 monitors, or false for 1
 	public static final boolean DUAL_SCREEN = true;
+	// listLayout scroll speed
 	public static final int SCROLL_SPEED = 20;
+	// how fast an arrow registers a click
 	public static final int ARROW_CLICK_SPEED = 50;
+	// all module elements
 	private ArrayList<ModuleElement> moduleElements;
 
 		
@@ -85,6 +92,7 @@ public class HomeScreen extends ProcessingModule
 		}
 		size(width, height);
 		
+		// load cursor image
 		cursor_image = loadImage(CURSOR_FILENAME);
 		cursor_image.resize(32, 32);
 		
@@ -129,7 +137,6 @@ public class HomeScreen extends ProcessingModule
 			e.printStackTrace();
 		}
 		// Iterates through the array of package names and loads each modules icon.
-		int x = MODULE_OFFSETX;
 		for (int i = 0; i < packageNames.length; ++i) {
 			PImage tempImage = loadImage("icon.png", packageNames[i]);
 			if (tempImage == null) {
@@ -139,7 +146,6 @@ public class HomeScreen extends ProcessingModule
 			ModuleElement tempElement = new ModuleElement(this, screenScale, tempImage, packageNames[i], 1.0);
 			moduleElements.add(tempElement);
 			moduleListLayout.add(tempElement);
-			x += MODULE_WIDTH + MODULE_OFFSETX;
 		}
 		//moduleList = new ModuleList(moduleElements);
 		
@@ -173,6 +179,7 @@ public class HomeScreen extends ProcessingModule
 		//moduleListView.update(0, 0);
 		rootLayout.update(0, 0);
 		int millis = millis();
+		// check arrows for clicks
 		if (leftArrow.completed(millis)) {
 			moduleListLayout.incrementViewLength(-SCROLL_SPEED);
 		}
@@ -180,6 +187,7 @@ public class HomeScreen extends ProcessingModule
 			moduleListLayout.incrementViewLength(SCROLL_SPEED);
 		}
 
+		// check all ModuleElements for clicks
 		checkModulesForClicks();
 		
 		if (DEBUG_KINECT) {
@@ -198,7 +206,7 @@ public class HomeScreen extends ProcessingModule
 		rootLayout.draw();
 		
 		//temporary place holder for twitter, weather and time feeds.
-		line (0, STATUSBAR_Y, width, STATUSBAR_Y);
+		//line (0, STATUSBAR_Y, width, STATUSBAR_Y);
 		
 		image(cursor_image, handX, handY);
 	}
@@ -221,6 +229,9 @@ public class HomeScreen extends ProcessingModule
 		handY = (int) e.y;
 	}
 
+	/**
+	 * Iterates through all ModuleElements and checks them for clicks
+	 */
 	public void checkModulesForClicks() {
 		int millis = millis();
 		for (ModuleElement element: moduleElements) {
