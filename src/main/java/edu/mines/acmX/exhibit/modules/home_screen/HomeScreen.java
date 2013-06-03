@@ -81,8 +81,12 @@ public class HomeScreen extends ProcessingModule
 	public static final int SCROLL_SPEED = 20;
 	// how fast an arrow registers a click
 	public static final int ARROW_CLICK_SPEED = 50;
+	// time to fall asleep, in millis
+	public static final int TIME_TO_SLEEP = 10000;
 	// all module elements
 	private ArrayList<ModuleElement> moduleElements;
+	// millis when last interacted with
+	private int lastInput;
 
 		
 	public void setup() {
@@ -171,6 +175,7 @@ public class HomeScreen extends ProcessingModule
 		rootLayout.setOriginY(0);
 		rootLayout.setHeight(height);
 		rootLayout.setWidth(width);
+		lastInput = millis();
 	}
 	
 	public void update() {
@@ -203,7 +208,9 @@ public class HomeScreen extends ProcessingModule
 		backDrop.draw();
 		// draw the leftmost module
 		//moduleListView.draw();
-		rootLayout.draw();
+		if (millis() - lastInput < TIME_TO_SLEEP) {
+			rootLayout.draw();
+		}
 		
 		//temporary place holder for twitter, weather and time feeds.
 		//line (0, STATUSBAR_Y, width, STATUSBAR_Y);
@@ -215,6 +222,7 @@ public class HomeScreen extends ProcessingModule
 		//moduleListView.mouseMoved();
 //		rightArrow.getClick().update(mouseX, mouseY, millis());
 //		leftArrow.getClick().update(mouseX, mouseY, millis());
+		lastInput = millis();
 
 		
 		if (!DEBUG_KINECT) {
