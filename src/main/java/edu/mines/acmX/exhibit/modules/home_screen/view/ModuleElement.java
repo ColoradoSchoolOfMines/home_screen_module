@@ -95,6 +95,7 @@ public class ModuleElement extends DisplayElement {
 			// set color to black
 			parent.fill(0, infoAlpha);
 			// draw packageName
+			parent.textSize(20);
 			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
 			if (infoAlpha < 255) {
 				infoAlpha += INFO_FADE_SPEED;
