@@ -1,28 +1,24 @@
 package edu.mines.acmX.exhibit.modules.home_screen;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
-import org.OpenNI.Context;
-import org.OpenNI.OutArg;
-import org.OpenNI.ScriptNode;
-
 import processing.core.PImage;
-
-import edu.mines.acmX.exhibit.input_services.events.InputReceiver;
-import edu.mines.acmX.exhibit.input_services.openni.OpenNIHandTrackerInputDriver;
+import edu.mines.acmX.exhibit.input_services.events.EventManager;
+import edu.mines.acmX.exhibit.input_services.events.EventType;
+import edu.mines.acmX.exhibit.input_services.hardware.BadFunctionalityRequestException;
+import edu.mines.acmX.exhibit.input_services.hardware.DeviceConnectionException;
+import edu.mines.acmX.exhibit.input_services.hardware.HardwareManager;
+import edu.mines.acmX.exhibit.input_services.hardware.HardwareManagerManifestException;
+import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
 import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import edu.mines.acmX.exhibit.module_management.loaders.ManifestLoadException;
 import edu.mines.acmX.exhibit.module_management.loaders.ModuleLoadException;
-import edu.mines.acmX.exhibit.module_management.modules.*;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
-import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ArrowClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleElement;
-import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleListView;
 import edu.mines.acmX.exhibit.modules.home_screen.view.Side;
 import edu.mines.acmX.exhibit.modules.home_screen.view.SpaceElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
@@ -63,7 +59,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	//private ModuleList moduleList;
 	//private ModuleListView moduleListView;
 	
-	private int handX, handY;
+	private float handX, handY;
 	// root layout for module
 	private LinearLayout rootLayout;
 	// list layout to hold all module elements
@@ -83,6 +79,11 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	private ArrayList<ModuleElement> moduleElements;
 	// millis when last interacted with
 	private int lastInput;
+	
+	private static HardwareManager hardwareManager;
+	private static EventManager eventManager;
+	private HandTrackerInterface driver;
+	private MyHandReceiver receiver;
 
 		
 	public void setup() {
@@ -159,10 +160,41 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		rootLayout.setHeight(height);
 		rootLayout.setWidth(width);
 		lastInput = millis();
+		// hardware stuff
+		try {
+			hardwareManager = HardwareManager.getInstance();
+		} catch (HardwareManagerManifestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (DeviceConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		ArrayList<String> drivers;
+		try {
+			drivers = (ArrayList) hardwareManager.getDevices("handtracking");
+			driver = (HandTrackerInterface) hardwareManager.inflateDriver(drivers.get(0), "handtracking");
+			
+		} catch (BadFunctionalityRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		eventManager = EventManager.getInstance();
+		receiver = new MyHandReceiver();
+		eventManager.registerReceiver(EventType.HAND_CREATED, receiver);
+		eventManager.registerReceiver(EventType.HAND_UPDATED, receiver);
+		eventManager.registerReceiver(EventType.HAND_DESTROYED, receiver);
+		
+		
 	}
 	
 	public void update() {
-		
+		driver.updateDriver();
+		if (receiver.whichHand() != -1) {			
+			handX = receiver.getX();
+			handY = receiver.getY();
+		}
 		backDrop.update();
 		//moduleListView.update(0, 0);
 		rootLayout.update(0, 0);
@@ -203,7 +235,8 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 //		rightArrow.getClick().update(mouseX, mouseY, millis());
 //		leftArrow.getClick().update(mouseX, mouseY, millis());
 		lastInput = millis();
-
+//		handX = mouseX;
+//		handY = mouseY;
 		
 		
 	}
