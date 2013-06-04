@@ -1,5 +1,6 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view;
 
+import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 import processing.core.PApplet;
 
@@ -17,7 +18,7 @@ public class ArrowClick extends ClickableDisplayElement {
 		originX = x;
 		originY = y;
 		click.updateCoordinates(originX, originY, width, height);
-		click.update(parent.mouseX, parent.mouseY, parent.millis());
+		click.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
 	}
 
 	@Override

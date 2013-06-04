@@ -59,7 +59,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	//private ModuleList moduleList;
 	//private ModuleListView moduleListView;
 	
-	private float handX, handY;
+	private static float handX, handY;
 	// root layout for module
 	private LinearLayout rootLayout;
 	// list layout to hold all module elements
@@ -192,8 +192,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	public void update() {
 		driver.updateDriver();
 		if (receiver.whichHand() != -1) {			
-			handX = receiver.getX();
-			handY = receiver.getY();
+			handX = receiver.getX() * (2 + (width / 640));
+			handY = receiver.getY() * (2 + (height / 480));
+			handX -= 300;
+			handY -= 300;
 			lastInput = millis();
 		}
 		backDrop.update();
@@ -249,5 +251,13 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		for (ModuleElement element: moduleElements) {
 			element.checkClicks(millis);
 		}
+	}
+	
+	public static float getHandX() {
+		return handX;
+	}
+	
+	public static float getHandY() {
+		return handY;
 	}
 }

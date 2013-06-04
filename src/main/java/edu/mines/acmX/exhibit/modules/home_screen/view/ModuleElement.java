@@ -50,9 +50,9 @@ public class ModuleElement extends DisplayElement {
 		info.updateCoordinates(originX + ( 3 * width / 4), originY, width / 4, height / 4);
 		// if the module is visible, start checking for clicks
 		if (visible) {
-			startGame.update(parent.mouseX, parent.mouseY, parent.millis());
-			hint.update(parent.mouseX, parent.mouseY, parent.millis());
-			info.update(parent.mouseX, parent.mouseY, parent.millis());
+			startGame.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
+			hint.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
+			info.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
 		}
 		visible = false;
 	}
