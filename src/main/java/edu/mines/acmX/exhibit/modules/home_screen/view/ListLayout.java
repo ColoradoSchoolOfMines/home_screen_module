@@ -58,6 +58,7 @@ public class ListLayout extends DisplayElement {
 			}
 		}
 		else if (orientation == Orientation.VERTICAL) {
+			// TODO use viewLength
 			int spacing = (int) (width * ratio); {
 				for (DisplayElement element: elements) {
 					element.setHeight(spacing);

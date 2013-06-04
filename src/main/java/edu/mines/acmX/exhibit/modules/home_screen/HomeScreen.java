@@ -9,13 +9,12 @@ import org.OpenNI.ScriptNode;
 
 import processing.core.PImage;
 
-import edu.mines.acmX.exhibit.input_services.InputEvent;
-import edu.mines.acmX.exhibit.input_services.InputReceiver;
+import edu.mines.acmX.exhibit.input_services.events.InputReceiver;
 import edu.mines.acmX.exhibit.input_services.openni.OpenNIHandTrackerInputDriver;
-import edu.mines.acmX.exhibit.module_manager.ManifestLoadException;
-import edu.mines.acmX.exhibit.module_manager.ModuleLoadException;
-import edu.mines.acmX.exhibit.module_manager.ModuleManager;
-import edu.mines.acmX.exhibit.module_manager.ProcessingModule;
+import edu.mines.acmX.exhibit.module_management.ModuleManager;
+import edu.mines.acmX.exhibit.module_management.loaders.ManifestLoadException;
+import edu.mines.acmX.exhibit.module_management.loaders.ModuleLoadException;
+import edu.mines.acmX.exhibit.module_management.modules.*;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.model.ModuleList;
@@ -41,8 +40,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectCl
  * TODO
  * Should scaling for the screen size be abstracted away from the user? Seems infeasible
  */
-public class HomeScreen extends ProcessingModule 
-	implements InputReceiver {
+public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules.ProcessingModule {
 	
 	public static final int EXPECTED_WIDTH = 1920;
 	public static final int EXPECTED_HEIGHT = 1080;
@@ -65,8 +63,6 @@ public class HomeScreen extends ProcessingModule
 	//private ModuleList moduleList;
 	//private ModuleListView moduleListView;
 	
-	private OpenNIHandTrackerInputDriver kinect;
-	public static final boolean DEBUG_KINECT = false;
 	private int handX, handY;
 	// root layout for module
 	private LinearLayout rootLayout;
@@ -76,7 +72,7 @@ public class HomeScreen extends ProcessingModule
 	private ArrowClick leftArrow;
 	private ArrowClick rightArrow;
 	// set to true if using 2 monitors, or false for 1
-	public static final boolean DUAL_SCREEN = true;
+	public static final boolean DUAL_SCREEN = false;
 	// listLayout scroll speed
 	public static final int SCROLL_SPEED = 20;
 	// how fast an arrow registers a click
@@ -111,19 +107,6 @@ public class HomeScreen extends ProcessingModule
 		// Ideally the hand tracker will take over displaying the 'cursor'
 		noCursor();
 		
-		if (DEBUG_KINECT) {
-			// TODO Verify on the box whether this HandTracker works!
-			Context ctx;
-			OutArg<ScriptNode> scriptNode = new OutArg<ScriptNode>();
-			try {
-				System.out.println(new java.io.File(".").getCanonicalPath());
-			} catch (IOException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
-			}
-			kinect = new OpenNIHandTrackerInputDriver();
-			kinect.installInto(null);
-		}
 		
 		// get all module names
 		ModuleManager manager;
@@ -195,9 +178,6 @@ public class HomeScreen extends ProcessingModule
 		// check all ModuleElements for clicks
 		checkModulesForClicks();
 		
-		if (DEBUG_KINECT) {
-			kinect.pumpInput(this);
-		}
 
 	}
 	
@@ -225,16 +205,7 @@ public class HomeScreen extends ProcessingModule
 		lastInput = millis();
 
 		
-		if (!DEBUG_KINECT) {
-			handX = mouseX;
-			handY = mouseY;
-		}
 		
-	}
-	
-	public void receiveInput(InputEvent e) {
-		handX = (int) e.x;
-		handY = (int) e.y;
 	}
 
 	/**

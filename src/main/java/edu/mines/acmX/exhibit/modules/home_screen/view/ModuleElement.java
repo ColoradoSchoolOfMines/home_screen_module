@@ -1,8 +1,7 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view;
 
 import processing.core.PImage;
-
-import edu.mines.acmX.exhibit.module_manager.ModuleManager;
+import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 
