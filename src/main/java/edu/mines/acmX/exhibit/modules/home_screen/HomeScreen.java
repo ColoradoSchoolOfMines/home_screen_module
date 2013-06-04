@@ -194,6 +194,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		if (receiver.whichHand() != -1) {			
 			handX = receiver.getX();
 			handY = receiver.getY();
+			lastInput = millis();
 		}
 		backDrop.update();
 		//moduleListView.update(0, 0);
@@ -234,7 +235,6 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//moduleListView.mouseMoved();
 //		rightArrow.getClick().update(mouseX, mouseY, millis());
 //		leftArrow.getClick().update(mouseX, mouseY, millis());
-		lastInput = millis();
 //		handX = mouseX;
 //		handY = mouseY;
 		

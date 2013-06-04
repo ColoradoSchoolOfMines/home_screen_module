@@ -26,6 +26,12 @@ public class MyHandReceiver extends HandReceiver {
 		}
 	}	
 	
+	public void handDestroyed(int id) {
+		if (id == handID) {
+			handID = -1;
+		}
+	}
+	
 	public int whichHand() {
 		return handID;
 	}
