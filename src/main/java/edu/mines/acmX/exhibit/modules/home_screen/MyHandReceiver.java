@@ -21,6 +21,9 @@ public class MyHandReceiver extends HandReceiver {
 	}
 	
 	public void handUpdated(HandPosition pos) {
+		if (handID == -1)  {
+			handID = pos.id;
+		}
 		if (pos.id == handID) {
 			position = pos.position;
 		}
