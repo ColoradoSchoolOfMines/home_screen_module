@@ -36,10 +36,12 @@ public class BubblesBackdrop extends Backdrop {
 			bubbles.add(new Bubble(randX, parent.height));
 		}
 		
-		for (Bubble b : bubbles) {
+		for(int i = 0; i < bubbles.size(); i++) {
+			Bubble b = bubbles.get(i);
 			b.update();
 			if(b.getY() <= 0) {
-				bubbles.remove(b);
+				bubbles.remove(i);
+				i--;
 			}
 		}
 	}

@@ -48,9 +48,16 @@ public class ListLayout extends DisplayElement {
 		int yTemp = y;
 		// TODO debug line, remove
 		if (orientation == Orientation.HORIZONTAL) {
-			xTemp -= viewLength;
 			int spacing = (int) (height * ratio);
+			float totalLength = spacing * elements.size();
+			xTemp -= viewLength;
 			for (DisplayElement element: elements) {
+				while(xTemp >= totalLength) {
+					xTemp -= totalLength;
+				}
+				while(xTemp < 0) {
+					xTemp += totalLength;
+				}
 				element.setWidth(spacing);
 				element.setHeight(height);
 				element.update(xTemp, yTemp);
@@ -59,13 +66,19 @@ public class ListLayout extends DisplayElement {
 		}
 		else if (orientation == Orientation.VERTICAL) {
 			// TODO use viewLength
-			int spacing = (int) (width * ratio); {
-				for (DisplayElement element: elements) {
-					element.setHeight(spacing);
-					element.setWidth(width);
-					element.update(xTemp, yTemp);
-					yTemp += spacing;
+			int spacing = (int) (width * ratio); 
+			float totalHeight = spacing * elements.size();
+			for (DisplayElement element: elements) {
+				while(yTemp >= totalHeight) {
+					yTemp -= totalHeight;
 				}
+				while(yTemp < 0) {
+					yTemp += totalHeight;
+				}
+				element.setHeight(spacing);
+				element.setWidth(width);
+				element.update(xTemp, yTemp);
+				yTemp += spacing;
 			}
 		}
 		
