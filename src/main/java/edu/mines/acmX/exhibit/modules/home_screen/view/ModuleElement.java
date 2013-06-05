@@ -49,25 +49,32 @@ public class ModuleElement extends DisplayElement {
 		hint.updateCoordinates(originX, originY, width, height);
 		info.updateCoordinates(originX + ( 3 * width / 4), originY, width / 4, height / 4);
 		// if the module is visible, start checking for clicks
-		if (visible) {
+		if (visible && !(leftEdge) && !(rightEdge)) {
+			
 			startGame.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
 			hint.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
 			info.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
 		}
 		visible = false;
+		leftEdge = false;
+		rightEdge = false;
 	}
+	
 
 	@Override
 	public void draw() {
 		visible = true;
 		// show part of an image if the full image doesn't fit.
 		// TODO DOESN'T WORK
+		float heightRatio = (float) icon.height / height;
+		float widthRatio = (float) icon.width / width;
 		if (leftEdge) {
-			PImage temp = icon.get(edgeLength, originY, width - edgeLength, height);
-			parent.image(temp, originX, originY, width, height);
+			PImage temp = icon.get((int) (edgeLength * widthRatio), 0, (int) ((width - edgeLength) * widthRatio) , icon.height);
+			parent.image(temp, originX + edgeLength, originY, width - edgeLength, height);
 		}
 		else if (rightEdge) {
-			parent.image(icon, originX, originY, width, height);
+			PImage temp = icon.get(0, 0, (int)  ((width-edgeLength) * widthRatio), icon.height);
+			parent.image(temp, originX, originY, width - edgeLength, height);
 		}
 		// else show the icon normally
 		else {
@@ -113,8 +120,6 @@ public class ModuleElement extends DisplayElement {
 			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
 			infoAlpha -= INFO_FADE_SPEED;
 		}
-		leftEdge = false;
-		rightEdge = false;
 	}
 	
 	public PImage getIcon() {

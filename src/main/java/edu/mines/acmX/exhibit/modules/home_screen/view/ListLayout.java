@@ -46,16 +46,16 @@ public class ListLayout extends DisplayElement {
 		originY = y;
 		int xTemp = x;
 		int yTemp = y;
-		// TODO debug line, remove
+
 		if (orientation == Orientation.HORIZONTAL) {
 			int spacing = (int) (height * ratio);
 			float totalLength = spacing * elements.size();
 			xTemp -= viewLength;
 			for (DisplayElement element: elements) {
-				while(xTemp >= totalLength) {
+				while(xTemp >= totalLength - spacing) {
 					xTemp -= totalLength;
 				}
-				while(xTemp < 0) {
+				while(xTemp < this.originX - 2 * spacing) {
 					xTemp += totalLength;
 				}
 				element.setWidth(spacing);
@@ -96,18 +96,27 @@ public class ListLayout extends DisplayElement {
 		}
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {
-				if (element.originX  > this.originX &&
-					element.originX + element.width < this.originX + this.width) {
-					element.draw();
+				if(element.originX < this.originX) {
+					System.out.println("left corner outside frame");
+					if(element.originX + element.width >= this.originX) {
+						System.out.println("but right corner in frame");
+						ModuleElement tempElement = (ModuleElement) element;
+						tempElement.setLeft(true);
+						tempElement.setEdgeLength(this.originX - element.originX);
+						tempElement.draw();
+					}
 				}
-				/*
-				else if (element.originX < this.originX &&
-						element.originX + element.width > this.originX) {
-					ModuleElement tempElement = (ModuleElement) element;
-					tempElement.setLeft(true);
-					tempElement.setEdgeLength(originX - element.getOriginX());
-					tempElement.draw();
-				} */
+				else {
+					if(element.originX + element.width < this.originX + this.width) {
+						element.draw();
+					}
+					else if(element.originX < this.originX + this.width) {
+						ModuleElement tempElement  = (ModuleElement) element;
+						tempElement.setRight(true);
+						tempElement.setEdgeLength(element.originX + element.width - this.originX - this.width);
+						tempElement.draw();
+					}
+				}
 			}
 		}
 		else if (orientation == Orientation.VERTICAL) {
