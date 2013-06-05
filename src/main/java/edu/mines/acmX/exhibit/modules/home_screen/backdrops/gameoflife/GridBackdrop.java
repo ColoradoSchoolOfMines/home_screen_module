@@ -17,8 +17,8 @@ public class GridBackdrop extends Backdrop {
 	private int size_w;
 	private int size_h;
 	
-	public GridBackdrop(HomeScreen p, double screenScale) {
-		super(p, screenScale);
+	public GridBackdrop(HomeScreen p) {
+		super(p);
 		
 		size_w = (int) (Math.floor(p.screenWidth / SIZE));
 		size_h = (int) (Math.floor(p.screenHeight / SIZE));
@@ -116,10 +116,10 @@ public class GridBackdrop extends Backdrop {
 		parent.background(81, 81, 81);
 		parent.stroke(66, 66, 66);
 		for (int i = 0; i < size_w; ++i) {
-			parent.line(i * SIZE, 0, i * SIZE, parent.screenHeight);
+			parent.line(i * SIZE, 0, i * SIZE, parent.height);
 		}
 		for (int i = 0; i < size_h; ++i) {
-			parent.line(0, i * SIZE, parent.screenWidth, i * SIZE);
+			parent.line(0, i * SIZE, parent.width, i * SIZE);
 		}
 		
 		for (int i = 0; i < size_w; ++i) {

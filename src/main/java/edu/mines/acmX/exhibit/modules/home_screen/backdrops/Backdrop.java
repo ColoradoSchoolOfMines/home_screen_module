@@ -1,14 +1,14 @@
 package edu.mines.acmX.exhibit.modules.home_screen.backdrops;
 
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
-import edu.mines.acmX.exhibit.modules.home_screen.view.Scalable;
 import processing.core.PApplet;
 
-public abstract class Backdrop extends Scalable {
+
+
+public abstract class Backdrop {
 	protected PApplet parent;
 	
-	public Backdrop(HomeScreen par, double screenScale) {
-		super(screenScale);
+	public Backdrop(HomeScreen par) {
 		this.parent = par;
 	}
 

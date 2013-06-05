@@ -4,8 +4,8 @@ import processing.core.PApplet;
 
 public class SpaceElement extends DisplayElement {
 
-	public SpaceElement(PApplet par, double scale, double weight) {
-		super(par, scale, weight);
+	public SpaceElement(PApplet par, double weight) {
+		super(par, weight);
 	}
 
 	@Override

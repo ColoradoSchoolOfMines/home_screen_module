@@ -50,4 +50,8 @@ public class MyHandReceiver extends HandReceiver {
 	public float getZ() {
 		return position.getZ();
 	}
+	
+	public void killHand() {
+		handID = -1;
+	}
 }

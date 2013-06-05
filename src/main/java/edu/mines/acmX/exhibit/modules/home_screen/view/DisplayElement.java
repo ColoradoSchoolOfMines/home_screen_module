@@ -2,7 +2,7 @@ package edu.mines.acmX.exhibit.modules.home_screen.view;
 
 import processing.core.PApplet;
 
-public abstract class DisplayElement extends Scalable {
+public abstract class DisplayElement {
 
 	protected PApplet parent;
 	protected int originX;
@@ -12,11 +12,9 @@ public abstract class DisplayElement extends Scalable {
 	protected int width;
 	protected int height;
 	
-	public DisplayElement(PApplet par, double scale, double weight) {
-		super(scale);
+	public DisplayElement(PApplet par, double weight) {
 		this.parent = par;
 		this.weight = weight;
-		this.scale = scale;
 	}
 	
 	public abstract void update(int x, int y);
@@ -48,10 +46,6 @@ public abstract class DisplayElement extends Scalable {
 
 	public double getWeight() {
 		return weight;
-	}
-	
-	public double scale(double d) {
-		return super.scale(d);
 	}
 	
 	public int getWidth() {

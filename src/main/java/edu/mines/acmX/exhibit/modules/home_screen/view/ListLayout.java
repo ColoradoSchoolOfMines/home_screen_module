@@ -17,8 +17,8 @@ public class ListLayout extends DisplayElement {
 	private double ratio;
 	private int viewLength;
 	
-	public ListLayout(Orientation ori, PApplet par, double scale, double weight, double ratio) {
-		super(par, scale, weight);
+	public ListLayout(Orientation ori, PApplet par, double weight, double ratio) {
+		super(par, weight);
 		this.orientation = ori;
 		this.elements = new ArrayList<DisplayElement>();
 		this.totalWeight = 0;

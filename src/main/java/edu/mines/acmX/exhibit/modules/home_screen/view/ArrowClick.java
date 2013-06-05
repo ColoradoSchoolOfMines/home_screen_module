@@ -8,8 +8,8 @@ public class ArrowClick extends ClickableDisplayElement {
 
 	private Side side;
 	
-	public ArrowClick(PApplet par, double scale, double weight, VirtualRectClick click, Side side) {
-		super(par, scale, weight, click);
+	public ArrowClick(PApplet par, double weight, VirtualRectClick click, Side side) {
+		super(par, weight, click);
 		this.side = side;
 	}
 

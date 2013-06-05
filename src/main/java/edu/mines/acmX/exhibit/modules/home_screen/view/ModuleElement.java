@@ -25,9 +25,9 @@ public class ModuleElement extends DisplayElement {
 	private boolean drawInfo;
 	private float infoAlpha;
 	
-	public ModuleElement(HomeScreen par, double screenScale, PImage image,
+	public ModuleElement(HomeScreen par, PImage image,
 			String name, double weight) {
-		super(par, screenScale, weight);
+		super(par, weight);
 		icon = image;
 		packageName = name;
 		edgeLength = 0;
@@ -144,6 +144,7 @@ public class ModuleElement extends DisplayElement {
 			try {
 				ModuleManager manager = ModuleManager.getInstance();
 				manager.setNextModule(packageName);
+				((HomeScreen) parent).getReceiver().killHand();
 				parent.exit();
 			} catch (Exception e) {
 				// TODO log

@@ -18,8 +18,8 @@ public class BubblesBackdrop extends Backdrop {
 	private Random rand;
 	private PImage img;
 	
-	public BubblesBackdrop(HomeScreen par, double screenScale) {
-		super(par, screenScale);
+	public BubblesBackdrop(HomeScreen par) {
+		super(par);
 		bubbles = new ArrayList<Bubble>();
 		rand = new Random();
 		img = parent.loadImage(BUBBLE_IMAGE);
@@ -32,20 +32,23 @@ public class BubblesBackdrop extends Backdrop {
 	public void update() {
 		if (rand.nextInt(100) < RAND_BUBBLE_SPAWN) {
 			// Spawn a bubble
-			int randX = rand.nextInt(parent.screenWidth);
-			bubbles.add(new Bubble(randX, parent.screenHeight));
+			int randX = rand.nextInt(parent.width);
+			bubbles.add(new Bubble(randX, parent.height));
 		}
 		
 		for (Bubble b : bubbles) {
 			b.update();
+			if(b.getY() <= 0) {
+				bubbles.remove(b);
+			}
 		}
 	}
 
 	@Override
 	public void draw() {
 		for (Bubble b : bubbles) {
-			int newX = (int) Math.round(scale(b.getX()));
-			int newY = (int) Math.round(scale(b.getY()));
+			int newX = b.getX();
+			int newY = b.getY();
 			parent.image(img, newX, newY);
 		}
 	}
