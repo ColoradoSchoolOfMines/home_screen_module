@@ -24,7 +24,9 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.Side;
 import edu.mines.acmX.exhibit.modules.home_screen.view.SpaceElement;
+import edu.mines.acmX.exhibit.modules.home_screen.view.TimeDisplay;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
+import edu.mines.acmX.exhibit.modules.home_screen.view.weather.WeatherDisplay;
 
 /*
  * TODO (in order)
@@ -150,7 +152,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		
 		LinearLayout twitter = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
 		LinearLayout weatherAndTime = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
-		weatherAndTime.add(new SpaceElement(this, 80.0));
+		weatherAndTime.add(new WeatherDisplay(this, 80.0));
 		weatherAndTime.add(new TimeDisplay(this, 20.0));
 
 		rootLayout.add(twitter);
