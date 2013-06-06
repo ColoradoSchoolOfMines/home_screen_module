@@ -8,7 +8,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.Orientation;
 
 public class ListLayout extends DisplayElement {
 
-	private static final boolean DEBUG = true;
+	private static final boolean DEBUG = false;
 	private Orientation orientation;
 	private List<DisplayElement> elements;
 	// TODO should the weight of an element have an effect on how the ratio works?
@@ -97,9 +97,7 @@ public class ListLayout extends DisplayElement {
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {
 				if(element.originX < this.originX) {
-					System.out.println("left corner outside frame");
 					if(element.originX + element.width >= this.originX) {
-						System.out.println("but right corner in frame");
 						ModuleElement tempElement = (ModuleElement) element;
 						tempElement.setLeft(true);
 						tempElement.setEdgeLength(this.originX - element.originX);

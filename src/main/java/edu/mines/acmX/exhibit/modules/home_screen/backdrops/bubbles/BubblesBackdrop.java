@@ -51,7 +51,9 @@ public class BubblesBackdrop extends Backdrop {
 		for (Bubble b : bubbles) {
 			int newX = b.getX();
 			int newY = b.getY();
+			parent.tint(255, 128);
 			parent.image(img, newX, newY);
+			parent.noTint();
 		}
 	}
 

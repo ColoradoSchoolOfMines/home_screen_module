@@ -1,8 +1,8 @@
 package edu.mines.acmX.exhibit.modules.home_screen;
 
-import edu.mines.acmX.exhibit.input_services.hardware.HandPosition;
-import edu.mines.acmX.exhibit.input_services.hardware.drivers.openni.HandReceiver;
+import edu.mines.acmX.exhibit.input_services.events.HandReceiver;
 import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate3D;
+import edu.mines.acmX.exhibit.stdlib.graphics.HandPosition;
 
 public class MyHandReceiver extends HandReceiver {
 

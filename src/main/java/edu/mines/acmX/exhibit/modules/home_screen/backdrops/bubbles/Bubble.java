@@ -3,7 +3,7 @@ package edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles;
 import java.util.Random;
 
 public class Bubble {
-	public static final int BOUYANCY = 10;
+	public static final int BOUYANCY = 8;
 	public static final int MAX_AMPLITUDE = 30;
 	private int x;
 	private int y;
@@ -24,7 +24,7 @@ public class Bubble {
 	public void update() {
 		++tick;
 		y -= BOUYANCY;
-		x = x + (int) (rand_amplitude * Math.sin(tick));	
+		x = x + (int) (rand_amplitude * Math.sin(tick) / 2);	
 	}
 	
 	public int getX() {

@@ -1,6 +1,8 @@
 package edu.mines.acmX.exhibit.modules.home_screen;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.input_services.events.EventManager;
@@ -15,6 +17,7 @@ import edu.mines.acmX.exhibit.module_management.loaders.ManifestLoadException;
 import edu.mines.acmX.exhibit.module_management.loaders.ModuleLoadException;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ArrowClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
@@ -39,21 +42,13 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectCl
 public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules.ProcessingModule {
 	
 	
-	public static final int EXPECTED_HEIGHT = 1080;
-	public static final double EXPECTED_ASPECT_RATIO = 16.0/9;
-	
-	public static final int STATUSBAR_Y = 930;
-
-	public static final int MODULE_OFFSETY = 175;
-	public static final int MODULE_OFFSETX = 125;
-	public static final int MODULE_WIDTH = 500;
-	public static final int MODULE_HEIGHT = 500;
-	public static final int MODULE_MARGIN = 70;
 	
 	public static final String CURSOR_FILENAME = "hand_cursor.png";
 	private PImage cursor_image;
 	
-	private Backdrop backDrop;
+	//variables that hold the backdrops
+	private List<Backdrop> backdrops;
+	private Backdrop backdrop;
 	
 	//private ModuleList moduleList;
 	//private ModuleListView moduleListView;
@@ -78,6 +73,8 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	private ArrayList<ModuleElement> moduleElements;
 	// millis when last interacted with
 	private int lastInput;
+	// holds sleeping status
+	private boolean isSleeping;
 	
 	private static HardwareManager hardwareManager;
 	private static EventManager eventManager;
@@ -99,9 +96,11 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		// TODO Fall back to different configuration?
 		// -Would this have to be a config driven UI?
 		
-		
-		backDrop = new BubblesBackdrop(this);
-		
+		backdrops = new ArrayList<Backdrop>();
+		backdrops.add(new BubblesBackdrop(this));
+		backdrops.add(new GridBackdrop(this));
+		backdrop = backdrops.get(0);
+		isSleeping = false;
 		
 		// Ideally the hand tracker will take over displaying the 'cursor'
 		noCursor();
@@ -149,9 +148,13 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		rootLayout.add(modules);
 		rootLayout.add(new SpaceElement(this, 50.0));
 		
-		LinearLayout statusBarLayout = new LinearLayout(Orientation.HORIZONTAL, this, 20.0);
+		LinearLayout twitter = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
+		LinearLayout weatherAndTime = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
+		weatherAndTime.add(new SpaceElement(this, 80.0));
+		weatherAndTime.add(new TimeDisplay(this, 20.0));
 
-		rootLayout.add(statusBarLayout);
+		rootLayout.add(twitter);
+		rootLayout.add(weatherAndTime);
 		// set default settings for root layout
 		rootLayout.setOriginX(0);
 		rootLayout.setOriginY(0);
@@ -189,14 +192,18 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	
 	public void update() {
 		driver.updateDriver();
-		if (receiver.whichHand() != -1) {			
+		if (receiver.whichHand() != -1) {
+			if(isSleeping) {
+				isSleeping = false;
+				cycleBackdrop();
+			}
 			handX = receiver.getX() * (2 + (width / 640));
 			handY = receiver.getY() * (2 + (height / 480));
 			handX -= 300;
 			handY -= 300;
 			lastInput = millis();
 		}
-		backDrop.update();
+		backdrop.update();
 		//moduleListView.update(0, 0);
 		rootLayout.update(0, 0);
 		int millis = millis();
@@ -218,27 +225,20 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		update();
 		
 		background(255, 255, 255);
-		backDrop.draw();
+		backdrop.draw();
 		// draw the leftmost module
 		//moduleListView.draw();
 		if (millis() - lastInput < TIME_TO_SLEEP) {
 			rootLayout.draw();
+		}
+		else {
+			isSleeping = true;
 		}
 		
 		//temporary place holder for twitter, weather and time feeds.
 		//line (0, STATUSBAR_Y, width, STATUSBAR_Y);
 		
 		image(cursor_image, handX, handY);
-	}
-	
-	public void mouseMoved() {
-		//moduleListView.mouseMoved();
-//		rightArrow.getClick().update(mouseX, mouseY, millis());
-//		leftArrow.getClick().update(mouseX, mouseY, millis());
-//		handX = mouseX;
-//		handY = mouseY;
-		
-		
 	}
 
 	/**
@@ -249,6 +249,12 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		for (ModuleElement element: moduleElements) {
 			element.checkClicks(millis);
 		}
+	}
+	
+	public void cycleBackdrop() {
+		Random rand = new Random();
+		int randBackdrop = rand.nextInt(backdrops.size());
+		backdrop = backdrops.get(randBackdrop);
 	}
 	
 	public static float getHandX() {
