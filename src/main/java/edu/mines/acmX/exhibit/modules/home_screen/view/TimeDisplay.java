@@ -37,6 +37,8 @@ public class TimeDisplay extends DisplayElement {
 
 	@Override
 	public void draw() {
+		parent.fill(84, 84, 84);
+		parent.rect(originX, originY, width, height);
 		parent.fill(0, 0, 0);
 		parent.textAlign(PApplet.CENTER, PApplet.CENTER);
 		parent.textSize(32);

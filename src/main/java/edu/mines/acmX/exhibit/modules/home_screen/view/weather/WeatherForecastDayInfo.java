@@ -11,10 +11,11 @@ public class WeatherForecastDayInfo {
 	private String picture;
 	private String description;
 	private double precipitation;
+	private String date;
 	
 	public WeatherForecastDayInfo(int minTempF, int maxTempF, int minTempC,
 			int maxTempC, int windSpeed, String picture, String description,
-			double precipitation) {
+			double precipitation, String date) {
 		super();
 		this.minTempF = minTempF;
 		this.maxTempF = maxTempF;
@@ -24,6 +25,7 @@ public class WeatherForecastDayInfo {
 		this.picture = picture;
 		this.description = description;
 		this.precipitation = precipitation;
+		this.date = date;
 	}
 
 	public int getMinTempF() {
@@ -58,5 +60,7 @@ public class WeatherForecastDayInfo {
 		return precipitation;
 	}
 	
-	
+	public String getDate() {
+		return date;
+	}
 }

@@ -12,8 +12,8 @@ public abstract class DisplayElement {
 	protected int width;
 	protected int height;
 	
-	public DisplayElement(PApplet par, double weight) {
-		this.parent = par;
+	public DisplayElement(PApplet parent, double weight) {
+		this.parent = parent;
 		this.weight = weight;
 	}
 	

@@ -73,11 +73,6 @@ public class WeatherLoader {
 	}
 	
 	private static void parseCurrentCondition(Element currentTag) {
-		NodeList attributes = currentTag.getChildNodes();
-		for (int i = 0; i < attributes.getLength(); ++i) {
-			//System.out.println("On line " + i + ", node name = " + attributes.item(i).getNodeName());
-			//System.out.println(attributes.item(i).getTextContent());
-		}
 		int tempC = Integer.parseInt(parseTag("temp_C", currentTag));
 		int tempF = Integer.parseInt(parseTag("temp_F", currentTag));
 		String picture = (parseTag("weatherIconUrl", currentTag));
@@ -91,7 +86,7 @@ public class WeatherLoader {
 	}
 	
 	private static WeatherForecastDayInfo parseWeatherTag(Element weatherTag) {
-		String date = "";
+		String date = parseTag("date", weatherTag);
 		int minTempF = Integer.parseInt(parseTag("tempMinF", weatherTag)); 
 		int maxTempF = Integer.parseInt(parseTag("tempMaxF", weatherTag));
 		int minTempC = Integer.parseInt(parseTag("tempMinC", weatherTag));
@@ -100,7 +95,7 @@ public class WeatherLoader {
 		String picture = parseTag("weatherIconUrl", weatherTag);
 		String description = parseTag("weatherDesc", weatherTag);
 		double precipitation = Double.parseDouble(parseTag("precipMM", weatherTag));
-		return new WeatherForecastDayInfo(minTempF, maxTempF, minTempC, maxTempC, windSpeed, picture, description, precipitation);
+		return new WeatherForecastDayInfo(minTempF, maxTempF, minTempC, maxTempC, windSpeed, picture, description, precipitation, date);
 	}
 	
 	private static String parseTag(String tagName, Element e) {
