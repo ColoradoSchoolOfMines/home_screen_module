@@ -221,16 +221,24 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				//switch the backdrop to a random one in the list
 				cycleBackdrop();
 			}
+			
+			//TODO transfer this whole thing into stdlib
+			// int getScaledHandX(int handX, int depthWidth, int frameWidth, float marginFraction)
+			// handX = getScaledHandX(receiver.getX(), driver.getHandWidth, width, 6);
+			int depthWidth = 640; //TODO get HandTracker data (NYI)
+			int depthHeight = 480;
+			float marginFraction = 6; //user preference for sensitivity
+			float marginX = depthWidth/marginFraction;
+			float marginY = depthHeight/marginFraction;
+			float scaledDepthWidth = depthWidth - 2 * marginX;
+			float scaledDepthHeight = depthHeight - 2 * marginY;
+			handX = (receiver.getX() - marginX) * width/scaledDepthWidth;
+			handY = (receiver.getY() - marginY) * height/scaledDepthHeight;
 			//get hand position - uses scaling to let user reach all of screen
-			//float conversionRatioX = 640 + receiver.getX() / (float) 640;
-			//float conversionRatioY = 300 + receiver.getY() / (float) 480;
-			//handX = (int) (width*conversionRatioX*2);
-			//handY = (int) (height*conversionRatioY*2);
-			handX = receiver.getX() * (2 + (width / 640)); //TODO use driver's get width and height
-			handY = receiver.getY() * (2 + (height / 480));
-			//TODO extremely magic numbers here, but they work (figure out why)
-			handX -= 300;
-			handY -= 300;
+			if (handX < 0) handX = 0;
+			if (handY < 0) handY = 0;
+			if (handX > width) handX = width;
+			if (handY > height) handY = height;
 			lastInput = millis();
 		}
 		//call update for the loaded backdrop
@@ -271,7 +279,9 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		
 		//draw the hand where the user's hand is (if it has one)
 		if (receiver.whichHand() != -1) {
+			imageMode(CENTER);
 			image(cursor_image, handX, handY);
+			imageMode(CORNER);
 		}
 	}
 
