@@ -27,6 +27,7 @@ import org.xml.sax.SAXException;
  *
  *@see {@link WeatherDisplay} {@link WeatherCurrentInfo} {@link WeatherForecastDayInfo}
  */
+//TODO threading needed?
 public class WeatherLoader {
 	
 	//API key- don't know how it's generated

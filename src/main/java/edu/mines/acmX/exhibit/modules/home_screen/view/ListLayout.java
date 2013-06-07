@@ -34,6 +34,7 @@ public class ListLayout extends DisplayElement {
 	
 	//specialized constructor if the user wants to specify a minimum number of elements to display
 	//TODO get the carosel to work when there's fewer than the min specified (eliminate pop-in)
+	//TODO fix so if minShown is exceeded, displays correctly
 	public ListLayout(Orientation ori, PApplet par, double weight, double ratio, int minShown) {
 		super(par, weight);
 		this.orientation = ori;

@@ -28,9 +28,12 @@ public class WeatherDisplay extends DisplayElement {
 	//stores forecasted data (currently unused)
 	private List<WeatherForecastDayInfo> forecastInfo;
 	private PImage img;
+	//stores millis, to check when to refresh the weather data
+	private int lastUpdate;
 	
 	public WeatherDisplay(PApplet parent, double weight) {
 		super(parent, weight);
+		lastUpdate = parent.millis();
 		WeatherLoader.loadWeatherInfo();
 		currentInfo = WeatherLoader.getCurrentInfo();
 		forecastInfo = WeatherLoader.getForecastInfo();
@@ -40,8 +43,9 @@ public class WeatherDisplay extends DisplayElement {
 	public void update(int x, int y) {
 		originX = x;
 		originY = y;
-		//updates weather info every 10 minutes, starting on the hour
-		if (PApplet.minute() % TIME_TO_REFRESH == 0) {
+		//updates weather info every 10 minutes
+		if (parent.millis() - lastUpdate > TIME_TO_REFRESH * 60000) {
+			lastUpdate = parent.millis();
 			WeatherLoader.loadWeatherInfo();
 			currentInfo = WeatherLoader.getCurrentInfo();
 			forecastInfo = WeatherLoader.getForecastInfo();

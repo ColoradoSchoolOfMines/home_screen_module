@@ -182,20 +182,20 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		try {
 			hardwareManager = HardwareManager.getInstance();
 		} catch (HardwareManagerManifestException e) {
-			// TODO Auto-generated catch block
+			log.error("Hardware manager manifest is malformed");
 			e.printStackTrace();
 		}
 		try {
 			driver = (HandTrackerInterface) hardwareManager.getInitialDriver("handtracking");
 			
 		} catch (BadFunctionalityRequestException e) {
-			log.info("Asked for nonexistent functionality");
+			log.error("Asked for nonexistent functionality");
 			e.printStackTrace();
 		} catch (DeviceConnectionException e) {
-			// TODO Auto-generated catch block
+			log.error("Requested driver path is unavailable");
 			e.printStackTrace();
 		} catch (InvalidConfigurationFileException e) {
-			// TODO Auto-generated catch block
+			log.error("Invalid configuration file loaded");
 			e.printStackTrace();
 		}
 		
