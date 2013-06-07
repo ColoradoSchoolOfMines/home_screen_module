@@ -14,6 +14,7 @@ import edu.mines.acmX.exhibit.input_services.hardware.BadFunctionalityRequestExc
 import edu.mines.acmX.exhibit.input_services.hardware.DeviceConnectionException;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManager;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManagerManifestException;
+import edu.mines.acmX.exhibit.input_services.hardware.devicedata.DepthImageInterface;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
 import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import edu.mines.acmX.exhibit.module_management.loaders.ManifestLoadException;
@@ -28,7 +29,6 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.ModuleElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.Side;
 import edu.mines.acmX.exhibit.modules.home_screen.view.SpaceElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.TimeDisplay;
-import edu.mines.acmX.exhibit.modules.home_screen.view.TwitterDisplay;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.weather.WeatherDisplay;
 
@@ -77,7 +77,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	private static EventManager eventManager;
 	private HandTrackerInterface driver;
 	private MyHandReceiver receiver;
-
+	
 	/**
 	 * setup, called once
 	 */
@@ -206,6 +206,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				cycleBackdrop();
 			}
 			//get hand position - uses scaling to let user reach all of screen
+			//float conversionRatioX = 640 + receiver.getX() / (float) 640;
+			//float conversionRatioY = 300 + receiver.getY() / (float) 480;
+			//handX = (int) (width*conversionRatioX*2);
+			//handY = (int) (height*conversionRatioY*2);
 			handX = receiver.getX() * (2 + (width / 640)); //TODO use driver's get width and height
 			handY = receiver.getY() * (2 + (height / 480));
 			//TODO extremely magic numbers here, but they work (figure out why)

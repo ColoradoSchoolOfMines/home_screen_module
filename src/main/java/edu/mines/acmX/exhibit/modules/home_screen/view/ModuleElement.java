@@ -1,5 +1,6 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view;
 
+import processing.core.PApplet;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
@@ -103,6 +104,7 @@ public class ModuleElement extends DisplayElement {
 			parent.fill(0, infoAlpha);
 			// draw packageName
 			parent.textSize(20);
+			parent.textAlign(PApplet.LEFT, PApplet.TOP);
 			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
 			if (infoAlpha < 255) {
 				infoAlpha += INFO_FADE_SPEED;
@@ -117,6 +119,8 @@ public class ModuleElement extends DisplayElement {
 			// set color to black
 			parent.fill(0, infoAlpha);
 			// draw packageName
+			parent.textSize(20);
+			parent.textAlign(PApplet.LEFT, PApplet.TOP);
 			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
 			infoAlpha -= INFO_FADE_SPEED;
 		}
