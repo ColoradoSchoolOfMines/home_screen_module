@@ -10,8 +10,8 @@
         title="Processing Launcher"
         author="Exhibit Team"
         version="0.0.1" >
-        <inputs>
-            
+        <inputs>        
+					<input input-type="handtracking" />
         </inputs>
         <requires-module>
 			<optional-all />
