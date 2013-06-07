@@ -16,26 +16,52 @@ public class ListLayout extends DisplayElement {
 	// ratio width:height ex 3 = 3px width : 1px height
 	private double ratio;
 	private int viewLength;
+	private int listSize;
+	private int minShown;
 	
+	//default constructor
 	public ListLayout(Orientation ori, PApplet par, double weight, double ratio) {
 		super(par, weight);
 		this.orientation = ori;
 		this.elements = new ArrayList<DisplayElement>();
+		this.minShown = minShown;
 		this.totalWeight = 0;
 		this.ratio = ratio;
 		this.viewLength = 0;
+		this.listSize = 0;
+		this.minShown = 0;
+	}
+	
+	//specialized constructor if the user wants to specify a minimum number of elements to display
+	//TODO get the carosel to work when there's fewer than the min specified (eliminate pop-in)
+	public ListLayout(Orientation ori, PApplet par, double weight, double ratio, int minShown) {
+		super(par, weight);
+		this.orientation = ori;
+		this.elements = new ArrayList<DisplayElement>();
+		this.minShown = minShown;
+		this.totalWeight = 0;
+		this.ratio = ratio;
+		this.viewLength = 0;
+		this.listSize = minShown;
 	}
 	
 	public void add (DisplayElement element) {
 		elements.add(element);
 		totalWeight += element.getWeight();
+		if(listSize == elements.size() - 1) {
+			listSize++;
+		}
 	}
 	
 	public void pop() {
 		totalWeight -= elements.get(elements.size() - 1).getWeight();
 		elements.remove(elements.size() - 1);
+		listSize--;
+		if (elements.size() < minShown) {
+			listSize = minShown;
+		}
 	}
-
+	
 	public int size() {
 		return elements.size();
 	}
@@ -49,7 +75,7 @@ public class ListLayout extends DisplayElement {
 
 		if (orientation == Orientation.HORIZONTAL) {
 			int spacing = (int) (height * ratio);
-			float totalLength = spacing * elements.size();
+			float totalLength = spacing * listSize;
 			xTemp -= viewLength;
 			for (DisplayElement element: elements) {
 				while(xTemp >= totalLength - spacing) {

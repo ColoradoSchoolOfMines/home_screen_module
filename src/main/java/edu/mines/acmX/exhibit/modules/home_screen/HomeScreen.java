@@ -10,12 +10,14 @@ import org.apache.logging.log4j.Logger;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.input_services.events.EventManager;
 import edu.mines.acmX.exhibit.input_services.events.EventType;
+import edu.mines.acmX.exhibit.input_services.hardware.BadDeviceFunctionalityRequestException;
 import edu.mines.acmX.exhibit.input_services.hardware.BadFunctionalityRequestException;
 import edu.mines.acmX.exhibit.input_services.hardware.DeviceConnectionException;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManager;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManagerManifestException;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.DepthImageInterface;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
+import edu.mines.acmX.exhibit.input_services.hardware.drivers.InvalidConfigurationFileException;
 import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import edu.mines.acmX.exhibit.module_management.loaders.ManifestLoadException;
 import edu.mines.acmX.exhibit.module_management.loaders.ModuleLoadException;
@@ -108,7 +110,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		String[] packageNames = null;
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
-		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0);
+		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 3);
 		try {
 			manager = ModuleManager.getInstance();
 			packageNames = manager.getAllAvailableModules();
@@ -118,9 +120,20 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		} catch (ModuleLoadException e) {
 			log.info("Module failed to load");
 			e.printStackTrace();
+		} catch (HardwareManagerManifestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (BadDeviceFunctionalityRequestException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
+		
 		// Iterates through the array of package names and loads each module's icon.
 		for (int i = 0; i < packageNames.length; ++i) {
+			//removes the home screen module from the list of displayed modules
+			if (packageNames[i].equals("edu.mines.acmX.exhibit.modules.home_screen") ) {
+				continue;
+			}
 			PImage tempImage = loadImage("icon.png", packageNames[i]);
 			if (tempImage == null) {
 				//load a default icon if there's no icon in the original package
@@ -171,15 +184,18 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		} catch (HardwareManagerManifestException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (DeviceConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		try {
 			driver = (HandTrackerInterface) hardwareManager.getInitialDriver("handtracking");
 			
 		} catch (BadFunctionalityRequestException e) {
 			log.info("Asked for nonexistent functionality");
+			e.printStackTrace();
+		} catch (DeviceConnectionException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvalidConfigurationFileException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -15,17 +15,17 @@ public class MyHandReceiver extends HandReceiver {
 	
 	public void handCreated(HandPosition pos) {
 		if (handID == -1) {
-			handID = pos.id;
+			handID = pos.getId();
 		}
-		position = pos.position;
+		position = pos.getPosition();
 	}
 	
 	public void handUpdated(HandPosition pos) {
 		if (handID == -1)  {
-			handID = pos.id;
+			handID = pos.getId();
 		}
-		if (pos.id == handID) {
-			position = pos.position;
+		if (pos.getId() == handID) {
+			position = pos.getPosition();
 		}
 	}	
 	
