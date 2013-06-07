@@ -25,6 +25,7 @@ public class TwitterDisplay extends DisplayElement {
 		super(parent, weight);
 		twitter = new TwitterFactory().getInstance();
 		twitterMessages = retrieveAllMessages();
+		System.out.println("number of messages retrieved: " + twitterMessages.size());
 		currentMessageIndex = 0;
 		currentMessage = twitterMessages.get(currentMessageIndex);
 		currentMessageIndex++;
@@ -65,7 +66,8 @@ public class TwitterDisplay extends DisplayElement {
 				return messageList;
 				//returns an empty list
 			}
-			ResponseList<Status> twitterStatuses = twitter.getMentionsTimeline();
+			ResponseList<Status> twitterStatuses = twitter.getHomeTimeline();
+			System.out.println("got past the first line");
 			for (Status status : twitterStatuses) {
 				messageList.add("@" + status.getUser().getScreenName() + " - " + status.getText());
 			}
@@ -78,8 +80,10 @@ public class TwitterDisplay extends DisplayElement {
 	private boolean authorizeAccess() throws TwitterException {
 		try {
 			RequestToken requestToken = twitter.getOAuthRequestToken();
+			System.out.println("request Token: " + requestToken.toString());
 			AccessToken accessToken = null;
 			accessToken = getAccessToken(requestToken, accessToken);
+			System.out.println("Access token: " + accessToken.toString());
 		} catch (IllegalStateException e) {
 			if (!twitter.getAuthorization().isEnabled()) {
 				System.out.println("OAuth consumer key/secret not set");
