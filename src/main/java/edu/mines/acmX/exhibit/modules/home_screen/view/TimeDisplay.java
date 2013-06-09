@@ -56,9 +56,9 @@ public class TimeDisplay extends DisplayElement {
 		//draw grey rectangle behind text
 		parent.fill(84, 84, 84);
 		parent.rect(originX, originY, width, height);
-		parent.fill(0, 0, 0);
+		parent.fill(200, 200, 200);
 		//center-align text
-		parent.textAlign(PApplet.CENTER, PApplet.CENTER);
+		parent.textAlign(PApplet.RIGHT, PApplet.CENTER);
 		parent.textSize(32);
 		//add a 0 to minute/second if it's between 0 and 9
 		String minuteString = "" + PApplet.nf(minute, 2);
@@ -67,7 +67,7 @@ public class TimeDisplay extends DisplayElement {
 		String time = hour + ":" + minuteString + ":" + secondString;
 		//concatenate date
 		String date = day + "/" + month + "/" + year;
-		parent.text(time + "     " + date, originX + width / 2, originY + height / 2);
+		parent.text(time + "  " + date, originX + width - 10, originY + height / 2);
 	}
 
 }

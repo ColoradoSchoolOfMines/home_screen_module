@@ -8,11 +8,14 @@ import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 public class GridBackdrop extends Backdrop {
 	
 	public static final int SIZE = 20;
-	public static final int FRAME_DELAY = 50;
+	//public static final int FRAME_DELAY = 50;
 	public static final int RAND_TILE_ALIVE = 20;
 	
-	private int frameTick = 0;
+	//private int frameTick = 0;
 	boolean tiles[][];
+	
+	private static final float SECONDS_TO_UPDATE = 1;
+	private int lastUpdateTime;
 	
 	private int size_w;
 	private int size_h;
@@ -54,6 +57,7 @@ public class GridBackdrop extends Backdrop {
 				
 			}
 		}
+		lastUpdateTime = parent.millis();
 	}
 
 	public void nextGeneration() {
@@ -103,11 +107,15 @@ public class GridBackdrop extends Backdrop {
 
 	@Override
 	public void update() {
-		++frameTick;
+		if (parent.millis() - lastUpdateTime > SECONDS_TO_UPDATE * 1000) {
+			nextGeneration();
+			lastUpdateTime = parent.millis();
+		}
+		/*++frameTick;
 		if (frameTick == FRAME_DELAY) {
 			frameTick = 0;
 			nextGeneration();
-		}
+		}*/
 		
 	}
 

@@ -12,10 +12,9 @@ import edu.mines.acmX.exhibit.input_services.events.EventManager;
 import edu.mines.acmX.exhibit.input_services.events.EventType;
 import edu.mines.acmX.exhibit.input_services.hardware.BadDeviceFunctionalityRequestException;
 import edu.mines.acmX.exhibit.input_services.hardware.BadFunctionalityRequestException;
-import edu.mines.acmX.exhibit.input_services.hardware.DeviceConnectionException;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManager;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManagerManifestException;
-import edu.mines.acmX.exhibit.input_services.hardware.devicedata.DepthImageInterface;
+import edu.mines.acmX.exhibit.input_services.hardware.UnknownDriverRequest;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
 import edu.mines.acmX.exhibit.input_services.hardware.drivers.InvalidConfigurationFileException;
 import edu.mines.acmX.exhibit.module_management.ModuleManager;
@@ -33,6 +32,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.SpaceElement;
 import edu.mines.acmX.exhibit.modules.home_screen.view.TimeDisplay;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.weather.WeatherDisplay;
+import edu.mines.acmX.exhibit.stdlib.input_processing.tracking.HandTrackingUtilities;
 
 /*
  * TODO (in order)
@@ -73,6 +73,8 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	private int lastInput;
 	// holds sleeping status (used for cycling backdrops)
 	private boolean isSleeping;
+	//allows the loading backdrop to be randomized
+	private boolean RANDOM_BACKDROP = false;
 	
 	//interfaces with input services components
 	private static HardwareManager hardwareManager;
@@ -95,12 +97,17 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		cursor_image.resize(32, 32);
 		
 		//loads backdrops
-		//currently backdrops must be added manually (convert?)
+		//currently backdrops must be added manually (TODO convert to config?)
 		backdrops = new ArrayList<Backdrop>();
 		backdrops.add(new BubblesBackdrop(this));
 		backdrops.add(new GridBackdrop(this));
-		//pick backdrop to launch with (TODO could randomize- optional)
-		backdrop = backdrops.get(0);
+		//pick backdrop to launch with
+		if (RANDOM_BACKDROP) {
+			Random rand = new Random();
+			backdrop = backdrops.get(rand.nextInt(backdrops.size()));
+		} else {
+			backdrop = backdrops.get(0);
+		}
 		isSleeping = false;
 		
 		noCursor();
@@ -110,7 +117,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		String[] packageNames = null;
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
-		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 3);
+		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5);
 		try {
 			manager = ModuleManager.getInstance();
 			packageNames = manager.getAllAvailableModules();
@@ -191,11 +198,11 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		} catch (BadFunctionalityRequestException e) {
 			log.error("Asked for nonexistent functionality");
 			e.printStackTrace();
-		} catch (DeviceConnectionException e) {
-			log.error("Requested driver path is unavailable");
-			e.printStackTrace();
 		} catch (InvalidConfigurationFileException e) {
 			log.error("Invalid configuration file loaded");
+			e.printStackTrace();
+		} catch (UnknownDriverRequest e) {
+			log.error("Trying to access unknown driver");
 			e.printStackTrace();
 		}
 		
@@ -222,23 +229,12 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				cycleBackdrop();
 			}
 			
-			//TODO transfer this whole thing into stdlib
-			// int getScaledHandX(int handX, int depthWidth, int frameWidth, float marginFraction)
-			// handX = getScaledHandX(receiver.getX(), driver.getHandWidth, width, 6);
-			int depthWidth = 640; //TODO get HandTracker data (NYI)
-			int depthHeight = 480;
-			float marginFraction = 6; //user preference for sensitivity
-			float marginX = depthWidth/marginFraction;
-			float marginY = depthHeight/marginFraction;
-			float scaledDepthWidth = depthWidth - 2 * marginX;
-			float scaledDepthHeight = depthHeight - 2 * marginY;
-			handX = (receiver.getX() - marginX) * width/scaledDepthWidth;
-			handY = (receiver.getY() - marginY) * height/scaledDepthHeight;
+			float marginFraction = 6; //user preference for sensitivity/zoom level (smaller is closer)
 			//get hand position - uses scaling to let user reach all of screen
-			if (handX < 0) handX = 0;
-			if (handY < 0) handY = 0;
-			if (handX > width) handX = width;
-			if (handY > height) handY = height;
+			handX = HandTrackingUtilities.getScaledHandX(receiver.getX(), 
+						driver.getHandTrackingWidth(), width, marginFraction);
+			handY = HandTrackingUtilities.getScaledHandY(receiver.getY(), 
+						driver.getHandTrackingHeight(), height, marginFraction);
 			lastInput = millis();
 		}
 		//call update for the loaded backdrop
@@ -282,6 +278,19 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 			imageMode(CENTER);
 			image(cursor_image, handX, handY);
 			imageMode(CORNER);
+		} else {
+			//if no hand detected, print "Wave to begin"
+			textAlign(RIGHT, TOP);
+			textSize(48);
+			fill(84, 84, 84);
+			rectMode(CORNERS);
+			int rightMargin = 10;
+			rect(width - rightMargin - textWidth("Wave to begin"), height * 3/4, 
+					width - rightMargin, height * 3/4 + 60);
+			rectMode(CORNER);
+			fill(200, 200, 200);
+			text("Wave to Begin", width - rightMargin, height * 3 / 4);
+			textAlign(LEFT, TOP);
 		}
 	}
 

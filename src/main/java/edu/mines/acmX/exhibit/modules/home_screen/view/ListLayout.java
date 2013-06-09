@@ -24,7 +24,6 @@ public class ListLayout extends DisplayElement {
 		super(par, weight);
 		this.orientation = ori;
 		this.elements = new ArrayList<DisplayElement>();
-		this.minShown = minShown;
 		this.totalWeight = 0;
 		this.ratio = ratio;
 		this.viewLength = 0;
@@ -94,7 +93,8 @@ public class ListLayout extends DisplayElement {
 		else if (orientation == Orientation.VERTICAL) {
 			// TODO use viewLength
 			int spacing = (int) (width * ratio); 
-			float totalHeight = spacing * elements.size();
+			float totalHeight = spacing * listSize;
+			yTemp -= viewLength;
 			for (DisplayElement element: elements) {
 				while(yTemp >= totalHeight) {
 					yTemp -= totalHeight;

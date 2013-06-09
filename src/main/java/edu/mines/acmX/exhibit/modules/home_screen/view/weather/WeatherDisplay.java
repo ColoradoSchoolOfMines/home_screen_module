@@ -37,24 +37,21 @@ public class WeatherDisplay extends DisplayElement {
 		WeatherLoader.loadWeatherInfo();
 		currentInfo = WeatherLoader.getCurrentInfo();
 		forecastInfo = WeatherLoader.getForecastInfo();
+		img = parent.loadImage(currentInfo.getPicture());
 	}
 
 	@Override
 	public void update(int x, int y) {
 		originX = x;
 		originY = y;
-		//updates weather info every 10 minutes
+		//updates weather info after a set number of minutes (TIME_TO_REFRESH)
 		if (parent.millis() - lastUpdate > TIME_TO_REFRESH * 60000) {
 			lastUpdate = parent.millis();
 			WeatherLoader.loadWeatherInfo();
 			currentInfo = WeatherLoader.getCurrentInfo();
 			forecastInfo = WeatherLoader.getForecastInfo();
+			img = parent.loadImage(currentInfo.getPicture());
 		}
-		//System.out.println(currentInfo.getPicture());
-		//TODO currently overriding Processing's loadImage- this won't work for a URL path
-		//img = loadImage("http://www.worldweatheronline.com/images/wsymbols01_png_64/wsymbol_0002_sunny_intervals", "png");
-		//System.out.println(img == null);
-
 	}
 
 	@Override
@@ -62,19 +59,25 @@ public class WeatherDisplay extends DisplayElement {
 		//grey background rectangle
 		parent.fill(84, 84, 84);
 		parent.rect(originX, originY, width, height);
-		//TODO find degree symbols for temperatures
-		String temps = currentInfo.getTempF() + " deg F (" + currentInfo.getTempC() + " deg C)";
+		char deg = "\u00b0".toCharArray()[0]; //degree symbol in Unicode
+		String temps = currentInfo.getTempF() + deg + "F (" + currentInfo.getTempC() + deg + "C)";
 		String description = currentInfo.getDescription();
-		String windString = "Wind Speed: " + currentInfo.getWindspeed() + " mph    Humidity: " + currentInfo.getHumidity() + "%";
-		parent.textAlign(PApplet.CENTER, PApplet.CENTER);
-		parent.fill(0, 0, 0);
+		String windString = "Wind Speed: " + currentInfo.getWindspeed() + " mph   Humidity: " + currentInfo.getHumidity() + "%";
+		parent.textAlign(PApplet.LEFT, PApplet.CENTER);
+		//off-white text
+		parent.fill(200, 200, 200);
 		parent.textSize(32);
-		parent.text(temps, originX + width/8, originY + height/2);
-		parent.imageMode(PApplet.CENTER);
-		//parent.image(img, originX + width/2, originY + height/2, width/8, height/2);
+		//number of pixels to move away from edge
+		int initialOffset = 10;
+		//number of pixels between elements
+		int padding = 20;
+		parent.text(temps, originX + initialOffset, originY + height/2);
+		parent.text(description, originX + parent.textWidth(temps) + initialOffset + padding, originY + height/2);
+		parent.imageMode(PApplet.CORNERS);
+		int imgOffsetX = (int) (parent.textWidth(temps) + parent.textWidth(description) + initialOffset + 2 * padding - 10);
+		parent.image(img, originX + imgOffsetX,	originY, originX + imgOffsetX + height, originY + height); //make the image square
 		parent.imageMode(PApplet.CORNER);
-		parent.text(description, originX + width/3, originY + height/2);
-		parent.text(windString, originX + width *3/4, originY + height/2);
+		parent.text(windString, originX + imgOffsetX + height + padding, originY + height/2);
 	}
 
 	
