@@ -58,9 +58,10 @@ public class WeatherDisplay extends DisplayElement {
 	public void draw() {
 		//grey background rectangle
 		parent.fill(84, 84, 84);
+		parent.noStroke();
 		parent.rect(originX, originY, width, height);
 		char deg = "\u00b0".toCharArray()[0]; //degree symbol in Unicode
-		String temps = currentInfo.getTempF() + deg + "F (" + currentInfo.getTempC() + deg + "C)";
+		String temps = currentInfo.getTempF() + "" + deg + "F (" + currentInfo.getTempC() + "" + deg + "C)";
 		String description = currentInfo.getDescription();
 		String windString = "Wind Speed: " + currentInfo.getWindspeed() + " mph   Humidity: " + currentInfo.getHumidity() + "%";
 		parent.textAlign(PApplet.LEFT, PApplet.CENTER);

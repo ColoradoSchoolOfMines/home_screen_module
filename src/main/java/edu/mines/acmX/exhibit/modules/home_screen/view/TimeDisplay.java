@@ -55,6 +55,7 @@ public class TimeDisplay extends DisplayElement {
 	public void draw() {
 		//draw grey rectangle behind text
 		parent.fill(84, 84, 84);
+		parent.noStroke();
 		parent.rect(originX, originY, width, height);
 		parent.fill(200, 200, 200);
 		//center-align text

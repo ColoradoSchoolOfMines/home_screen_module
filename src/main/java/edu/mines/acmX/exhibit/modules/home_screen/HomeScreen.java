@@ -174,8 +174,8 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//twitter.add(new TwitterDisplay(this, 100.0)); //TODO get this fully working
 		//add Weather/Time display
 		LinearLayout weatherAndTime = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
-		weatherAndTime.add(new WeatherDisplay(this, 80.0));
-		weatherAndTime.add(new TimeDisplay(this, 20.0));
+		weatherAndTime.add(new WeatherDisplay(this, 75.0));
+		weatherAndTime.add(new TimeDisplay(this, 25.0));
 
 		rootLayout.add(twitter);
 		rootLayout.add(weatherAndTime);
