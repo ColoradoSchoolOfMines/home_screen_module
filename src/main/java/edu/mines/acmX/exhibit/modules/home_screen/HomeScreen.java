@@ -59,8 +59,6 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	// arrows, to manipulate the moduleListLayout
 	private ArrowClick leftArrow;
 	private ArrowClick rightArrow;
-	// set to true if using 2 monitors, or false for 1 (used for debugging, for PApplet dims)
-	public static final boolean DUAL_SCREEN = false;
 	// listLayout scroll speed, in pixels
 	public static final int SCROLL_SPEED = 20;
 	// how fast an arrow registers a click
@@ -86,10 +84,6 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	 * setup, called once
 	 */
 	public void setup() {
-		// Allows for sane usage of dual monitors
-		if (DUAL_SCREEN) {
-			width = width / 2;
-		}
 		size(width, height);
 		
 		// load cursor image
@@ -120,21 +114,18 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		String[] packageNames = modulesList.keySet().toArray(new String[0]);
 		
 		// Iterates through the array of package names and loads each module's icon.
-		for (int i = 0; i < packageNames.length; ++i) {
+		for (int i = 0; i < modulesList.size(); ++i) {
 			//removes the home screen module from the list of displayed modules
 			if (packageNames[i].equals("edu.mines.acmX.exhibit.modules.home_screen") ) {
 				continue;
 			}
+			PImage tempImage = null;
 			//look if the image is a png
-			PImage tempImage = loadImage("icon.png", packageNames[i], 0);
-			if (tempImage == null) {
-				//look if the image is a jpg
-				tempImage = loadImage("icon.jpg", packageNames[i], 0);
-			}
-			if (tempImage == null) {
-				//load a default icon if there's no icon in the original package
-				tempImage = loadImage("question.png");
-			}
+			if (pollForImage("icon.png", packageNames[i])) tempImage = loadImage("icon.png", packageNames[i], 0);
+			//look if the image is a jpg
+			if (pollForImage("icon.jpg", packageNames[i])) tempImage = loadImage("icon.jpg", packageNames[i], 0);
+			//load a default icon if there's no icon in the original package
+			if (tempImage == null) tempImage = loadImage("question.png");
 			// storing icons and package names into their respective ModuleElements.
 			ModuleElement tempElement = new ModuleElement(this, tempImage, 
 					packageNames[i], modulesList.get(packageNames[i]), 1.0);
@@ -216,7 +207,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				//stop sleeping if it was before
 				isSleeping = false;
 				//switch the backdrop to a random one in the list
-				cycleBackdrop();
+				if (RANDOM_BACKDROP) cycleBackdrop();
 			}
 			
 			float marginFraction = (float) 1/6; //user preference for sensitivity/zoom level (smaller is closer)
