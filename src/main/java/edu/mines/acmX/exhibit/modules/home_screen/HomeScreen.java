@@ -23,6 +23,7 @@ import edu.mines.acmX.exhibit.module_management.loaders.ModuleLoadException;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines.MinesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ArrowClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
@@ -48,6 +49,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	
 	//variables that hold the backdrops
 	private List<Backdrop> backdrops;
+	//currently displayed backdrop (only one to update)
 	private Backdrop backdrop;
 	
 	//hand positions
@@ -74,7 +76,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	// holds sleeping status (used for cycling backdrops)
 	private boolean isSleeping;
 	//allows the loading backdrop to be randomized
-	private boolean RANDOM_BACKDROP = false;
+	private boolean RANDOM_BACKDROP = true;
 	
 	//interfaces with input services components
 	private static HardwareManager hardwareManager;
@@ -101,6 +103,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		backdrops = new ArrayList<Backdrop>();
 		backdrops.add(new BubblesBackdrop(this));
 		backdrops.add(new GridBackdrop(this));
+		backdrops.add(new MinesBackdrop(this));
 		//pick backdrop to launch with
 		if (RANDOM_BACKDROP) {
 			Random rand = new Random();
@@ -110,6 +113,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		}
 		isSleeping = false;
 		
+		//disable mouse cursor display
 		noCursor();
 		
 		// get all module names
@@ -141,7 +145,12 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 			if (packageNames[i].equals("edu.mines.acmX.exhibit.modules.home_screen") ) {
 				continue;
 			}
+			//look for if the image is a png
 			PImage tempImage = loadImage("icon.png", packageNames[i]);
+			if (tempImage == null) {
+				//look if the image is a jpg
+				tempImage = loadImage("icon.jpg", packageNames[i]);
+			}
 			if (tempImage == null) {
 				//load a default icon if there's no icon in the original package
 				tempImage = loadImage("question.png");
@@ -280,16 +289,16 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 			imageMode(CORNER);
 		} else {
 			//if no hand detected, print "Wave to begin"
-			textAlign(RIGHT, TOP);
+			textAlign(RIGHT, BOTTOM);
 			textSize(48);
 			fill(84, 84, 84);
 			rectMode(CORNERS);
 			int rightMargin = 10;
-			rect(width - rightMargin - textWidth("Wave to begin"), height * 3/4, 
-					width - rightMargin, height * 3/4 + 60);
+			rect(width - rightMargin - textWidth("Wave to begin"), (float) (height * 0.8 - 60), 
+					width - rightMargin, (float) (height * 0.8));
 			rectMode(CORNER);
 			fill(200, 200, 200);
-			text("Wave to Begin", width - rightMargin, height * 3 / 4);
+			text("Wave to Begin", width - rightMargin, (float) (height * 0.8));
 			textAlign(LEFT, TOP);
 		}
 	}
