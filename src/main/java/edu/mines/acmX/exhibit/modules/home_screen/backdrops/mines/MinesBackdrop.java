@@ -10,6 +10,7 @@ import java.util.zip.ZipInputStream;
 
 import processing.core.PApplet;
 import processing.core.PImage;
+import edu.mines.acmX.exhibit.module_management.modules.ProcessingModule;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate;
@@ -24,16 +25,18 @@ import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate;
  */
 public class MinesBackdrop extends Backdrop {
 
-	//folder where all module images are contained
-	public static final String IMAGES_LOCATION = "images/";
 	//file folder holding slideshow pictures
 	public static final String SLIDE_SHOW_LOCATION = "SlideShowImages/";
 	//time (in millis) to wait before loading the next picture
 	public static final int TIME_TO_ADVANCE = 15000;
-	//minimum time to allow for a picture to fade in (TODO ideally tied into FADE_CHANGE)
-	private static final int MIN_FADE_TIME = 8000;
-	//rate of change for fading in/out
-	public static final int FADE_CHANGE = 3;
+	//minimum time to allow for a picture to fade in (worst case, fades out as soon as fully in)
+	private static final int MAX_FADE_TIME = TIME_TO_ADVANCE / 2;
+	//rate of change for fading in/out, in number of ticks per fade
+	public static final int NUM_FADE_TICKS = 85;
+	//actual value added/subtracted for alpha changes
+	public static final int FADE_CHANGE = (int) ((float) 256 / NUM_FADE_TICKS);
+	//amount to turn (in radians) per update tick
+	public static final float ROTATION_INCREMENT = (float) 0.05;
 
 	private PImage logo;
 	private PImage banner;
@@ -46,8 +49,6 @@ public class MinesBackdrop extends Backdrop {
 	private int lastRefreshTime;
 	private int pictureFadeTime;
 	private int alpha;
-
-	public static final float ROTATION_INCREMENT = (float) 0.05;
 
 	private float rotationTotal;
 	private Coordinate spinLocation;
@@ -87,7 +88,7 @@ public class MinesBackdrop extends Backdrop {
 		}
 		
 		//control fade-in/out of the background images
-		if (alpha < 255 && parent.millis() - lastRefreshTime < MIN_FADE_TIME) {
+		if (alpha < 255 && parent.millis() - lastRefreshTime < MAX_FADE_TIME) {
 			alpha+= FADE_CHANGE;
 			//bound max alpha
 			if (alpha >= 255) {
@@ -170,7 +171,7 @@ public class MinesBackdrop extends Backdrop {
 				while ((ze = jarStream.getNextEntry()) != null) {
 					String entryName = ze.getName();
 					//if in correct folder, add to potential names list
-					if (entryName.startsWith(IMAGES_LOCATION + SLIDE_SHOW_LOCATION)) {
+					if (entryName.startsWith(ProcessingModule.IMAGES_LOCATION + SLIDE_SHOW_LOCATION)) {
 						fileNames.add(entryName);
 					}
 				}
@@ -179,9 +180,10 @@ public class MinesBackdrop extends Backdrop {
 					//if .jpg or .png, load the image and store it
 					if (fileNames.get(i).contains("jpg") || 
 							fileNames.get(i).contains("png")) {
-						String truePath = fileNames.get(i).substring("images/".length());
+						String truePath = fileNames.get(i).substring(ProcessingModule.IMAGES_LOCATION.length());
 						PImage tempImage = parent.loadImage(truePath);
 						slideShowImages.add(tempImage);
+						//TODO split this into two functions for auto-refreshing during runtime
 					}
 				}
 			} catch (IOException e) {
