@@ -236,7 +236,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				cycleBackdrop();
 			}
 			
-			float marginFraction = 6; //user preference for sensitivity/zoom level (smaller is closer)
+			float marginFraction = (float) 1/6; //user preference for sensitivity/zoom level (smaller is closer)
 			//get hand position - uses scaling to let user reach all of screen
 			handX = HandTrackingUtilities.getScaledHandX(receiver.getX(), 
 						driver.getHandTrackingWidth(), width, marginFraction);
