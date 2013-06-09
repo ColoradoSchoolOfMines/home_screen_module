@@ -2,6 +2,7 @@ package edu.mines.acmX.exhibit.modules.home_screen;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -10,16 +11,13 @@ import org.apache.logging.log4j.Logger;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.input_services.events.EventManager;
 import edu.mines.acmX.exhibit.input_services.events.EventType;
-import edu.mines.acmX.exhibit.input_services.hardware.BadDeviceFunctionalityRequestException;
 import edu.mines.acmX.exhibit.input_services.hardware.BadFunctionalityRequestException;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManager;
 import edu.mines.acmX.exhibit.input_services.hardware.HardwareManagerManifestException;
 import edu.mines.acmX.exhibit.input_services.hardware.UnknownDriverRequest;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
 import edu.mines.acmX.exhibit.input_services.hardware.drivers.InvalidConfigurationFileException;
-import edu.mines.acmX.exhibit.module_management.ModuleManager;
-import edu.mines.acmX.exhibit.module_management.loaders.ManifestLoadException;
-import edu.mines.acmX.exhibit.module_management.loaders.ModuleLoadException;
+import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
@@ -114,12 +112,12 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//disable mouse cursor display
 		noCursor();
 		
-		String[] packageNames = null;
+		
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5);
-		packageNames = getAllAvailableModules().keySet().toArray(new String[0]);
-		
+		Map<String, ModuleMetaData> modulesList = getAllAvailableModules();
+		String[] packageNames = modulesList.keySet().toArray(new String[0]);
 		
 		// Iterates through the array of package names and loads each module's icon.
 		for (int i = 0; i < packageNames.length; ++i) {
@@ -138,7 +136,8 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				tempImage = loadImage("question.png");
 			}
 			// storing icons and package names into their respective ModuleElements.
-			ModuleElement tempElement = new ModuleElement(this, tempImage, packageNames[i], 1.0);
+			ModuleElement tempElement = new ModuleElement(this, tempImage, 
+					packageNames[i], modulesList.get(packageNames[i]), 1.0);
 			moduleElements.add(tempElement);
 			moduleListLayout.add(tempElement);
 		}

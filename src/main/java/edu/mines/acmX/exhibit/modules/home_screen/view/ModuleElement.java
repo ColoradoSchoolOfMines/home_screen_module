@@ -29,10 +29,11 @@ public class ModuleElement extends DisplayElement {
 	private float infoAlpha;
 	
 	public ModuleElement(HomeScreen par, PImage image,
-			String name, double weight) {
+			String name, ModuleMetaData data, double weight) {
 		super(par, weight);
 		icon = image;
 		packageName = name;
+		this.data = data;
 		edgeLength = 0;
 		startGame = new VirtualRectClick(MODULE_RUN_SPEED, 0, 0, 0, 0);
 		hint = new VirtualRectClick(HINT_SPEED, 0, 0, 0, 0);
@@ -106,7 +107,8 @@ public class ModuleElement extends DisplayElement {
 			// draw packageName
 			parent.textSize(20);
 			parent.textAlign(PApplet.LEFT, PApplet.TOP);
-			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
+			parent.text(data.getTitle(), (float) (originX + (width / 6)), (float) (originY + (height / 6)));
+			parent.text("By " + data.getAuthor(), (float) (originX + (width / 6)), (float) (originY + (height / 6) + 40));
 			if (infoAlpha < 255) {
 				infoAlpha += INFO_FADE_SPEED;
 			}
@@ -122,7 +124,8 @@ public class ModuleElement extends DisplayElement {
 			// draw packageName
 			parent.textSize(20);
 			parent.textAlign(PApplet.LEFT, PApplet.TOP);
-			parent.text(packageName, (float) (originX + (width / 6)), (float) (originY + (height / 6)));
+			parent.text(data.getTitle(), (float) (originX + (width / 6)), (float) (originY + (height / 6)));
+			parent.text("By " + data.getAuthor(), (float) (originX + (width / 6)), (float) (originY + (height / 6) + 40));
 			infoAlpha -= INFO_FADE_SPEED;
 		}
 	}
