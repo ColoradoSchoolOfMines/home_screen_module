@@ -1,9 +1,12 @@
 package edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines;
 
-import java.io.File;
 import java.io.IOException;
+import java.net.URL;
+import java.security.CodeSource;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
 import processing.core.PApplet;
 import processing.core.PImage;
@@ -21,25 +24,27 @@ import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate;
  */
 public class MinesBackdrop extends Backdrop {
 
+	//folder where all module images are contained
+	public static final String IMAGES_LOCATION = "images/";
 	//file folder holding slideshow pictures
 	public static final String SLIDE_SHOW_LOCATION = "SlideShowImages/";
 	//time (in millis) to wait before loading the next picture
 	public static final int TIME_TO_ADVANCE = 15000;
-	
+
 	private PImage logo;
 	private PImage banner;
 	private PImage blaster;
 	private PImage spinLogo;
-	
+
 	private List<PImage> slideShowImages;
 	private int currentImage;
 	private int lastRefreshTime;
 	private int alpha;
-	
+
 	public static final float ROTATION_INCREMENT = (float) 0.05;
 	private float rotationTotal;
 	private Coordinate spinLocation;
-	
+
 	public MinesBackdrop(HomeScreen par) {
 		super(par);
 		logo = parent.loadImage("CSMLogo.png");
@@ -52,7 +57,7 @@ public class MinesBackdrop extends Backdrop {
 		currentImage = 0;
 		loadSlideShowImages();
 		lastRefreshTime = parent.millis();
-		
+
 		//TODO documentation about adding pics/note to submissions tester (check before approving)
 	}
 
@@ -105,29 +110,50 @@ public class MinesBackdrop extends Backdrop {
 		//will do nothing if no pictures are loaded
 		if (!slideShowImages.isEmpty()) {
 			PImage currentImg = slideShowImages.get(currentImage);
-			if (parent.millis() - lastRefreshTime < 1000 && alpha < 255) {
-				alpha++;
+			if (parent.millis() - lastRefreshTime < 5000 && alpha < 255) {
+				alpha+= 3;
 				parent.tint(255, 255, 255, alpha);
+				System.out.println("Time since shift:" + (parent.millis() - lastRefreshTime));
 			} else {
 				parent.noTint();
 			}
+			parent.imageMode(PApplet.CENTER);
 			parent.image(currentImg, parent.width/2, parent.height/2);
 			parent.noTint();
+			parent.imageMode(PApplet.CORNER);
 		}
 	}
-	
-	//TODO use jar methods to get inside the folder and read its contents
+
+	/**
+	 * Private function that opens the class jar and loads all pictures
+	 * associated with the backdrop slide show. 
+	 */
 	private void loadSlideShowImages() {
-		File folder = new File("images/" + SLIDE_SHOW_LOCATION);
-		System.out.println(folder.isDirectory());
-		File[] listOfImages = folder.listFiles();
-		System.out.println(listOfImages);
-		/*for (int i = 0; i < listOfImages.length; ++i) {
-			if (listOfImages[i].getName().contains("jpg") || 
-					listOfImages[i].getName().contains("png")) {
-				PImage tempImage = parent.loadImage(SLIDE_SHOW_LOCATION + listOfImages[i].getName());
-				slideShowImages.add(tempImage);
+		CodeSource src = MinesBackdrop.class.getProtectionDomain().getCodeSource();
+		if (src != null) {
+			URL jarLoc = src.getLocation();
+			try {
+				ZipInputStream jarStream = new ZipInputStream(jarLoc.openStream());
+				ZipEntry ze = null;
+				List<String> fileNames = new ArrayList<String>();
+				while ((ze = jarStream.getNextEntry()) != null) {
+					String entryName = ze.getName();
+					if (entryName.startsWith(IMAGES_LOCATION + SLIDE_SHOW_LOCATION)) {
+						fileNames.add(entryName);
+					}
+				}
+				for (int i = 0; i < fileNames.size(); ++i) {
+					if (fileNames.get(i).contains("jpg") || 
+							fileNames.get(i).contains("png")) {
+						String truePath = fileNames.get(i).substring("images/".length());
+						PImage tempImage = parent.loadImage(truePath);
+						slideShowImages.add(tempImage);
+					}
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		}*/
+		}
 	}
 }
