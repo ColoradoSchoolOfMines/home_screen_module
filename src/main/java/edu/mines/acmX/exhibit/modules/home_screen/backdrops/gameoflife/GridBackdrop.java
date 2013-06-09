@@ -7,16 +7,18 @@ import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 
 public class GridBackdrop extends Backdrop {
 	
+	//pixel size of box
 	public static final int SIZE = 20;
-	//public static final int FRAME_DELAY = 50;
+	//number of ticks to run before resetting the board
+	public static final int MAX_GENERATIONS = 120;
 	public static final int RAND_TILE_ALIVE = 20;
 	
-	//private int frameTick = 0;
 	boolean tiles[][];
 	
 	//time (in millis) between generation ticks
-	private static final float TIME_TO_UPDATE = 750;
+	private static final float TIME_TO_UPDATE = 1000;
 	private int lastUpdateTime;
+	private int currentGen;
 	
 	private int size_w;
 	private int size_h;
@@ -29,7 +31,7 @@ public class GridBackdrop extends Backdrop {
 		
 		tiles = new boolean[size_w][size_h];
 		setup();
-		getNumNeighbors(25, 25);
+		//getNumNeighbors(25, 25);
 	}
 	
 	public boolean isAlive(int x, int y) {
@@ -58,6 +60,7 @@ public class GridBackdrop extends Backdrop {
 				
 			}
 		}
+		currentGen = 0;
 		lastUpdateTime = parent.millis();
 	}
 
@@ -90,7 +93,7 @@ public class GridBackdrop extends Backdrop {
 				}
 			}
 		}
-		
+		currentGen++;
 	}
 	
 	public int getNumNeighbors(int x, int y) {
@@ -112,6 +115,9 @@ public class GridBackdrop extends Backdrop {
 			nextGeneration();
 			lastUpdateTime = parent.millis();
 		}		
+		if (currentGen >= MAX_GENERATIONS) {
+			setup();
+		}
 	}
 
 	@Override
