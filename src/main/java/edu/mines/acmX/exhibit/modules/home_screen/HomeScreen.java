@@ -108,7 +108,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		if (RANDOM_BACKDROP) {
 			cycleBackdrop();
 		} else {
-			backdrop = backdrops.get(0);
+			backdrop = backdrops.get(2);
 		}
 		
 		//disable mouse cursor display

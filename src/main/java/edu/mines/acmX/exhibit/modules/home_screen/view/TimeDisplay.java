@@ -67,7 +67,7 @@ public class TimeDisplay extends DisplayElement {
 		//concatenate time string
 		String time = hour + ":" + minuteString + ":" + secondString;
 		//concatenate date
-		String date = day + "/" + month + "/" + year;
+		String date = month + "/" + day + "/" + year;
 		parent.text(time + "  " + date, originX + width - 10, originY + height / 2);
 	}
 
