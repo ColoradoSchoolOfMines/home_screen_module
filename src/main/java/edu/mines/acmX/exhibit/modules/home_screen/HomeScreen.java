@@ -144,10 +144,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				continue;
 			}
 			//look if the image is a png
-			PImage tempImage = loadImage("icon.png", packageNames[i]);
+			PImage tempImage = loadImage("icon.png", packageNames[i], 0);
 			if (tempImage == null) {
 				//look if the image is a jpg
-				tempImage = loadImage("icon.jpg", packageNames[i]);
+				tempImage = loadImage("icon.jpg", packageNames[i], 0);
 			}
 			if (tempImage == null) {
 				//load a default icon if there's no icon in the original package
