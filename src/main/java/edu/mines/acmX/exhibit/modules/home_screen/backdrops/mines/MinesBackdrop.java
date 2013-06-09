@@ -37,17 +37,24 @@ public class MinesBackdrop extends Backdrop {
 	public static final int FADE_CHANGE = (int) ((float) 256 / NUM_FADE_TICKS);
 	//amount to turn (in radians) per update tick
 	public static final float ROTATION_INCREMENT = (float) 0.05;
+	//controls how long the module waits to fade in an image once idling
+	public static final int FADE_WAIT_TIME = 100;
 
+	//store images to be drawn
 	private PImage logo;
 	private PImage banner;
 	private PImage blaster;
 	private PImage spinLogo;
 	private PImage currentSlideShowImage;
 
+	//stores all of the images for the slide show
 	private List<PImage> slideShowImages;
+	//index of current image
 	private int currentImage;
 	private int lastRefreshTime;
+	//logs how long it took a picture to fade
 	private int pictureFadeTime;
+	private int timeSinceDrawn;
 	private int alpha;
 
 	private float rotationTotal;
@@ -62,44 +69,50 @@ public class MinesBackdrop extends Backdrop {
 		spinLocation = new Coordinate(parent.width - parent.height * 0.1, parent.height * 0.1);
 		rotationTotal = 0;
 		slideShowImages = new ArrayList<PImage>();
-		currentImage = 0;
 		loadSlideShowImages();
 		currentSlideShowImage = slideShowImages.get(currentImage);
+		currentImage = slideShowImages.size();
 		lastRefreshTime = parent.millis();
-		pictureFadeTime = 0;
+		timeSinceDrawn = 0;
+		pictureFadeTime = parent.millis() - FADE_WAIT_TIME;
+		alpha = 0;
 
 		//TODO documentation about adding pics/note to submissions tester (check before approving)
 	}
 
 	/**
-	 * Increments the rotation for the top right image.
+	 * Increments the rotation for the top right image, and controls slide show fading.
 	 */
 	@Override
 	public void update() {
 		//increase rotation amount
 		rotationTotal += ROTATION_INCREMENT;
-		//move to the next picture if the time to advance is met
-		if (parent.millis() - lastRefreshTime >= TIME_TO_ADVANCE) {
-			lastRefreshTime = parent.millis(); //reset timer
-			alpha = 0;
-			currentImage++;
-			if (currentImage >= slideShowImages.size()) currentImage = 0;
-			currentSlideShowImage = slideShowImages.get(currentImage);
-		}
 		
-		//control fade-in/out of the background images
-		if (alpha < 255 && parent.millis() - lastRefreshTime < MAX_FADE_TIME) {
-			alpha+= FADE_CHANGE;
-			//bound max alpha
-			if (alpha >= 255) {
-				alpha = 255;
-				//record how long it took to reach full visibility
-				pictureFadeTime = parent.millis() - lastRefreshTime;
+		//checks if the alternate loop is being drawn (inactive state)
+		if (parent.millis() - timeSinceDrawn < FADE_WAIT_TIME) {
+			//move to the next picture if the time to advance is met
+			if (parent.millis() - lastRefreshTime >= TIME_TO_ADVANCE) {
+				lastRefreshTime = parent.millis(); //reset timer
+				alpha = 0;
+				currentImage++;
+				if (currentImage >= slideShowImages.size()) currentImage = 0;
+				currentSlideShowImage = slideShowImages.get(currentImage);
 			}
-		} else if (parent.millis() - lastRefreshTime > TIME_TO_ADVANCE - (1.02 * pictureFadeTime)) {
-			alpha -= FADE_CHANGE;
-			//bound min alpha
-			if (alpha < 0) alpha = 0;
+
+			//control fade-in/out of the background images
+			if (alpha < 255 && parent.millis() - lastRefreshTime < MAX_FADE_TIME) {
+				alpha+= FADE_CHANGE;
+				//bound max alpha
+				if (alpha >= 255) {
+					alpha = 255;
+					//record how long it took to reach full visibility
+					pictureFadeTime = parent.millis() - lastRefreshTime;
+				}
+			} else if (parent.millis() - lastRefreshTime > TIME_TO_ADVANCE - (1.02 * pictureFadeTime)) {
+				alpha -= FADE_CHANGE;
+				//bound min alpha
+				if (alpha < 0) alpha = 0;
+			}
 		}
 	}
 
@@ -137,13 +150,19 @@ public class MinesBackdrop extends Backdrop {
 	//aspect ratio (no distortion)
 	@Override
 	public void alternateDrawFaded() {
+		//skip drawing the first loop if it hasn't been drawing recently
+		if (parent.millis() - timeSinceDrawn >= FADE_WAIT_TIME) {
+			timeSinceDrawn = parent.millis();
+			return;
+		}
+		timeSinceDrawn = parent.millis();
 		//will do nothing if no pictures are loaded
 		if (!slideShowImages.isEmpty()) {
-			
+
 			//if alpha is less than 255, make the image transparent
 			if (alpha < 255) parent.tint(255, 255, 255, alpha);
 			else parent.noTint();
-			
+
 			parent.imageMode(PApplet.CENTER);
 			//draw just above center
 			parent.image(currentSlideShowImage, parent.width/2, (float) (parent.height * 0.4));
