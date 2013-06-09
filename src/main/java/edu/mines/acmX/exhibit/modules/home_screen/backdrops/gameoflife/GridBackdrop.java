@@ -14,7 +14,8 @@ public class GridBackdrop extends Backdrop {
 	//private int frameTick = 0;
 	boolean tiles[][];
 	
-	private static final float SECONDS_TO_UPDATE = 1;
+	//time (in millis) between generation ticks
+	private static final float TIME_TO_UPDATE = 750;
 	private int lastUpdateTime;
 	
 	private int size_w;
@@ -107,16 +108,10 @@ public class GridBackdrop extends Backdrop {
 
 	@Override
 	public void update() {
-		if (parent.millis() - lastUpdateTime > SECONDS_TO_UPDATE * 1000) {
+		if (parent.millis() - lastUpdateTime > TIME_TO_UPDATE) {
 			nextGeneration();
 			lastUpdateTime = parent.millis();
-		}
-		/*++frameTick;
-		if (frameTick == FRAME_DELAY) {
-			frameTick = 0;
-			nextGeneration();
-		}*/
-		
+		}		
 	}
 
 	@Override
@@ -140,6 +135,8 @@ public class GridBackdrop extends Backdrop {
 				parent.rect(i * SIZE, j * SIZE, SIZE, SIZE);
 			}
 		}
+		parent.noStroke();
+		parent.noFill();
 	}
 
 }

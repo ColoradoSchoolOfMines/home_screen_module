@@ -74,7 +74,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	// millis when last interacted with
 	private int lastInput;
 	// holds sleeping status (used for cycling backdrops)
-	private boolean isSleeping;
+	private boolean isSleeping = false;
 	//allows the loading backdrop to be randomized
 	private boolean RANDOM_BACKDROP = true;
 	
@@ -106,12 +106,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		backdrops.add(new MinesBackdrop(this));
 		//pick backdrop to launch with
 		if (RANDOM_BACKDROP) {
-			Random rand = new Random();
-			backdrop = backdrops.get(rand.nextInt(backdrops.size()));
+			cycleBackdrop();
 		} else {
 			backdrop = backdrops.get(0);
 		}
-		isSleeping = false;
 		
 		//disable mouse cursor display
 		noCursor();
@@ -145,7 +143,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 			if (packageNames[i].equals("edu.mines.acmX.exhibit.modules.home_screen") ) {
 				continue;
 			}
-			//look for if the image is a png
+			//look if the image is a png
 			PImage tempImage = loadImage("icon.png", packageNames[i]);
 			if (tempImage == null) {
 				//look if the image is a jpg
@@ -271,6 +269,12 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//call update first
 		update();
 		
+		//reset to default draw settings, in case other classes didn't
+		noFill();
+		noStroke();
+		imageMode(CORNER);
+		textAlign(LEFT, TOP);
+		
 		//white background
 		background(255, 255, 255);
 		backdrop.draw();
@@ -280,6 +284,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		} else {
 			//set the screen to sleep
 			isSleeping = true;
+			backdrop.alternateDrawFaded();
 		}
 		
 		//draw the hand where the user's hand is (if it has one)
@@ -293,6 +298,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 			textSize(48);
 			fill(84, 84, 84);
 			rectMode(CORNERS);
+			//number of pixels to leave between the side and the text
 			int rightMargin = 10;
 			rect(width - rightMargin - textWidth("Wave to begin"), (float) (height * 0.8 - 60), 
 					width - rightMargin, (float) (height * 0.8));
@@ -317,7 +323,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	 * randomly picks an available backdrop to display
 	 */
 	public void cycleBackdrop() {
-		Random rand = new Random();
+		Random rand = new Random(millis());
 		int randBackdrop = rand.nextInt(backdrops.size());
 		backdrop = backdrops.get(randBackdrop);
 	}
