@@ -26,21 +26,31 @@ public class WeatherCurrentInfo {
 	public int getTempF() {
 		return tempF;
 	}
+	
 	public int getTempC() {
 		return tempC;
 	}
+	
 	public String getPicture() {
 		return picture;
 	}
+	
+	public void setPicture(String picture) {
+		this.picture = picture;
+	}
+	
 	public String getDescription() {
 		return description;
 	}
+	
 	public int getWindspeed() {
 		return windspeed;
 	}
+	
 	public double getPrecipitation() {
 		return precipitation;
 	}
+	
 	public int getHumidity() {
 		return humidity;
 	}

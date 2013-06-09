@@ -1,5 +1,6 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view.weather;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import processing.core.PApplet;
@@ -27,17 +28,24 @@ public class WeatherDisplay extends DisplayElement {
 	private WeatherCurrentInfo currentInfo;
 	//stores forecasted data (currently unused)
 	private List<WeatherForecastDayInfo> forecastInfo;
+	//stores current weather icon
 	private PImage img;
+	//stores all icons for the forecasted days
+	private List<PImage> forecastImgs;
 	//stores millis, to check when to refresh the weather data
 	private int lastUpdate;
-	
+
 	public WeatherDisplay(PApplet parent, double weight) {
 		super(parent, weight);
 		lastUpdate = parent.millis();
 		WeatherLoader.loadWeatherInfo();
 		currentInfo = WeatherLoader.getCurrentInfo();
 		forecastInfo = WeatherLoader.getForecastInfo();
+		forecastImgs = new ArrayList<PImage>();
 		img = parent.loadImage(currentInfo.getPicture());
+		for (int i = 0; i < forecastInfo.size(); ++i) {
+			forecastImgs.add(parent.loadImage(forecastInfo.get(i).getPicture()));
+		}
 	}
 
 	@Override
@@ -50,7 +58,15 @@ public class WeatherDisplay extends DisplayElement {
 			WeatherLoader.loadWeatherInfo();
 			currentInfo = WeatherLoader.getCurrentInfo();
 			forecastInfo = WeatherLoader.getForecastInfo();
-			img = parent.loadImage(currentInfo.getPicture());
+			//if there is a connected image, load images
+			if (!currentInfo.getPicture().equals("noConnection.png")) {
+				img = parent.loadImage(currentInfo.getPicture());
+				forecastImgs.clear();
+				for (int i = 0; i < forecastInfo.size(); ++i) {
+					//make sure this works
+					forecastImgs.add(parent.loadImage(forecastInfo.get(i).getPicture()));
+				}
+			}
 		}
 	}
 
@@ -81,5 +97,5 @@ public class WeatherDisplay extends DisplayElement {
 		parent.text(windString, originX + imgOffsetX + height + padding, originY + height/2);
 	}
 
-	
+
 }

@@ -5,13 +5,18 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.UnknownHostException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -30,6 +35,8 @@ import org.xml.sax.SAXException;
 //TODO threading needed?
 public class WeatherLoader {
 	
+	private static Logger log = LogManager.getLogger(WeatherLoader.class);
+	
 	//API key- don't know how it's generated
 	private static final String API_KEY = "b665b08214224103123010";
 	//ZIP code to be checked
@@ -37,7 +44,7 @@ public class WeatherLoader {
 	//main site for getting information
 	private static final String BASE_URL = "http://free.worldweatheronline.com/feed/weather.ashx";
 	//number of forecast days to collect
-	private static final String NUM_DAYS = "5";
+	private static final int NUM_DAYS = 5;
 	
 	private static WeatherCurrentInfo currentInfo;
 	private static List<WeatherForecastDayInfo> forecastInfo;
@@ -50,19 +57,22 @@ public class WeatherLoader {
 		//instantiate list if it doesn't exist
 		if (forecastInfo == null) {
 			forecastInfo = new ArrayList<WeatherForecastDayInfo>();
-		} else {
-			//dump the current info if update is called
-			forecastInfo.clear();
-		}
+		} 
 		try {
 			URL weatherURL = new URL(BASE_URL + "?key=" + API_KEY + "&q=" 
 					+ ZIP + "&num_of_days=" + NUM_DAYS + "&format=xml");
 			URLConnection weatherConnection = weatherURL.openConnection();
 			InputStream weatherStream = weatherConnection.getInputStream();
+			//dump the current info if update is called
+			forecastInfo.clear();
 			DocumentBuilder docBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 			Document doc = docBuilder.parse(weatherStream);
 			doc.getDocumentElement().normalize();
 			parseInfo(doc);
+		} catch (UnknownHostException e) {
+			//if connection to the URL fails (no internet connection), perform an alternate load
+			//this is here to avoid crashes if the program can't connect
+			alternateLoad();
 		} catch (MalformedURLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -79,6 +89,31 @@ public class WeatherLoader {
 		
 	}
 	
+	/**
+	 * An alternate load state that is only used when no internet connection
+	 * is available. If the display starts without any information, it will
+	 * populate with clearly bad values. Otherwise, it will direct the display
+	 * to not repopulate the images (since they're external). All old data
+	 * is preserved. 
+	 */
+	private static void alternateLoad() {
+		log.warn("No internet connection available for weather");
+		//if no connection is available, keep old data
+		//change picture string to tell display not to reload images
+		if (currentInfo != null) {
+			currentInfo.setPicture("noConnection.png");
+			return;
+		}
+		//build dummy data for rendering, clearly demonstrates no connection available
+		currentInfo = new WeatherCurrentInfo(0, 0, "noConnection.png", "???", 0, 0, 0);
+		SimpleDateFormat ft = new SimpleDateFormat ("yyyy-MM-dd");
+		String date = ft.format(new Date());
+		for (int i = 0; i < NUM_DAYS; ++i) {
+			forecastInfo.add(new WeatherForecastDayInfo
+					(0, 0, 0, 0, 0, "noConnection.png", "???", 0, date));
+		}
+	}
+
 	/**
 	 * The main function for parsing the XML once the document has been 
 	 * generated. 

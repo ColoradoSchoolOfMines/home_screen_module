@@ -51,7 +51,7 @@ public class WeatherForecastDayInfo {
 	public String getPicture() {
 		return picture;
 	}
-
+	
 	public String getDescription() {
 		return description;
 	}
