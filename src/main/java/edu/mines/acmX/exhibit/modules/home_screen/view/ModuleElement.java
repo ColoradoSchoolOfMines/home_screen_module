@@ -3,6 +3,7 @@ package edu.mines.acmX.exhibit.modules.home_screen.view;
 import processing.core.PApplet;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.module_management.ModuleManager;
+import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 
@@ -15,6 +16,7 @@ public class ModuleElement extends DisplayElement {
 	public static final int INFO_FADE_SPEED = 5;
 	private PImage icon;
 	private String packageName;
+	private ModuleMetaData data;
 	private boolean leftEdge;
 	private boolean rightEdge;
 	private int edgeLength;
@@ -66,7 +68,6 @@ public class ModuleElement extends DisplayElement {
 	public void draw() {
 		visible = true;
 		// show part of an image if the full image doesn't fit.
-		// TODO DOESN'T WORK
 		float heightRatio = (float) icon.height / height;
 		float widthRatio = (float) icon.width / width;
 		if (leftEdge) {

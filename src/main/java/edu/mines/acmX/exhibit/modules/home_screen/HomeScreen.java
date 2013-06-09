@@ -114,28 +114,12 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//disable mouse cursor display
 		noCursor();
 		
-		// get all module names
-		ModuleManager manager;
 		String[] packageNames = null;
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5);
-		try {
-			manager = ModuleManager.getInstance();
-			packageNames = manager.getAllAvailableModules();
-		} catch (ManifestLoadException e) {
-			log.info("Bad module manager manifest");
-			e.printStackTrace();
-		} catch (ModuleLoadException e) {
-			log.info("Module failed to load");
-			e.printStackTrace();
-		} catch (HardwareManagerManifestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (BadDeviceFunctionalityRequestException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		packageNames = getAllAvailableModules().keySet().toArray(new String[0]);
+		
 		
 		// Iterates through the array of package names and loads each module's icon.
 		for (int i = 0; i < packageNames.length; ++i) {
