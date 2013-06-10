@@ -106,7 +106,6 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//disable mouse cursor display
 		noCursor();
 		
-		
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5);
@@ -269,12 +268,15 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		} else {
 			//if no hand detected, print "Wave to begin"
 			textAlign(RIGHT, BOTTOM);
-			textSize(48);
+			//on 1600x900, want 48 pt font
+			int waveTextSize = (int) (48.0/900 * height);
+			textSize(waveTextSize);
 			fill(84, 84, 84);
 			rectMode(CORNERS);
 			//number of pixels to leave between the side and the text
 			int rightMargin = 10;
-			rect(width - rightMargin - textWidth("Wave to begin"), (float) (height * 0.8 - 60), 
+			rect(width - rightMargin - textWidth("Wave to begin"), 
+					(float) (height * 0.8 - (textAscent() + textDescent())), 
 					width - rightMargin, (float) (height * 0.8));
 			rectMode(CORNER);
 			fill(200, 200, 200);
