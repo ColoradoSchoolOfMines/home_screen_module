@@ -153,9 +153,3 @@ public class ListLayout extends DisplayElement {
 		viewLength += inc;
 	}
 }
-
-
-
-
-
-

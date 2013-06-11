@@ -100,7 +100,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		if (RANDOM_BACKDROP) {
 			cycleBackdrop();
 		} else {
-			backdrop = backdrops.get(2);
+			backdrop = backdrops.get(0);
 		}
 		
 		//disable mouse cursor display
@@ -109,25 +109,21 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5);
-		Map<String, ModuleMetaData> modulesList = getAllAvailableModules();
-		String[] packageNames = modulesList.keySet().toArray(new String[0]);
+		String[] packageNames = getAllAvailableModules();
 		
 		// Iterates through the array of package names and loads each module's icon.
-		for (int i = 0; i < modulesList.size(); ++i) {
+		for (int i = 0; i < packageNames.length; ++i) {
 			//removes the home screen module from the list of displayed modules
 			if (packageNames[i].equals("edu.mines.acmX.exhibit.modules.home_screen") ) {
 				continue;
 			}
-			PImage tempImage = null;
-			//look if the image is a png
-			if (pollForImage("icon.png", packageNames[i])) tempImage = loadImage("icon.png", packageNames[i], 0);
-			//look if the image is a jpg
-			if (pollForImage("icon.jpg", packageNames[i])) tempImage = loadImage("icon.jpg", packageNames[i], 0);
-			//load a default icon if there's no icon in the original package
+			//tries to load specified icon from module
+			PImage tempImage = loadImage(getModuleMetaData(packageNames[i]).getIconPath());
+			//load default if this fails
 			if (tempImage == null) tempImage = loadImage("question.png");
 			// storing icons and package names into their respective ModuleElements.
 			ModuleElement tempElement = new ModuleElement(this, tempImage, 
-					packageNames[i], modulesList.get(packageNames[i]), 1.0);
+					packageNames[i], getModuleMetaData(packageNames[i]), 1.0);
 			moduleElements.add(tempElement);
 			moduleListLayout.add(tempElement);
 		}
