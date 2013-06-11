@@ -223,10 +223,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		int millis = millis();
 		// check arrows for clicks
 		if (leftArrow.completed(millis)) {
-			moduleListLayout.incrementViewLength(-SCROLL_SPEED);
+			moduleListLayout.incrementOffset(-SCROLL_SPEED);
 		}
 		if (rightArrow.completed(millis)) {
-			moduleListLayout.incrementViewLength(SCROLL_SPEED);
+			moduleListLayout.incrementOffset(SCROLL_SPEED);
 		}
 
 		// check all ModuleElements for clicks

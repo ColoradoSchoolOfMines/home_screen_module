@@ -10,13 +10,15 @@ public class ListLayout extends DisplayElement {
 
 	private static final boolean DEBUG = false;
 	private static final float ROUNDEDNESS = 100;
+    private static final float PADDINGNESS_BETWEEN_ELEMENTS = 10;
+    private static final float PADDINGNESS_SHORT_SIDE = 10;
 	private Orientation orientation;
 	private List<DisplayElement> elements;
 	// TODO should the weight of an element have an effect on how the ratio works?
 	private double totalWeight;
 	// ratio width:height ex 3 = 3px width : 1px height
 	private double ratio;
-	private int xOffset;
+	private int offset;
 	private int listSize;
 	private int minShown;
 	private int backgroundColor;
@@ -29,7 +31,7 @@ public class ListLayout extends DisplayElement {
 		this.elements = new ArrayList<DisplayElement>();
 		this.totalWeight = 0;
 		this.ratio = ratio;
-		this.xOffset = 0;
+		this.offset = 0;
 		this.listSize = 0;
 		this.minShown = 0;
 	}
@@ -50,7 +52,7 @@ public class ListLayout extends DisplayElement {
 		this.minShown = minShown;
 		this.totalWeight = 0;
 		this.ratio = ratio;
-		this.xOffset = 0;
+		this.offset = 0;
 		this.listSize = minShown;
 	}
 	
@@ -84,40 +86,50 @@ public class ListLayout extends DisplayElement {
 
 		if (orientation == Orientation.HORIZONTAL) {
 			int spacing = (int) (height * ratio);
-			float totalLength = spacing * listSize;
-			xTemp -= xOffset;
+            float paddingH = spacing / PADDINGNESS_BETWEEN_ELEMENTS;
+            float paddingV = height / PADDINGNESS_SHORT_SIDE;
+			//float totalLength = (spacing) * listSize;
+			float totalLength = (spacing + paddingH) * listSize;
+			offset = (int) normalizeAgainst(offset, totalLength);
+			xTemp -= offset;
 			for (DisplayElement element: elements) {
-				while(xTemp >= totalLength - spacing) {
+				if(xTemp >= totalLength - (spacing + paddingH)) {
 					xTemp -= totalLength;
 				}
-				while(xTemp < this.originX - 2 * spacing) {
+				if(xTemp < this.originX - 2 * (spacing + paddingH)) {
 					xTemp += totalLength;
 				}
+				//xTemp = (int) normalizeAgainst(xTemp, (totalLength - spacing));
 				element.setWidth(spacing);
-				element.setHeight(height);
-				element.update(xTemp, yTemp);
-				xTemp += spacing;
+				element.setHeight((int) (height - paddingV));
+				element.update(xTemp, (int) (yTemp + paddingV / 2.0));
+				xTemp += spacing + paddingH;
 			}
 		}
 		else if (orientation == Orientation.VERTICAL) {
-			// TODO use viewLength
-			int spacing = (int) (width * ratio); 
-			float totalHeight = spacing * listSize;
-			yTemp -= xOffset;
+			int spacing = (int) (width * ratio);
+			float paddingV = spacing / PADDINGNESS_BETWEEN_ELEMENTS;
+			float totalHeight = (spacing + paddingV) * listSize;
+			offset = (int) normalizeAgainst(offset, totalHeight);
+			yTemp -= offset;
 			for (DisplayElement element: elements) {
-				while(yTemp >= totalHeight) {
+				if(yTemp >= totalHeight - (spacing + paddingV)) {
 					yTemp -= totalHeight;
 				}
-				while(yTemp < 0) {
+				if(yTemp < this.originY - 2 * (spacing + paddingV)) {
 					yTemp += totalHeight;
 				}
 				element.setHeight(spacing);
 				element.setWidth(width);
 				element.update(xTemp, yTemp);
-				yTemp += spacing;
+				yTemp += spacing + paddingV;
 			}
 		}
 		
+	}
+
+	private float normalizeAgainst(float toNormalize, float normalizeAgainst) {
+		return toNormalize % normalizeAgainst;
 	}
 
 	@Override
@@ -155,7 +167,7 @@ public class ListLayout extends DisplayElement {
 		}
 	}
 
-	public void incrementViewLength(int inc) {
-		xOffset += inc;
+	public void incrementOffset(int inc) {
+		offset += inc;
 	}
 }
