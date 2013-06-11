@@ -118,7 +118,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				continue;
 			}
 			//tries to load specified icon from module
-			PImage tempImage = loadImage(getModuleMetaData(packageNames[i]).getIconPath());
+			PImage tempImage = loadImage(getModuleMetaData(packageNames[i]).getIconPath(), packageNames[i], 0);
 			//load default if this fails
 			if (tempImage == null) tempImage = loadImage("question.png");
 			// storing icons and package names into their respective ModuleElements.
