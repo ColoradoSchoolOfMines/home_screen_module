@@ -108,7 +108,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
-		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5);
+		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5,color(124,145,156, 64));
 		String[] packageNames = getAllAvailableModules();
 		
 		// Iterates through the array of package names and loads each module's icon.
@@ -118,9 +118,13 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				continue;
 			}
 			//tries to load specified icon from module
-			PImage tempImage = loadImage(getModuleMetaData(packageNames[i]).getIconPath(), packageNames[i], 0);
+			ModuleMetaData mToLoad = getModuleMetaData(packageNames[i]);
+			PImage tempImage = loadImage( mToLoad.getIconPath(), mToLoad);
 			//load default if this fails
-			if (tempImage == null) tempImage = loadImage("question.png");
+			if (tempImage == null) {
+				log.warn("Could not find icon for the module " + mToLoad.getPackageName());
+				tempImage = loadImage("question.png");
+			}
 			// storing icons and package names into their respective ModuleElements.
 			ModuleElement tempElement = new ModuleElement(this, tempImage, 
 					packageNames[i], getModuleMetaData(packageNames[i]), 1.0);

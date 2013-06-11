@@ -7,8 +7,8 @@ public abstract class DisplayElement {
 	protected PApplet parent;
 	protected int originX;
 	protected int originY;
+	// TODO abstract this into a WeightedDisplayElement
 	protected double weight;
-	protected double scale;
 	protected int width;
 	protected int height;
 	

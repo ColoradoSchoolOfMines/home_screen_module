@@ -3,6 +3,9 @@ package edu.mines.acmX.exhibit.modules.home_screen.view.weather;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import processing.core.PApplet;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.modules.home_screen.view.DisplayElement;
@@ -21,6 +24,8 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.DisplayElement;
  * @see {@link WeatherLoader} {@link WeatherCurrentInfo} {@link WeatherForecastDayInfo}
  */
 public class WeatherDisplay extends DisplayElement {
+	
+	private static Logger logger = LogManager.getLogger(WeatherDisplay.class);
 
 	//time (in minutes) to reload weather information
 	public static final int TIME_TO_REFRESH = 10;
@@ -92,7 +97,11 @@ public class WeatherDisplay extends DisplayElement {
 		parent.text(description, originX + parent.textWidth(temps) + initialOffset + padding, originY + height/2);
 		parent.imageMode(PApplet.CORNERS);
 		int imgOffsetX = (int) (parent.textWidth(temps) + parent.textWidth(description) + initialOffset + 2 * padding - 10);
-		parent.image(img, originX + imgOffsetX,	originY, originX + imgOffsetX + height, originY + height); //make the image square
+		if( img != null ) { 
+			parent.image(img, originX + imgOffsetX,	originY, originX + imgOffsetX + height, originY + height); //make the image square
+		} else {
+			logger.warn("Could not load weather icon");
+		}
 		parent.imageMode(PApplet.CORNER);
 		parent.text(windString, originX + imgOffsetX + height + padding, originY + height/2);
 	}

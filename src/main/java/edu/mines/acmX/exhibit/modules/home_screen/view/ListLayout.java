@@ -9,15 +9,18 @@ import edu.mines.acmX.exhibit.modules.home_screen.Orientation;
 public class ListLayout extends DisplayElement {
 
 	private static final boolean DEBUG = false;
+	private static final float ROUNDEDNESS = 100;
 	private Orientation orientation;
 	private List<DisplayElement> elements;
 	// TODO should the weight of an element have an effect on how the ratio works?
 	private double totalWeight;
 	// ratio width:height ex 3 = 3px width : 1px height
 	private double ratio;
-	private int viewLength;
+	private int xOffset;
 	private int listSize;
 	private int minShown;
+	private int backgroundColor;
+	private boolean drawBackground = false;
 	
 	//default constructor
 	public ListLayout(Orientation ori, PApplet par, double weight, double ratio) {
@@ -26,9 +29,15 @@ public class ListLayout extends DisplayElement {
 		this.elements = new ArrayList<DisplayElement>();
 		this.totalWeight = 0;
 		this.ratio = ratio;
-		this.viewLength = 0;
+		this.xOffset = 0;
 		this.listSize = 0;
 		this.minShown = 0;
+	}
+	
+	public ListLayout(Orientation ori, PApplet par, double weight, double ratio, int minShown, int backgroundColor) {
+		this(ori, par, weight, ratio, minShown);
+		this.drawBackground = true;
+		this.backgroundColor = backgroundColor;
 	}
 	
 	//specialized constructor if the user wants to specify a minimum number of elements to display
@@ -41,7 +50,7 @@ public class ListLayout extends DisplayElement {
 		this.minShown = minShown;
 		this.totalWeight = 0;
 		this.ratio = ratio;
-		this.viewLength = 0;
+		this.xOffset = 0;
 		this.listSize = minShown;
 	}
 	
@@ -76,7 +85,7 @@ public class ListLayout extends DisplayElement {
 		if (orientation == Orientation.HORIZONTAL) {
 			int spacing = (int) (height * ratio);
 			float totalLength = spacing * listSize;
-			xTemp -= viewLength;
+			xTemp -= xOffset;
 			for (DisplayElement element: elements) {
 				while(xTemp >= totalLength - spacing) {
 					xTemp -= totalLength;
@@ -94,7 +103,7 @@ public class ListLayout extends DisplayElement {
 			// TODO use viewLength
 			int spacing = (int) (width * ratio); 
 			float totalHeight = spacing * listSize;
-			yTemp -= viewLength;
+			yTemp -= xOffset;
 			for (DisplayElement element: elements) {
 				while(yTemp >= totalHeight) {
 					yTemp -= totalHeight;
@@ -113,13 +122,10 @@ public class ListLayout extends DisplayElement {
 
 	@Override
 	public void draw() {
-		if (DEBUG) {
-			parent.noFill();
-			parent.stroke(0);
-			parent.strokeWeight(1);
-			parent.rect(originX, originY, width, height);
-			parent.noStroke();
-			parent.fill(0);
+		// if the layout was constructed using the background option draw the background
+		if (this.drawBackground) {
+			parent.fill(this.backgroundColor);
+			parent.rect(this.originX, this.originY, this.width, this.height, this.width / ROUNDEDNESS, this.height / ROUNDEDNESS );
 		}
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {
@@ -150,6 +156,6 @@ public class ListLayout extends DisplayElement {
 	}
 
 	public void incrementViewLength(int inc) {
-		viewLength += inc;
+		xOffset += inc;
 	}
 }
