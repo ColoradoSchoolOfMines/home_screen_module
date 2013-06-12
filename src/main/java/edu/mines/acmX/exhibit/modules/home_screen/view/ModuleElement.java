@@ -79,8 +79,9 @@ public class ModuleElement extends DisplayElement {
 
 		// processing has a bug where continually resizing the image will fade
 		// the image. We have to make sure to do this only once.
-		if(resize) {
-			icon.resize(width, height);
+		if (resize) {
+			icon.resize((int) (width - 2 * width / IMAGE_PADDING),
+					(int) (height - 2 * height / IMAGE_PADDING));
 			resize = false;
 		}
 
@@ -89,8 +90,7 @@ public class ModuleElement extends DisplayElement {
 		float heightRatio = (float) icon.height / height;
 		float widthRatio = (float) icon.width / width;
 		if (leftEdge) {
-			drawModuleIconWithLeftSideCut((int) edgeLength, 0,
-					(int) (width - edgeLength), icon.height);
+			drawModuleIconWithLeftSideCut();
 		} else if (rightEdge) {
 
 			drawModuleIconWithRightSideCut(0, 0, (int) (width - edgeLength),
@@ -120,24 +120,96 @@ public class ModuleElement extends DisplayElement {
 		}
 	}
 
+	/**
+	 * TODO comment
+	 * 
+	 * @param x
+	 * @param y
+	 * @param cutWidth
+	 * @param cutHeight
+	 */
 	private void drawModuleIconWithRightSideCut(int x, int y, int cutWidth,
 			int cutHeight) {
 		PImage temp = icon.get(x, y, cutWidth, cutHeight);
-		parent.image(temp, 
-				originX + cutWidth / IMAGE_PADDING,
-				originY + cutHeight / IMAGE_PADDING, 
-				cutWidth - 2 * cutWidth / IMAGE_PADDING, 
-				cutHeight - 2 * cutHeight / IMAGE_PADDING);
+		parent.image(temp, originX + cutWidth / IMAGE_PADDING, originY
+				+ cutHeight / IMAGE_PADDING, cutWidth - 2 * cutWidth
+				/ IMAGE_PADDING, cutHeight - 2 * cutHeight / IMAGE_PADDING);
 	}
 
-	private void drawModuleIconWithLeftSideCut(int x, int y, int cutWidth,
-			int cutHeight) {
-		PImage temp = icon.get(x, y, cutWidth, cutHeight);
-		parent.image(temp, 
-				originX + edgeLength + cutWidth / IMAGE_PADDING, 
-				originY + cutHeight / IMAGE_PADDING, 
-				cutWidth - 2 * cutWidth / IMAGE_PADDING,
-				cutHeight - 2 * cutHeight / IMAGE_PADDING);
+	/**
+	 * TODO comment
+	 */
+	private void drawModuleIconWithLeftSideCut() {
+		int cutWidth = (int) (width - edgeLength);
+		// set the drawing parameters for the border
+		parent.stroke(153, 153);
+		parent.noFill();
+
+		float xRadius = width / BORDER_CURVE;
+		float yRadius = height / BORDER_CURVE;
+		float originXAtCut = originX + edgeLength;
+		float originYAtCut = originY;
+
+		// draw line on the top if in view
+		if (cutWidth >= xRadius) {
+			parent.line(originXAtCut, originYAtCut, originXAtCut + cutWidth
+					- xRadius, originYAtCut);
+		}
+
+		// draw line on the bottom if in view
+		if (cutWidth >= xRadius) {
+			parent.line(originXAtCut, originYAtCut + height, originXAtCut
+					+ cutWidth - xRadius, originYAtCut + height);
+		}
+
+		// draw line on the right side
+		parent.line(originXAtCut + cutWidth, originYAtCut + yRadius,
+				originXAtCut + cutWidth, originYAtCut + height - yRadius);
+		
+		// calculate the theata to make the arcs come in smoothly
+		float x = cutWidth;
+		if ( x > xRadius ) {
+			x = xRadius;
+		}
+		float theata = (float) Math.acos( (xRadius - x) / xRadius );
+		
+		// draw the corner for the top-right corner
+		// we need to multiply radius by two because we are dictating the elipse
+		// diameter
+		parent.arc(originXAtCut + cutWidth - xRadius, originYAtCut + yRadius,
+				xRadius * 2, yRadius * 2, -theata, 0);
+		
+		// draw the corner for the bottom-right corner
+		parent.arc(originXAtCut + cutWidth - xRadius, originYAtCut + height - yRadius, xRadius * 2, yRadius * 2, 0, theata);
+
+		// There are a couple cases to deal with when drawing an image. One,
+		// when the image is being cut itself. This is the else in the following
+		// code. The second case is when the module is being cut in between the
+		// edge of the module and the image (i.e. in the image padding area of
+		// the left hand side). This second case is what the if statement
+		// catches.
+		float adjustedImageX, adjustedImageWidth, adjustedCutWidth, adjustedCutHeight, imageOffsetXFromZeroZero, imageWidth, imageHeight;
+		imageHeight = height - 2 * height / IMAGE_PADDING;
+		if (edgeLength < width / IMAGE_PADDING) {
+			adjustedImageX = originX + width / IMAGE_PADDING;
+			// adjustedImageWidth = cutWidth - width / IMAGE_PADDING;
+			imageOffsetXFromZeroZero = 0;
+			imageWidth = width - 2 * width / IMAGE_PADDING;
+		} else {
+			adjustedImageX = originX + edgeLength;
+			// adjustedImageWidth = cutWidth - 2 * width / IMAGE_PADDING;
+			imageOffsetXFromZeroZero = edgeLength - width / IMAGE_PADDING;
+			imageWidth = cutWidth - 1 * width / IMAGE_PADDING;
+		}
+
+		// The final case is when the cut is on the image padding on the right
+		// of the image. Here we will not render the image at all.
+		if (cutWidth > width / IMAGE_PADDING) {
+			PImage temp = icon.get((int) imageOffsetXFromZeroZero, 0,
+					(int) imageWidth, (int) imageHeight);
+			parent.image(temp, adjustedImageX,
+					originY + height / IMAGE_PADDING, imageWidth, imageHeight);
+		}
 	}
 
 	/**
