@@ -13,7 +13,9 @@ public class ModuleElement extends DisplayElement {
 	public static final int HINT_SPEED = 1;
 	public static final int INFO_SPEED = 1;
 	public static final int RECT_CURVE = 6;
+	public static final int BORDER_CURVE = 6;
 	public static final int INFO_FADE_SPEED = 5;
+	public static final float IMAGE_PADDING = 10;
 	private PImage icon;
 	private String packageName;
 	private ModuleMetaData data;
@@ -81,7 +83,10 @@ public class ModuleElement extends DisplayElement {
 		}
 		// else show the icon normally
 		else {
-		parent.image(icon, originX, originY, width, height);
+			parent.stroke(153,153);
+			parent.noFill();
+			parent.rect(originX, originY, width, height, (float) (width / BORDER_CURVE), (float) (height / BORDER_CURVE));
+			parent.image(icon, originX + width / IMAGE_PADDING, originY + height / IMAGE_PADDING, width - 2 * width / IMAGE_PADDING, height - 2 * height / IMAGE_PADDING);
 		}
 
 		// draw hint if need be
