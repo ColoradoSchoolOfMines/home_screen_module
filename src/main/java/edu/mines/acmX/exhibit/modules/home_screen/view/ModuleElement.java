@@ -149,39 +149,55 @@ public class ModuleElement extends DisplayElement {
 		float yRadius = height / BORDER_CURVE;
 		float originXAtCut = originX + edgeLength;
 		float originYAtCut = originY;
+		float originToDrawLine = originXAtCut;
+
+		if (edgeLength <= xRadius) {
+			originToDrawLine = xRadius - edgeLength + originXAtCut;
+		}
 
 		// draw line on the top if in view
 		if (cutWidth >= xRadius) {
-			parent.line(originXAtCut, originYAtCut, originXAtCut + cutWidth
+			parent.line(originToDrawLine, originYAtCut, originXAtCut + cutWidth
 					- xRadius, originYAtCut);
 		}
 
 		// draw line on the bottom if in view
 		if (cutWidth >= xRadius) {
-			parent.line(originXAtCut, originYAtCut + height, originXAtCut
+			parent.line(originToDrawLine, originYAtCut + height, originXAtCut
 					+ cutWidth - xRadius, originYAtCut + height);
 		}
 
 		// draw line on the right side
 		parent.line(originXAtCut + cutWidth, originYAtCut + yRadius,
 				originXAtCut + cutWidth, originYAtCut + height - yRadius);
-		
-		// calculate the theata to make the arcs come in smoothly
-		float x = cutWidth;
-		if ( x > xRadius ) {
-			x = xRadius;
-		}
-		float theata = (float) Math.acos( (xRadius - x) / xRadius );
-		
+
+		// calculate the theta to make the right side arcs come in smoothly
+		float theataForRight = calculateThetaForArc(cutWidth, xRadius);
+
 		// draw the corner for the top-right corner
 		// we need to multiply radius by two because we are dictating the elipse
 		// diameter
 		parent.arc(originXAtCut + cutWidth - xRadius, originYAtCut + yRadius,
-				xRadius * 2, yRadius * 2, -theata, 0);
-		
-		// draw the corner for the bottom-right corner
-		parent.arc(originXAtCut + cutWidth - xRadius, originYAtCut + height - yRadius, xRadius * 2, yRadius * 2, 0, theata);
+				xRadius * 2, yRadius * 2, -theataForRight, 0);
 
+		// draw the corner for the bottom-right corner
+		parent.arc(originXAtCut + cutWidth - xRadius, originYAtCut + height
+				- yRadius, xRadius * 2, yRadius * 2, 0, theataForRight);
+
+		// calculate the theta for the left side arc to display smoothly.
+		float thetaForLeft = calculateThetaForArc(edgeLength, xRadius);
+		// Only display the left arcs if the edge length is small enough.
+		if (edgeLength < xRadius) {
+			// draw the top left corner
+			parent.arc(originXAtCut + (xRadius - edgeLength), originYAtCut
+					+ yRadius, xRadius * 2, yRadius * 2, -PApplet.PI
+					+ thetaForLeft, -PApplet.HALF_PI);
+			// draw the bottom left corner
+			parent.arc(originXAtCut + (xRadius - edgeLength), originYAtCut
+					+ height - yRadius, xRadius * 2, yRadius * 2,
+					PApplet.HALF_PI, PApplet.PI - thetaForLeft);
+		}
+		
 		// There are a couple cases to deal with when drawing an image. One,
 		// when the image is being cut itself. This is the else in the following
 		// code. The second case is when the module is being cut in between the
@@ -210,6 +226,18 @@ public class ModuleElement extends DisplayElement {
 			parent.image(temp, adjustedImageX,
 					originY + height / IMAGE_PADDING, imageWidth, imageHeight);
 		}
+	}
+
+	/**
+	 * This will calculate the angle at which an arc should be drawn to make it
+	 * fade in with a hard edge.
+	 */
+	private float calculateThetaForArc(float cutArcFromHorizontalEdge, float arcRadi) {
+		float tempX = cutArcFromHorizontalEdge;
+		if (cutArcFromHorizontalEdge > arcRadi) {
+			 tempX = arcRadi;
+		}
+		return (float) Math.acos((arcRadi - tempX) / arcRadi);
 	}
 
 	/**
