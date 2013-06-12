@@ -29,6 +29,7 @@ public class ModuleElement extends DisplayElement {
 	private boolean drawHint;
 	private boolean drawInfo;
 	private float infoAlpha;
+	private boolean resize;
 
 	public ModuleElement(HomeScreen par, PImage image, String name,
 			ModuleMetaData data, double weight) {
@@ -44,6 +45,8 @@ public class ModuleElement extends DisplayElement {
 		drawHint = false;
 		drawInfo = false;
 		infoAlpha = (float) 0;
+		resize = true;
+
 	}
 
 	@Override
@@ -73,15 +76,25 @@ public class ModuleElement extends DisplayElement {
 
 	@Override
 	public void draw() {
+
+		// processing has a bug where continually resizing the image will fade
+		// the image. We have to make sure to do this only once.
+		if(resize) {
+			icon.resize(width, height);
+			resize = false;
+		}
+
 		visible = true;
 		// show part of an image if the full image doesn't fit.
 		float heightRatio = (float) icon.height / height;
 		float widthRatio = (float) icon.width / width;
 		if (leftEdge) {
-			drawModuleIconWithLeftSideCut((int) (edgeLength * widthRatio), 0,(int) ((width - edgeLength) * widthRatio), icon.height);
+			drawModuleIconWithLeftSideCut((int) edgeLength, 0,
+					(int) (width - edgeLength), icon.height);
 		} else if (rightEdge) {
 
-			drawModuleIconWithRightSideCut(0, 0, (int) ((width - edgeLength) * widthRatio), icon.height);
+			drawModuleIconWithRightSideCut(0, 0, (int) (width - edgeLength),
+					icon.height);
 		}
 		// else show the icon normally
 		else {
@@ -106,18 +119,27 @@ public class ModuleElement extends DisplayElement {
 			infoAlpha -= INFO_FADE_SPEED;
 		}
 	}
-	
-	private void drawModuleIconWithRightSideCut(int x, int y, int cutWidth, int cutHeight ) {
-		PImage temp = icon.get(x, y,
-				cutWidth, cutHeight);
-		parent.image(temp, originX, originY, width - edgeLength, height);
-	}
-	
-	private void drawModuleIconWithLeftSideCut(int x, int y, int cutWidth, int cutHeight) {
+
+	private void drawModuleIconWithRightSideCut(int x, int y, int cutWidth,
+			int cutHeight) {
 		PImage temp = icon.get(x, y, cutWidth, cutHeight);
-		parent.image(temp, originX + edgeLength, originY, width
-				- edgeLength, height);
-	}	
+		parent.image(temp, 
+				originX + cutWidth / IMAGE_PADDING,
+				originY + cutHeight / IMAGE_PADDING, 
+				cutWidth - 2 * cutWidth / IMAGE_PADDING, 
+				cutHeight - 2 * cutHeight / IMAGE_PADDING);
+	}
+
+	private void drawModuleIconWithLeftSideCut(int x, int y, int cutWidth,
+			int cutHeight) {
+		PImage temp = icon.get(x, y, cutWidth, cutHeight);
+		parent.image(temp, 
+				originX + edgeLength + cutWidth / IMAGE_PADDING, 
+				originY + cutHeight / IMAGE_PADDING, 
+				cutWidth - 2 * cutWidth / IMAGE_PADDING,
+				cutHeight - 2 * cutHeight / IMAGE_PADDING);
+	}
+
 	/**
 	 * This draws a full module icon with no extra stuff.
 	 */
@@ -125,20 +147,18 @@ public class ModuleElement extends DisplayElement {
 		parent.stroke(153, 153);
 		parent.noFill();
 		parent.rect(originX, originY, width, height,
-				(float) (width / BORDER_CURVE),
-				(float) (height / BORDER_CURVE));
-		parent.image(icon, originX + width / IMAGE_PADDING, originY
-				+ height / IMAGE_PADDING,
-				width - 2 * width / IMAGE_PADDING, height - 2 * height
-						/ IMAGE_PADDING);
+				(float) (width / BORDER_CURVE), (float) (height / BORDER_CURVE));
+		parent.image(icon, originX + width / IMAGE_PADDING, originY + height
+				/ IMAGE_PADDING, width - 2 * width / IMAGE_PADDING, height - 2
+				* height / IMAGE_PADDING);
 	}
-	
+
 	/**
 	 * This draws an area giving more information about a module. This method
 	 * should be called after image drawing so that the information is displayed
 	 * on top of the module
 	 */
-	private void drawInformationFade( float alpha ) {
+	private void drawInformationFade(float alpha) {
 		// set color to blue
 		parent.fill(135, 206, 250, alpha);
 		// draw info box
@@ -152,11 +172,9 @@ public class ModuleElement extends DisplayElement {
 		parent.textAlign(PApplet.LEFT, PApplet.TOP);
 		parent.text(data.getTitle(), (float) (originX + (width / 6)),
 				(float) (originY + (height / 6)));
-		parent.text("By " + data.getAuthor(),
-				(float) (originX + (width / 6)), (float) (originY
-						+ (height / 6) + 40));
+		parent.text("By " + data.getAuthor(), (float) (originX + (width / 6)),
+				(float) (originY + (height / 6) + 40));
 	}
-
 
 	/**
 	 * This draws the area that the user will have to hand over to launch a
