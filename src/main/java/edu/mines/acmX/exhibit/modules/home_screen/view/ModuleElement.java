@@ -29,9 +29,9 @@ public class ModuleElement extends DisplayElement {
 	private boolean drawHint;
 	private boolean drawInfo;
 	private float infoAlpha;
-	
-	public ModuleElement(HomeScreen par, PImage image,
-			String name, ModuleMetaData data, double weight) {
+
+	public ModuleElement(HomeScreen par, PImage image, String name,
+			ModuleMetaData data, double weight) {
 		super(par, weight);
 		icon = image;
 		packageName = name;
@@ -51,21 +51,25 @@ public class ModuleElement extends DisplayElement {
 		originX = x;
 		originY = y;
 		// update coordinates for all VirtualRectClicks
-		startGame.updateCoordinates(originX + (width / 4), originY + (height / 4), width / 2, height / 2);
+		startGame.updateCoordinates(originX + (width / 4), originY
+				+ (height / 4), width / 2, height / 2);
 		hint.updateCoordinates(originX, originY, width, height);
-		info.updateCoordinates(originX + ( 3 * width / 4), originY, width / 4, height / 4);
+		info.updateCoordinates(originX + (3 * width / 4), originY, width / 4,
+				height / 4);
 		// if the module is visible, start checking for clicks
 		if (visible && !(leftEdge) && !(rightEdge)) {
-			
-			startGame.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
-			hint.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
-			info.update((int) HomeScreen.getHandX(), (int) HomeScreen.getHandY(), parent.millis());
+
+			startGame.update((int) HomeScreen.getHandX(),
+					(int) HomeScreen.getHandY(), parent.millis());
+			hint.update((int) HomeScreen.getHandX(),
+					(int) HomeScreen.getHandY(), parent.millis());
+			info.update((int) HomeScreen.getHandX(),
+					(int) HomeScreen.getHandY(), parent.millis());
 		}
 		visible = false;
 		leftEdge = false;
 		rightEdge = false;
 	}
-	
 
 	@Override
 	public void draw() {
@@ -74,67 +78,114 @@ public class ModuleElement extends DisplayElement {
 		float heightRatio = (float) icon.height / height;
 		float widthRatio = (float) icon.width / width;
 		if (leftEdge) {
-			PImage temp = icon.get((int) (edgeLength * widthRatio), 0, (int) ((width - edgeLength) * widthRatio) , icon.height);
-			parent.image(temp, originX + edgeLength, originY, width - edgeLength, height);
-		}
-		else if (rightEdge) {
-			PImage temp = icon.get(0, 0, (int)  ((width-edgeLength) * widthRatio), icon.height);
-			parent.image(temp, originX, originY, width - edgeLength, height);
+			drawModuleIconWithLeftSideCut((int) (edgeLength * widthRatio), 0,(int) ((width - edgeLength) * widthRatio), icon.height);
+		} else if (rightEdge) {
+
+			drawModuleIconWithRightSideCut(0, 0, (int) ((width - edgeLength) * widthRatio), icon.height);
 		}
 		// else show the icon normally
 		else {
-			parent.stroke(153,153);
-			parent.noFill();
-			parent.rect(originX, originY, width, height, (float) (width / BORDER_CURVE), (float) (height / BORDER_CURVE));
-			parent.image(icon, originX + width / IMAGE_PADDING, originY + height / IMAGE_PADDING, width - 2 * width / IMAGE_PADDING, height - 2 * height / IMAGE_PADDING);
+			drawModuleIcon();
 		}
 
 		// draw hint if need be
 		if (drawHint && !drawInfo) {
-			parent.noFill();
-			parent.stroke(0);
-			parent.strokeWeight(4);
-			// draw the start module hint rect
-			parent.rect((float) startGame.getX(), (float) startGame.getY(), (float) startGame.getWidth(), (float) startGame.getHeight(), (float) (startGame.getWidth() / RECT_CURVE), (float) (startGame.getHeight() / RECT_CURVE));
-			// draw the module info rect
-			parent.rect((float) info.getX(), (float) info.getY(), (float) info.getWidth(), (float) info.getHeight(), (float) (info.getWidth() / RECT_CURVE), (float) (info.getHeight() / RECT_CURVE));
-			parent.noStroke();
-			parent.fill(0);
+			drawHintForInfo();
+			drawLaunchArea();
 		}
 		// if a click registers with the info click, draw the info
 		if (drawInfo) {
-			// set color to blue
-			parent.fill(135, 206, 250, infoAlpha);
-			// draw info box
-			parent.rect((float) originX, (float) originY, (float) width, (float) height, (float) (width / RECT_CURVE), (float) (height / RECT_CURVE));
-			// set color to black
-			parent.fill(0, infoAlpha);
-			// draw packageName
-			parent.textSize(20);
-			parent.textAlign(PApplet.LEFT, PApplet.TOP);
-			parent.text(data.getTitle(), (float) (originX + (width / 6)), (float) (originY + (height / 6)));
-			parent.text("By " + data.getAuthor(), (float) (originX + (width / 6)), (float) (originY + (height / 6) + 40));
+			drawInformationFade(infoAlpha);
 			if (infoAlpha < 255) {
 				infoAlpha += INFO_FADE_SPEED;
 			}
 		}
 		// if the click was false, but the infoAlpha isn't zero, fade info away
 		else if (infoAlpha > 0) {
-			// set color to blue
-			parent.fill(135, 206, 250, infoAlpha);
-			// draw info box
-			parent.rect((float) originX, (float) originY, (float) width, (float) height, (float) (width / RECT_CURVE), (float) (height / RECT_CURVE));
-			// set color to black
-			parent.fill(0, infoAlpha);
-			// draw packageName
-			parent.textSize(20);
-			parent.textAlign(PApplet.LEFT, PApplet.TOP);
-			parent.text(data.getTitle(), (float) (originX + (width / 6)), (float) (originY + (height / 6)));
-			parent.text("By " + data.getAuthor(), (float) (originX + (width / 6)), (float) (originY + (height / 6) + 40));
+			drawInformationFade(infoAlpha);
 			infoAlpha -= INFO_FADE_SPEED;
 		}
 	}
 	
+	private void drawModuleIconWithRightSideCut(int x, int y, int cutWidth, int cutHeight ) {
+		PImage temp = icon.get(x, y,
+				cutWidth, cutHeight);
+		parent.image(temp, originX, originY, width - edgeLength, height);
+	}
+	
+	private void drawModuleIconWithLeftSideCut(int x, int y, int cutWidth, int cutHeight) {
+		PImage temp = icon.get(x, y, cutWidth, cutHeight);
+		parent.image(temp, originX + edgeLength, originY, width
+				- edgeLength, height);
+	}	
+	/**
+	 * This draws a full module icon with no extra stuff.
+	 */
+	private void drawModuleIcon() {
+		parent.stroke(153, 153);
+		parent.noFill();
+		parent.rect(originX, originY, width, height,
+				(float) (width / BORDER_CURVE),
+				(float) (height / BORDER_CURVE));
+		parent.image(icon, originX + width / IMAGE_PADDING, originY
+				+ height / IMAGE_PADDING,
+				width - 2 * width / IMAGE_PADDING, height - 2 * height
+						/ IMAGE_PADDING);
+	}
+	
+	/**
+	 * This draws an area giving more information about a module. This method
+	 * should be called after image drawing so that the information is displayed
+	 * on top of the module
+	 */
+	private void drawInformationFade( float alpha ) {
+		// set color to blue
+		parent.fill(135, 206, 250, alpha);
+		// draw info box
+		parent.rect((float) originX, (float) originY, (float) width,
+				(float) height, (float) (width / RECT_CURVE),
+				(float) (height / RECT_CURVE));
+		// set color to black
+		parent.fill(0, alpha);
+		// draw packageName
+		parent.textSize(20);
+		parent.textAlign(PApplet.LEFT, PApplet.TOP);
+		parent.text(data.getTitle(), (float) (originX + (width / 6)),
+				(float) (originY + (height / 6)));
+		parent.text("By " + data.getAuthor(),
+				(float) (originX + (width / 6)), (float) (originY
+						+ (height / 6) + 40));
+	}
+
+
+	/**
+	 * This draws the area that the user will have to hand over to launch a
+	 * module
+	 */
+	private void drawLaunchArea() {
+		parent.rect((float) info.getX(), (float) info.getY(),
+				(float) info.getWidth(), (float) info.getHeight(),
+				(float) (info.getWidth() / RECT_CURVE),
+				(float) (info.getHeight() / RECT_CURVE));
+		parent.noStroke();
+		parent.fill(0);
+	}
+
+	/**
+	 * This draws an area that can be hand over to show information about a
+	 * module.
+	 */
+	private void drawHintForInfo() {
+		parent.noFill();
+		parent.stroke(0);
+		parent.strokeWeight(4);
+		// draw the start module hint rect
+		parent.rect((float) startGame.getX(), (float) startGame.getY(),
+				(float) startGame.getWidth(), (float) startGame.getHeight(),
+				(float) (startGame.getWidth() / RECT_CURVE),
+				(float) (startGame.getHeight() / RECT_CURVE));
+	}
+
 	public PImage getIcon() {
 		return icon;
 	}
@@ -172,15 +223,13 @@ public class ModuleElement extends DisplayElement {
 		// check for a hint click
 		if (hint.durationCompleted(millis)) {
 			drawHint = true;
-		}
-		else {
+		} else {
 			drawHint = false;
 		}
 		// check for an info click
 		if (info.durationCompleted(millis)) {
 			drawInfo = true;
-		}
-		else {
+		} else {
 			drawInfo = false;
 		}
 
