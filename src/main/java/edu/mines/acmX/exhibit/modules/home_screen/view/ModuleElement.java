@@ -7,6 +7,11 @@ import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 
+/**
+ * This class is reponsible for displaying a visual representation of a Module.
+ * TODO many of the static configs should be abstracted into a configuration
+ * file so that it can be easily changed and customized.
+ */
 public class ModuleElement extends DisplayElement {
 
 	public static final int MODULE_RUN_SPEED = 750;
@@ -92,6 +97,9 @@ public class ModuleElement extends DisplayElement {
 		rightEdge = false;
 	}
 
+    /**
+     * Draw the module element.
+     */
 	@Override
 	public void draw() {
 
@@ -145,7 +153,12 @@ public class ModuleElement extends DisplayElement {
 	}
 
 	/**
-	 * TODO comment
+	 * This is for drawing the module when it is sliced from the right hand
+     * side.
+     *
+     * TODO Note that this function is very similar to
+     * drawModuleIconWithLeftSideCut and should potentially be combined into a
+     * single function. 
 	 * 
 	 * @param x
 	 * @param y
@@ -240,7 +253,7 @@ public class ModuleElement extends DisplayElement {
 	}
 
 	/**
-	 * TODO comment
+     * This is for drawing the icon when the left side is being sliced.
 	 */
 	private void drawModuleIconWithLeftSideCut() {
 		int cutWidth = (int) (width - edgeLength);
@@ -348,14 +361,19 @@ public class ModuleElement extends DisplayElement {
 	 * This draws a full module icon with no extra stuff.
 	 */
 	private void drawModuleIcon(int tint) {
+        // draw the border of the rounded rectangle
 		parent.stroke(153, 153);
 		parent.noFill();
 		parent.rect(originX, originY, width, height,
 				(float) (width / BORDER_CURVE), (float) (height / BORDER_CURVE));
+
+        // draw the image icon for the module
         parent.tint(255, tint);
 		parent.image(icon, originX + width / IMAGE_PADDING, originY + height
 				/ IMAGE_PADDING, width - 2 * width / IMAGE_PADDING, height - 2
 				* height / IMAGE_PADDING);
+        
+        // reset the tint
         parent.noTint();
 	}
 
@@ -394,6 +412,7 @@ public class ModuleElement extends DisplayElement {
 	 * module
 	 */
 	private void drawHintForInfo() {
+        // draw a rounded rectangle around the hit box
 		parent.stroke(0);
 		parent.strokeWeight(4);
         parent.fill(HINT_BACKGROUND);
@@ -404,6 +423,8 @@ public class ModuleElement extends DisplayElement {
                 (float) (info.getHeight()),
                 (float) (info.getWidth() / BORDER_CURVE),
                 (float) (info.getHeight() / BORDER_CURVE));
+
+        // draw an icon in the center of the hit box
         int paddingX = info.getWidth() / INFO_IMAGE_PADDING;
         int paddingY = info.getHeight() / INFO_IMAGE_PADDING;
         parent.image(this.infoImage,
@@ -418,7 +439,6 @@ public class ModuleElement extends DisplayElement {
 	 * module.
 	 */
 	private void drawLaunchArea() {
-
         parent.fill(HINT_BACKGROUND);
 		parent.stroke(0);
 		parent.strokeWeight(4);
@@ -427,6 +447,7 @@ public class ModuleElement extends DisplayElement {
 				(float) startGame.getWidth(), (float) startGame.getHeight(),
 				(float) (startGame.getWidth() / RECT_CURVE),
 				(float) (startGame.getHeight() / RECT_CURVE));
+        // Draw some text to provide additional hints on launching
 		parent.textSize(48);
 		parent.fill(0, 102, 153, 220);
 		parent.textAlign(PApplet.CENTER, PApplet.CENTER);

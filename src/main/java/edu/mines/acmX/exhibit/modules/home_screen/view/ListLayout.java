@@ -6,6 +6,14 @@ import java.util.List;
 import processing.core.PApplet;
 import edu.mines.acmX.exhibit.modules.home_screen.Orientation;
 
+/**
+ * ListLayout displays elements side by side either horizontal or vertical (TODO
+ * vertical needs work). This an other layouts should also be better tested and
+ * abstracted in the standard lib. Also, a design note would be to change how
+ * the list layout displays edges.  Right now the list layout depends on its
+ * child elements to "cut" themselves, but really it would be more ideal and
+ * easier for code to have the List Layout do the "cutting".  
+ */
 public class ListLayout extends DisplayElement {
 
 	private static final boolean DEBUG = false;
