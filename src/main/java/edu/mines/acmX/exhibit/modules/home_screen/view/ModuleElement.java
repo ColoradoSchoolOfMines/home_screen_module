@@ -93,8 +93,7 @@ public class ModuleElement extends DisplayElement {
 			drawModuleIconWithLeftSideCut();
 		} else if (rightEdge) {
 
-			drawModuleIconWithRightSideCut(0, 0, (int) (width - edgeLength),
-					icon.height);
+			drawModuleIconWithRightSideCut();
 		}
 		// else show the icon normally
 		else {
@@ -128,12 +127,92 @@ public class ModuleElement extends DisplayElement {
 	 * @param cutWidth
 	 * @param cutHeight
 	 */
-	private void drawModuleIconWithRightSideCut(int x, int y, int cutWidth,
-			int cutHeight) {
-		PImage temp = icon.get(x, y, cutWidth, cutHeight);
-		parent.image(temp, originX + cutWidth / IMAGE_PADDING, originY
-				+ cutHeight / IMAGE_PADDING, cutWidth - 2 * cutWidth
-				/ IMAGE_PADDING, cutHeight - 2 * cutHeight / IMAGE_PADDING);
+	private void drawModuleIconWithRightSideCut() {
+		int cutWidth = (int) (width - edgeLength);
+		// set the drawing parameters for the border
+		parent.stroke(153, 153);
+		parent.noFill();
+
+		float xRadius = width / BORDER_CURVE;
+		float yRadius = height / BORDER_CURVE;
+		
+		float originXAtCut = originX + cutWidth; //modified from other
+		float originYAtCut = originY;
+		float originToDrawLine = originXAtCut;
+		
+		// this ensures that the top and bottom lines are not drawn over the right most arcs. 
+		if (edgeLength <= xRadius) {
+			originToDrawLine = originXAtCut - (xRadius - edgeLength); //modified
+		}
+
+		
+		// draw line on the top if in view
+		if (cutWidth >= xRadius) {
+			parent.line(originToDrawLine, originYAtCut, originXAtCut - cutWidth
+					+ xRadius, originYAtCut); //modified from other
+		}
+
+		// draw line on the bottom if in view
+		if (cutWidth >= xRadius) {
+			parent.line(originToDrawLine, originYAtCut + height, originXAtCut
+					- cutWidth + xRadius, originYAtCut + height); //modified from other
+		}
+		
+		// draw line on the left side
+		parent.line(originXAtCut - cutWidth, originYAtCut + yRadius,
+				originXAtCut - cutWidth, originYAtCut + height - yRadius); //modifed from other
+		
+		// calculate the theta to make the left side arcs come in smoothly
+		float thetaForLeft = calculateThetaForArc(cutWidth, xRadius); // modified
+		
+		parent.text("theata is:" + thetaForLeft,50,50);
+		// draw the corner for the top-left corner
+		// we need to multiply radius by two because we are dictating the elipse
+		// diameter
+		parent.arc(originXAtCut - cutWidth + xRadius, originYAtCut + yRadius,
+				xRadius * 2, yRadius * 2, PApplet.PI , thetaForLeft + PApplet.PI); //sign flip
+		
+		// draw the corner for the bottom-left corner
+		parent.arc(originXAtCut - cutWidth + xRadius, originYAtCut + height
+				- yRadius, xRadius * 2, yRadius * 2, PApplet.PI - thetaForLeft, PApplet.PI); //sign flip
+		
+		// calculate the theta for the right side arc to display smoothly.
+		float thetaForRight = calculateThetaForArc(edgeLength, xRadius);
+		// Only display the right arcs if the edge length is small enough.
+		if (edgeLength < xRadius) {
+			// draw the top right corner
+			parent.arc(originXAtCut + (edgeLength - xRadius), originYAtCut
+					+ yRadius, xRadius * 2, yRadius * 2, -PApplet.HALF_PI, -thetaForRight );
+			// draw the bottom left corner
+			parent.arc(originXAtCut + (edgeLength - xRadius), originYAtCut
+					+ height - yRadius, xRadius * 2, yRadius * 2,
+					thetaForRight, PApplet.HALF_PI);
+		}
+		
+		float adjustedImageX, adjustedImageWidth, adjustedCutWidth, adjustedCutHeight, imageOffsetXFromZeroZero, imageWidth, imageHeight;
+		imageHeight = height - 2 * height / IMAGE_PADDING;
+		if (edgeLength < width / IMAGE_PADDING) {
+			adjustedImageX = originX + width / IMAGE_PADDING;
+			// adjustedImageWidth = cutWidth - width / IMAGE_PADDING;
+			imageOffsetXFromZeroZero = 0;
+			imageWidth = width - 2 * width / IMAGE_PADDING;
+		} else {
+			adjustedImageX = originX + width / IMAGE_PADDING;
+			// adjustedImageWidth = cutWidth - 2 * width / IMAGE_PADDING;
+			imageOffsetXFromZeroZero = 0;
+			imageWidth = cutWidth - 1 * width / IMAGE_PADDING;
+		}
+
+		// The final case is when the cut is on the image padding on the left
+		// of the image. Here we will not render the image at all.
+		if (cutWidth > width / IMAGE_PADDING) {
+			PImage temp = icon.get((int) imageOffsetXFromZeroZero, 0,
+					(int) imageWidth, (int) imageHeight);
+			parent.image(temp, adjustedImageX,
+					originY + height / IMAGE_PADDING, imageWidth, imageHeight);
+		}
+
+		
 	}
 
 	/**
@@ -151,6 +230,7 @@ public class ModuleElement extends DisplayElement {
 		float originYAtCut = originY;
 		float originToDrawLine = originXAtCut;
 
+		// this ensures that the top and bottom lines are not drawn over the left most arcs. 
 		if (edgeLength <= xRadius) {
 			originToDrawLine = xRadius - edgeLength + originXAtCut;
 		}
