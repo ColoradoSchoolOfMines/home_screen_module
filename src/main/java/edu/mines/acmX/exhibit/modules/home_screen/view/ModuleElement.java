@@ -19,7 +19,14 @@ public class ModuleElement extends DisplayElement {
     public static final int INFO_VERT_PADDING = 20;
     public static final int INFO_HOR_PADDING = 20;
     public static final int INFO_IMAGE_PADDING = 5;
+    public static final int TEXT_PADDING_TOP = 75;
+    public static final int TEXT_PADDING_RIGHT = 75;
+    public static final int TITLE_HEIGHT = 5;
+    public static final int AUTHOR_HEIGHT = 8;
     public static final int INFO_SIZE = 8;
+    public static final int TEXT_SIZE_TITLE = 42;
+    public static final int TEXT_SIZE_AUTHOR = 24;
+    public static final int TEXT_SIZE_DESCRIPTION = 18;
     public static int HINT_BACKGROUND;
 	private static final String LAUNCH_TEXT = "LAUNCH";
 	private PImage icon;
@@ -126,12 +133,12 @@ public class ModuleElement extends DisplayElement {
 		// if a click registers with the info click, draw the info
 		if (drawInfo) {
 			drawInformationFade(infoAlpha);
-			if (infoAlpha < 255) {
+			if (infoAlpha < 245) {
 				infoAlpha += INFO_FADE_SPEED;
 			}
 		}
 		// if the click was false, but the infoAlpha isn't zero, fade info away
-		else if (infoAlpha > 0) {
+		else if (infoAlpha > 0 ) {
 			drawInformationFade(infoAlpha);
 			infoAlpha -= INFO_FADE_SPEED;
 		}
@@ -358,21 +365,28 @@ public class ModuleElement extends DisplayElement {
 	 * on top of the module
 	 */
 	private void drawInformationFade(float alpha) {
-		// set color to blue
-		parent.fill(135, 206, 250, alpha);
+		parent.fill(HINT_BACKGROUND, alpha);
 		// draw info box
 		parent.rect((float) originX, (float) originY, (float) width,
 				(float) height, (float) (width / RECT_CURVE),
 				(float) (height / RECT_CURVE));
 		// set color to black
-		parent.fill(0, alpha);
-		// draw packageName
-		parent.textSize(20);
-		parent.textAlign(PApplet.LEFT, PApplet.TOP);
-		parent.text(data.getTitle(), (float) (originX + (width / 6)),
-				(float) (originY + (height / 6)));
-		parent.text("By " + data.getAuthor(), (float) (originX + (width / 6)),
-				(float) (originY + (height / 6) + 40));
+		parent.fill(240, 240, 240, alpha);
+		// draw Title
+		parent.textSize(TEXT_SIZE_TITLE);
+        parent.textAlign(parent.CENTER, parent.CENTER);
+        parent.text(data.getTitle(), originX, originY + height / TEXT_PADDING_TOP,  width, height / TITLE_HEIGHT);
+
+        // draw line under title
+		parent.stroke(0);
+		parent.strokeWeight(2);
+        parent.line(originX, originY + height / TEXT_PADDING_TOP + height / TITLE_HEIGHT,
+                originX + width, originY + height / TEXT_PADDING_TOP + height / TITLE_HEIGHT);
+
+        // draw author
+        parent.textSize(TEXT_SIZE_AUTHOR);
+		parent.textAlign(PApplet.RIGHT, PApplet.CENTER);
+        parent.text(data.getAuthor(), originX, originY + height / TEXT_PADDING_TOP + height / TITLE_HEIGHT, width - width / TEXT_PADDING_RIGHT, height / AUTHOR_HEIGHT );
 	}
 
 	/**
