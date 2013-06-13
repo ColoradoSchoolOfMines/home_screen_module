@@ -18,7 +18,9 @@ public class ModuleElement extends DisplayElement {
 	public static final float IMAGE_PADDING = 10;
     public static final int INFO_VERT_PADDING = 20;
     public static final int INFO_HOR_PADDING = 20;
+    public static final int INFO_IMAGE_PADDING = 5;
     public static final int INFO_SIZE = 8;
+    public static int HINT_BACKGROUND;
 	private static final String LAUNCH_TEXT = "LAUNCH";
 	private PImage icon;
     private PImage infoImage;
@@ -51,7 +53,8 @@ public class ModuleElement extends DisplayElement {
 		drawHint = false;
 		drawInfo = false;
 		infoAlpha = (float) 0;
-		resize = true;
+        resize = true;
+        HINT_BACKGROUND = parent.color(114,114,114,183);
 
 	}
 
@@ -378,9 +381,22 @@ public class ModuleElement extends DisplayElement {
 	 */
 	private void drawHintForInfo() {
 		parent.stroke(0);
-		parent.noFill();
 		parent.strokeWeight(4);
-        parent.image(this.infoImage, info.getX(), info.getY(), info.getWidth(), info.getHeight());
+        parent.fill(HINT_BACKGROUND);
+        parent.rect(
+                (float) (info.getX()),
+                (float) (info.getY()),
+                (float) (info.getWidth()),
+                (float) (info.getHeight()),
+                (float) (info.getWidth() / BORDER_CURVE),
+                (float) (info.getHeight() / BORDER_CURVE));
+        int paddingX = info.getWidth() / INFO_IMAGE_PADDING;
+        int paddingY = info.getHeight() / INFO_IMAGE_PADDING;
+        parent.image(this.infoImage,
+                (float) (info.getX() + paddingX / 2.0),
+                (float) (info.getY() + paddingY / 2.0),
+                (float) (info.getWidth() - paddingX), 
+                (float) (info.getHeight() - paddingY ));
 	}
 
 	/**
@@ -389,7 +405,7 @@ public class ModuleElement extends DisplayElement {
 	 */
 	private void drawLaunchArea() {
 
-		parent.fill(114,114,114,183);
+        parent.fill(HINT_BACKGROUND);
 		parent.stroke(0);
 		parent.strokeWeight(4);
 		// draw the start module hint rect
