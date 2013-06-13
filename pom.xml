@@ -89,4 +89,19 @@
 	  </plugins>
   </build>
 
+  <distributionManagement>
+    <site>
+      <id>s3.site</id>
+      <url>s3://acmx.mines.edu/site</url>
+    </site>
+    <repository>
+      <id>s3.release</id>
+      <url>s3://acmx.mines.edu/release</url>
+    </repository>
+    <snapshotRepository>
+      <id>s3.snapshot</id>
+      <url>s3://acmx.mines.edu/snapshot</url>
+    </snapshotRepository>
+  </distributionManagement>
+
 </project>
