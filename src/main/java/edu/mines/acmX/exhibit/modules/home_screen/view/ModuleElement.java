@@ -16,6 +16,7 @@ public class ModuleElement extends DisplayElement {
 	public static final int BORDER_CURVE = 6;
 	public static final int INFO_FADE_SPEED = 5;
 	public static final float IMAGE_PADDING = 10;
+	private static final String LAUNCH_TEXT = "LAUNCH";
 	private PImage icon;
 	private String packageName;
 	private ModuleMetaData data;
@@ -360,21 +361,24 @@ public class ModuleElement extends DisplayElement {
 	 * This draws the area that the user will have to hand over to launch a
 	 * module
 	 */
-	private void drawLaunchArea() {
+	private void drawHintForInfo() {
+		parent.stroke(0);
+		parent.noFill();
+		parent.strokeWeight(4);
 		parent.rect((float) info.getX(), (float) info.getY(),
 				(float) info.getWidth(), (float) info.getHeight(),
 				(float) (info.getWidth() / RECT_CURVE),
 				(float) (info.getHeight() / RECT_CURVE));
-		parent.noStroke();
-		parent.fill(0);
+		
 	}
 
 	/**
 	 * This draws an area that can be hand over to show information about a
 	 * module.
 	 */
-	private void drawHintForInfo() {
-		parent.noFill();
+	private void drawLaunchArea() {
+
+		parent.fill(114,114,114,183);
 		parent.stroke(0);
 		parent.strokeWeight(4);
 		// draw the start module hint rect
@@ -382,6 +386,10 @@ public class ModuleElement extends DisplayElement {
 				(float) startGame.getWidth(), (float) startGame.getHeight(),
 				(float) (startGame.getWidth() / RECT_CURVE),
 				(float) (startGame.getHeight() / RECT_CURVE));
+		parent.textSize(48);
+		parent.fill(0, 102, 153, 220);
+		parent.textAlign(PApplet.CENTER, PApplet.CENTER);
+		parent.text(LAUNCH_TEXT, (float)(startGame.getX() + startGame.getWidth() / 2.0), (float)(startGame.getY() + startGame.getHeight() / 2.0));
 	}
 
 	public PImage getIcon() {
