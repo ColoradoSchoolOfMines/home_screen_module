@@ -43,6 +43,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	private static Logger log = LogManager.getLogger(HomeScreen.class);
 	//picture used for the user's hand
 	public static final String CURSOR_FILENAME = "hand_cursor.png";
+    public static final String INFO_IMAGE_PATH = "info_mark.png";
 	private PImage cursor_image;
 	
 	//variables that hold the backdrops
@@ -110,6 +111,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5,color(124,145,156, 64));
 		String[] packageNames = getAllAvailableModules();
+
+        // This is the image that will be displayed in the upper right of a
+        // module to indicate a hotspot for extra information
+        PImage infoImage = loadImage( INFO_IMAGE_PATH );
 		
 		// Iterates through the array of package names and loads each module's icon.
 		for (int i = 0; i < packageNames.length; ++i) {
@@ -126,7 +131,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				tempImage = loadImage("question.png");
 			}
 			// storing icons and package names into their respective ModuleElements.
-			ModuleElement tempElement = new ModuleElement(this, tempImage, 
+			ModuleElement tempElement = new ModuleElement(this, tempImage, infoImage,
 					packageNames[i], getModuleMetaData(packageNames[i]), 1.0);
 			moduleElements.add(tempElement);
 			moduleListLayout.add(tempElement);

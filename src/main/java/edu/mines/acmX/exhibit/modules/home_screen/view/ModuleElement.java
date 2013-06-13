@@ -16,8 +16,12 @@ public class ModuleElement extends DisplayElement {
 	public static final int BORDER_CURVE = 6;
 	public static final int INFO_FADE_SPEED = 5;
 	public static final float IMAGE_PADDING = 10;
+    public static final int INFO_VERT_PADDING = 20;
+    public static final int INFO_HOR_PADDING = 20;
+    public static final int INFO_SIZE = 8;
 	private static final String LAUNCH_TEXT = "LAUNCH";
 	private PImage icon;
+    private PImage infoImage;
 	private String packageName;
 	private ModuleMetaData data;
 	private boolean leftEdge;
@@ -32,12 +36,13 @@ public class ModuleElement extends DisplayElement {
 	private float infoAlpha;
 	private boolean resize;
 
-	public ModuleElement(HomeScreen par, PImage image, String name,
+	public ModuleElement(HomeScreen par, PImage image, PImage infoImage, String name,
 			ModuleMetaData data, double weight) {
 		super(par, weight);
 		icon = image;
 		packageName = name;
 		this.data = data;
+        this.infoImage = infoImage;
 		edgeLength = 0;
 		startGame = new VirtualRectClick(MODULE_RUN_SPEED, 0, 0, 0, 0);
 		hint = new VirtualRectClick(HINT_SPEED, 0, 0, 0, 0);
@@ -58,8 +63,10 @@ public class ModuleElement extends DisplayElement {
 		startGame.updateCoordinates(originX + (width / 4), originY
 				+ (height / 4), width / 2, height / 2);
 		hint.updateCoordinates(originX, originY, width, height);
-		info.updateCoordinates(originX + (3 * width / 4), originY, width / 4,
-				height / 4);
+
+        info.updateCoordinates(originX + width - width / INFO_HOR_PADDING - width / INFO_SIZE,
+                originY + height / INFO_VERT_PADDING, width / INFO_SIZE, height
+                / INFO_SIZE);
 		// if the module is visible, start checking for clicks
 		if (visible && !(leftEdge) && !(rightEdge)) {
 
@@ -98,7 +105,14 @@ public class ModuleElement extends DisplayElement {
 		}
 		// else show the icon normally
 		else {
-			drawModuleIcon();
+            int moduleTint;
+            // set alpha for module icon
+            if( drawHint ) {
+                moduleTint = 135;
+            } else {
+                moduleTint = 255;
+            }
+			drawModuleIcon(moduleTint);
 		}
 
 		// draw hint if need be
@@ -166,7 +180,6 @@ public class ModuleElement extends DisplayElement {
 		// calculate the theta to make the left side arcs come in smoothly
 		float thetaForLeft = calculateThetaForArc(cutWidth, xRadius); // modified
 		
-		parent.text("theata is:" + thetaForLeft,50,50);
 		// draw the corner for the top-left corner
 		// we need to multiply radius by two because we are dictating the elipse
 		// diameter
@@ -324,14 +337,16 @@ public class ModuleElement extends DisplayElement {
 	/**
 	 * This draws a full module icon with no extra stuff.
 	 */
-	private void drawModuleIcon() {
+	private void drawModuleIcon(int tint) {
 		parent.stroke(153, 153);
 		parent.noFill();
 		parent.rect(originX, originY, width, height,
 				(float) (width / BORDER_CURVE), (float) (height / BORDER_CURVE));
+        parent.tint(255, tint);
 		parent.image(icon, originX + width / IMAGE_PADDING, originY + height
 				/ IMAGE_PADDING, width - 2 * width / IMAGE_PADDING, height - 2
 				* height / IMAGE_PADDING);
+        parent.noTint();
 	}
 
 	/**
@@ -365,11 +380,7 @@ public class ModuleElement extends DisplayElement {
 		parent.stroke(0);
 		parent.noFill();
 		parent.strokeWeight(4);
-		parent.rect((float) info.getX(), (float) info.getY(),
-				(float) info.getWidth(), (float) info.getHeight(),
-				(float) (info.getWidth() / RECT_CURVE),
-				(float) (info.getHeight() / RECT_CURVE));
-		
+        parent.image(this.infoImage, info.getX(), info.getY(), info.getWidth(), info.getHeight());
 	}
 
 	/**
