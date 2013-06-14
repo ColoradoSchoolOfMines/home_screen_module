@@ -57,25 +57,36 @@ public class PhotoBackdrop extends Backdrop {
 	private int timeSinceDrawn;
 	private double alpha;
 
+	/**
+	 * Constructor. Builds the backdrop from the images provided. Any argument
+	 * can be skipped by giving "" as its parameter. 
+	 * @param par PApplet parent (usually called as this)
+	 * @param upLeftImg Upper left image name
+	 * @param upRightImg Upper right image name
+	 * @param downLeftImg Lower left image name
+	 * @param downRightImg Lower right image name
+	 * @param slideShowFolder folder where slide show images are stored (include "/"!)
+	 * @param headerText Text to draw when faded at the top center of the screen
+	 */
 	public PhotoBackdrop(HomeScreen par, String upLeftImg, String upRightImg, 
 			String downLeftImg, String downRightImg, String slideShowFolder, String headerText) {
 		super(par);
 		//load the corner images if they've been specified and perform proper scaling
 		if (!upLeftImg.equals("")) {
 			upperLeft = parent.loadImage(upLeftImg);
-			upperLeft = scaleImage(upperLeft, parent.width * 0.2, parent.height * 0.1);
+			scaleImage(upperLeft, parent.width * 0.2, parent.height * 0.1);
 		}
 		if (!upRightImg.equals("")) {
 			upperRight = parent.loadImage(upRightImg);
-			upperRight = scaleImage(upperRight, parent.width * 0.2, parent.height * 0.1);
+			scaleImage(upperRight, parent.width * 0.2, parent.height * 0.1);
 		}
 		if (!downLeftImg.equals("")) {
 			lowerLeft = parent.loadImage(downLeftImg);
-			lowerLeft = scaleImage(lowerLeft, parent.width * 0.5, parent.height * 0.12);
+			scaleImage(lowerLeft, parent.width * 0.5, parent.height * 0.12);
 		}
 		if (!downRightImg.equals("")) {
 			lowerRight = parent.loadImage(downRightImg);
-			lowerRight = scaleImage(lowerRight, parent.width * 0.5, parent.height * 0.12);
+			scaleImage(lowerRight, parent.width * 0.5, parent.height * 0.12);
 		}
 		this.headerText = headerText;
 		slideShowImages = new ArrayList<PImage>();
@@ -84,7 +95,7 @@ public class PhotoBackdrop extends Backdrop {
 		//load the current image for the slide show
 		if (!slideShowImages.isEmpty()) {
 			currentSlideShowImage = slideShowImages.get(currentImage);
-			currentSlideShowImage = scaleImage(currentSlideShowImage, 
+			scaleImage(currentSlideShowImage, 
 					parent.width * HORIZONTAL_SCALE, parent.height * VERTICAL_SCALE);
 		}
 		currentImage = slideShowImages.size();
@@ -92,8 +103,6 @@ public class PhotoBackdrop extends Backdrop {
 		timeSinceDrawn = 0;
 		pictureFadeTime = parent.millis() - FADE_WAIT_TIME;
 		alpha = 0;
-
-		//TODO documentation about adding pics/note to submissions tester (check before approving)
 	}
 
 	/**
@@ -112,7 +121,7 @@ public class PhotoBackdrop extends Backdrop {
 				if (currentImage >= slideShowImages.size()) currentImage = 0;
 				//load the new image and scale accordingly
 				currentSlideShowImage = slideShowImages.get(currentImage);
-				currentSlideShowImage = scaleImage(currentSlideShowImage, 
+				scaleImage(currentSlideShowImage, 
 						parent.width * HORIZONTAL_SCALE, parent.height * VERTICAL_SCALE);
 			}
 
@@ -239,18 +248,25 @@ public class PhotoBackdrop extends Backdrop {
 		}
 	}
 
-	public static PImage scaleImage(PImage img, double maxPixelsX, double maxPixelsY) {
-		PImage newImage = img;
+	/**
+	 * A static function that will take an image and scale it according to
+	 * the provided maximum pixel size in width and height. It also ensures
+	 * that the aspect ratio of the picture is preserved (i.e. no stretching
+	 * will occur, only the size of each pixel is changing).
+	 * @param img The image to be scaled (PImage)
+	 * @param maxPixelsX The maximum number of pixels in width (double)
+	 * @param maxPixelsY The maximum number of pixels in height (double)
+	 */
+	public static void scaleImage(PImage img, double maxPixelsX, double maxPixelsY) {
 		//get the ratio of height to width to conserve scaling
-		float ratio = (float) newImage.width / newImage.height;
+		float ratio = (float) img.width / img.height;
 		//if statements to check which will hit cap first
 		if (maxPixelsY * ratio > maxPixelsX) {
 			//width is limiting factor
-			newImage.resize((int) maxPixelsX, (int) (maxPixelsX / ratio));
+			img.resize((int) maxPixelsX, (int) (maxPixelsX / ratio));
 		} else {
 			//height is limiting factor
-			newImage.resize((int) (maxPixelsY * ratio), (int) maxPixelsY);
+			img.resize((int) (maxPixelsY * ratio), (int) maxPixelsY);
 		}
-		return newImage;
 	}
 }
