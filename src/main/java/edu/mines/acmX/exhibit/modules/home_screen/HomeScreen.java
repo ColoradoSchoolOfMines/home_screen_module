@@ -22,6 +22,7 @@ import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines.MinesBackdrop;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines.PhotoBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ArrowClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
@@ -91,12 +92,23 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		cursor_image = loadImage(CURSOR_FILENAME);
 		cursor_image.resize(32, 32);
 		
-		//loads backdrops
-		//currently backdrops must be added manually (TODO convert to config?)
+		//start storing the list of backdrops
 		backdrops = new ArrayList<Backdrop>();
+		
+		//draws random bubbles that float up
 		backdrops.add(new BubblesBackdrop(this));
+		//Conway's Game of Life
 		backdrops.add(new GridBackdrop(this));
-		backdrops.add(new MinesBackdrop(this));
+		//a demonstration of how to use a PhotoBackdrop
+		Backdrop demoPictures = new PhotoBackdrop(this, 
+				"CSMBlaster.png", "CSMLogoSimple.jpg", "EECS_logo.png", 
+				"CSMLogo.png", "SlideShowImages/", "The CSM Campus");
+		backdrops.add(demoPictures);
+		//the credits page
+		Backdrop credits = new PhotoBackdrop(this, 
+				"", "", "EECS_logo.png", 
+				"CSMLogo.png", "Credits/", "Contributors");
+		backdrops.add(credits);
 		//pick backdrop to launch with
 		if (RANDOM_BACKDROP) {
 			cycleBackdrop();
