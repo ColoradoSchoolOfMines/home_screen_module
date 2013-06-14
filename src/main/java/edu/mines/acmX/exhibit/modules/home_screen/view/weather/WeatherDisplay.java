@@ -88,7 +88,8 @@ public class WeatherDisplay extends DisplayElement {
 		parent.textAlign(PApplet.LEFT, PApplet.CENTER);
 		//off-white text
 		parent.fill(200, 200, 200);
-		parent.textSize(32);
+		//scale text size to match 32 pt on a 1600 x 900 screen
+		parent.textSize((int) (32.0/900 * parent.height));
 		//number of pixels to move away from edge
 		int initialOffset = 10;
 		//number of pixels between elements
