@@ -107,6 +107,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 				"", "", "EECS_logo.png", 
 				"CSMLogo.png", "Credits/", "Contributors");
 		backdrops.add(credits);
+		
 		//pick backdrop to launch with
 		if (RANDOM_BACKDROP) {
 			cycleBackdrop();
@@ -231,6 +232,10 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 			handY = HandTrackingUtilities.getScaledHandY(receiver.getY(), 
 						driver.getHandTrackingHeight(), height, marginFraction);
 			lastInput = millis();
+		} else {
+			//if no hand is being tracked, reset the hand to (0, 0)
+			handX = 0;
+			handY = 0;
 		}
 		//call update for the loaded backdrop
 		backdrop.update();
