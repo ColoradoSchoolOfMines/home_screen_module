@@ -60,7 +60,8 @@ public class TimeDisplay extends DisplayElement {
 		parent.fill(200, 200, 200);
 		//center-align text
 		parent.textAlign(PApplet.RIGHT, PApplet.CENTER);
-		parent.textSize(32);
+		//scale text size to match 32 pt on a 1600 x 900 screen
+		parent.textSize((int) (32.0/900 * parent.height));
 		//add a 0 to minute/second if it's between 0 and 9
 		String minuteString = "" + PApplet.nf(minute, 2);
 		String secondString = "" + PApplet.nf(second, 2);
@@ -69,6 +70,7 @@ public class TimeDisplay extends DisplayElement {
 		//concatenate date
 		String date = month + "/" + day + "/" + year;
 		parent.text(time + "  " + date, originX + width - 10, originY + height / 2);
+		parent.textAlign(PApplet.LEFT, PApplet.TOP);
 	}
 
 }

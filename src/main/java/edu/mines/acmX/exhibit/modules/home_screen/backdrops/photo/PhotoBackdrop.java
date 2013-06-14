@@ -183,7 +183,8 @@ public class PhotoBackdrop extends Backdrop {
 	@Override
 	public void alternateDrawFaded() {
 		parent.textAlign(PApplet.CENTER, PApplet.TOP);
-		parent.textSize(48);
+		//scale text size to match 48 pt on a 1600 x 900 screen
+		parent.textSize((int) (48.0/900 * parent.height));
 		parent.fill(0);
 		//draw the header text
 		parent.text(headerText, parent.width / 2, (float) (parent.height * 0.05));
