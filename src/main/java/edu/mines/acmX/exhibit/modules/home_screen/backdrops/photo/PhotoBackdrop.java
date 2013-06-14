@@ -1,4 +1,4 @@
-package edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines;
+package edu.mines.acmX.exhibit.modules.home_screen.backdrops.photo;
 
 import java.io.IOException;
 import java.net.URL;
@@ -205,7 +205,7 @@ public class PhotoBackdrop extends Backdrop {
 	 * @param slideShowLocation The string name of the folder that holds the slide show images
 	 */
 	private void loadSlideShowImages(String slideShowLocation) {
-		CodeSource src = MinesBackdrop.class.getProtectionDomain().getCodeSource();
+		CodeSource src = PhotoBackdrop.class.getProtectionDomain().getCodeSource();
 		if (src != null) {
 			//get absolute location of own jar
 			URL jarLoc = src.getLocation();
