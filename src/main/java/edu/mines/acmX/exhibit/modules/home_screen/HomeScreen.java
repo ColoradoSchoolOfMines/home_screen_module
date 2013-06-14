@@ -2,7 +2,6 @@ package edu.mines.acmX.exhibit.modules.home_screen;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -21,8 +20,7 @@ import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
-import edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines.MinesBackdrop;
-import edu.mines.acmX.exhibit.modules.home_screen.backdrops.mines.PhotoBackdrop;
+import edu.mines.acmX.exhibit.modules.home_screen.backdrops.photo.PhotoBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ArrowClick;
 import edu.mines.acmX.exhibit.modules.home_screen.view.LinearLayout;
 import edu.mines.acmX.exhibit.modules.home_screen.view.ListLayout;
