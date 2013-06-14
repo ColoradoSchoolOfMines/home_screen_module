@@ -16,11 +16,13 @@ import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate;
 
 /**
- * A simple demonstration backdrop for use as a template of an image background.
+ * A simple demonstration backdrop of an image background.
  * There is an image in each corner, and the top right corner image rotates slowly. 
  * 
  * @author Ryan Stauffer
  *
+ * @deprecated This class has been superceded by the {@link PhotoBackdrop} class. 
+ * This class has fewer features and is hard-coded. 
  * @see {@link Backdrop}
  */
 public class MinesBackdrop extends Backdrop {
