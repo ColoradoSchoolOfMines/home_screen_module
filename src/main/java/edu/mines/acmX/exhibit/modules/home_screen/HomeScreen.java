@@ -17,6 +17,7 @@ import edu.mines.acmX.exhibit.input_services.hardware.UnknownDriverRequest;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
 import edu.mines.acmX.exhibit.input_services.hardware.drivers.InvalidConfigurationFileException;
 import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
+import edu.mines.acmX.exhibit.module_management.modules.ProcessingModule;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.Backdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.bubbles.BubblesBackdrop;
 import edu.mines.acmX.exhibit.modules.home_screen.backdrops.gameoflife.GridBackdrop;
@@ -37,7 +38,7 @@ import edu.mines.acmX.exhibit.stdlib.input_processing.tracking.HandTrackingUtili
  * Getting the feeds working
  * Connecting the Home Screen to the Module API
  */
-public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules.ProcessingModule {
+public class HomeScreen extends ProcessingModule {
 	
 	private static Logger log = LogManager.getLogger(HomeScreen.class);
 	//picture used for the user's hand
@@ -73,6 +74,8 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	private boolean isSleeping = false;
 	//allows the loading backdrop to be randomized
 	private boolean RANDOM_BACKDROP = true;
+
+    private static final float BOTTOM_BAR_TEXT_RATIO = 0.01875f;
 	
 	//interfaces with input services components
 	private static HardwareManager hardwareManager;
@@ -170,8 +173,9 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 		//twitter.add(new TwitterDisplay(this, 100.0)); //TODO get this fully working
 		//add Weather/Time display
 		LinearLayout weatherAndTime = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
-		weatherAndTime.add(new WeatherDisplay(this, 75.0));
-		weatherAndTime.add(new TimeDisplay(this, 25.0));
+        int textSize = (int) (width * BOTTOM_BAR_TEXT_RATIO);
+		weatherAndTime.add(new WeatherDisplay(this, 75.0, textSize));
+		weatherAndTime.add(new TimeDisplay(this, 25.0, textSize));
 
 		rootLayout.add(twitter);
 		rootLayout.add(weatherAndTime);
@@ -214,6 +218,7 @@ public class HomeScreen extends edu.mines.acmX.exhibit.module_management.modules
 	 * update loop, called continuously before draw
 	 */
 	public void update() {
+		size(width, height);
 		//refresh driver for hand tracking
 		driver.updateDriver();
 		//checks if there is a registered hand detected
