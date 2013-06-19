@@ -34,23 +34,22 @@ import edu.mines.acmX.exhibit.modules.home_screen.view.weather.WeatherDisplay;
 import edu.mines.acmX.exhibit.stdlib.input_processing.tracking.HandTrackingUtilities;
 
 /*
- * TODO (in order)
- * Getting the feeds working
- * Connecting the Home Screen to the Module API
+ * TODO documentation
  */
+@SuppressWarnings("serial")
 public class HomeScreen extends ProcessingModule {
-	
+
 	private static Logger log = LogManager.getLogger(HomeScreen.class);
 	//picture used for the user's hand
 	public static final String CURSOR_FILENAME = "hand_cursor.png";
-    public static final String INFO_IMAGE_PATH = "info_mark.png";
+	public static final String INFO_IMAGE_PATH = "info_mark.png";
 	private PImage cursor_image;
-	
+
 	//variables that hold the backdrops
 	private List<Backdrop> backdrops;
 	//currently displayed backdrop (only one to update)
 	private Backdrop backdrop;
-	
+
 	//hand positions
 	private static float handX, handY;
 	// root layout for module
@@ -75,27 +74,27 @@ public class HomeScreen extends ProcessingModule {
 	//allows the loading backdrop to be randomized
 	private boolean RANDOM_BACKDROP = true;
 
-    private static final float BOTTOM_BAR_TEXT_RATIO = 0.01875f;
-	
+	private static final float BOTTOM_BAR_TEXT_RATIO = 0.01875f;
+
 	//interfaces with input services components
 	private static HardwareManager hardwareManager;
 	private static EventManager eventManager;
 	private HandTrackerInterface driver;
 	private MyHandReceiver receiver;
-	
+
 	/**
 	 * setup, called once
 	 */
 	public void setup() {
 		size(width, height);
-		
+
 		// load cursor image
 		cursor_image = loadImage(CURSOR_FILENAME);
 		cursor_image.resize(32, 32);
-		
+
 		//start storing the list of backdrops
 		backdrops = new ArrayList<Backdrop>();
-		
+
 		//draws random bubbles that float up
 		backdrops.add(new BubblesBackdrop(this));
 		//Conway's Game of Life
@@ -110,30 +109,30 @@ public class HomeScreen extends ProcessingModule {
 				"", "", "EECS_logo.png", 
 				"CSMLogo.png", "Credits/", "Contributors");
 		backdrops.add(credits);
-		
+
 		//pick backdrop to launch with
 		if (RANDOM_BACKDROP) {
 			cycleBackdrop();
 		} else {
 			backdrop = backdrops.get(0);
 		}
-		
+
 		//disable mouse cursor display
 		noCursor();
-		
+
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5,color(124,145,156, 64));
 		String[] packageNames = getAllAvailableModules();
 
-        // This is the image that will be displayed in the upper right of a
-        // module to indicate a hotspot for extra information
-        PImage infoImage = loadImage( INFO_IMAGE_PATH );
-		
+		// This is the image that will be displayed in the upper right of a
+		// module to indicate a hotspot for extra information
+		PImage infoImage = loadImage( INFO_IMAGE_PATH );
+
 		// Iterates through the array of package names and loads each module's icon.
 		for (int i = 0; i < packageNames.length; ++i) {
 			//removes the home screen module from the list of displayed modules
-			if (packageNames[i].equals("edu.mines.acmX.exhibit.modules.home_screen") ) {
+			if (packageNames[i].equals( this.getCurrentModulePackageName() ) ) {
 				continue;
 			}
 			//tries to load specified icon from module
@@ -150,10 +149,10 @@ public class HomeScreen extends ProcessingModule {
 			moduleElements.add(tempElement);
 			moduleListLayout.add(tempElement);
 		}
-		
+
 		//main layout for the whole screen
 		rootLayout = new LinearLayout(Orientation.VERTICAL, this, 1.0);
-		
+
 		//holds the module set layout
 		LinearLayout modules = new LinearLayout(Orientation.HORIZONTAL, this, 80.0);
 		leftArrow = new ArrowClick(this, 6.0, new VirtualRectClick(ARROW_CLICK_SPEED, 0, 0, 0, 0), Side.LEFT);
@@ -167,13 +166,13 @@ public class HomeScreen extends ProcessingModule {
 		rootLayout.add(modules);
 		//add spacing below modules
 		rootLayout.add(new SpaceElement(this, 50.0));
-		
+
 		//add Twitter display
 		LinearLayout twitter = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
 		//twitter.add(new TwitterDisplay(this, 100.0)); //TODO get this fully working
 		//add Weather/Time display
 		LinearLayout weatherAndTime = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
-        int textSize = (int) (width * BOTTOM_BAR_TEXT_RATIO);
+		int textSize = (int) (width * BOTTOM_BAR_TEXT_RATIO);
 		weatherAndTime.add(new WeatherDisplay(this, 75.0, textSize));
 		weatherAndTime.add(new TimeDisplay(this, 25.0, textSize));
 
@@ -194,7 +193,7 @@ public class HomeScreen extends ProcessingModule {
 		}
 		try {
 			driver = (HandTrackerInterface) hardwareManager.getInitialDriver("handtracking");
-			
+
 		} catch (BadFunctionalityRequestException e) {
 			log.error("Asked for nonexistent functionality");
 			e.printStackTrace();
@@ -205,7 +204,7 @@ public class HomeScreen extends ProcessingModule {
 			log.error("Trying to access unknown driver");
 			e.printStackTrace();
 		}
-		
+
 		//builds the event manager, and sets the receiver to look for hand events
 		eventManager = EventManager.getInstance();
 		receiver = new MyHandReceiver();
@@ -213,7 +212,7 @@ public class HomeScreen extends ProcessingModule {
 		eventManager.registerReceiver(EventType.HAND_UPDATED, receiver);
 		eventManager.registerReceiver(EventType.HAND_DESTROYED, receiver);
 	}
-	
+
 	/**
 	 * update loop, called continuously before draw
 	 */
@@ -229,13 +228,13 @@ public class HomeScreen extends ProcessingModule {
 				//switch the backdrop to a random one in the list
 				if (RANDOM_BACKDROP) cycleBackdrop();
 			}
-			
+
 			float marginFraction = (float) 1/6; //user preference for sensitivity/zoom level (smaller is closer)
 			//get hand position - uses scaling to let user reach all of screen
 			handX = HandTrackingUtilities.getScaledHandX(receiver.getX(), 
-						driver.getHandTrackingWidth(), width, marginFraction);
+					driver.getHandTrackingWidth(), width, marginFraction);
 			handY = HandTrackingUtilities.getScaledHandY(receiver.getY(), 
-						driver.getHandTrackingHeight(), height, marginFraction);
+					driver.getHandTrackingHeight(), height, marginFraction);
 			lastInput = millis();
 		} else {
 			//if no hand is being tracked, reset the hand to (0, 0)
@@ -256,23 +255,23 @@ public class HomeScreen extends ProcessingModule {
 
 		// check all ModuleElements for clicks
 		checkModulesForClicks();
-		
+
 
 	}
-	
+
 	/**
 	 * draws the screen
 	 */
 	public void draw() {
 		//call update first
 		update();
-		
+
 		//reset to default draw settings, in case other classes didn't
 		noFill();
 		noStroke();
 		imageMode(CORNER);
 		textAlign(LEFT, TOP);
-		
+
 		//white background
 		background(255, 255, 255);
 		backdrop.draw();
@@ -284,7 +283,7 @@ public class HomeScreen extends ProcessingModule {
 			isSleeping = true;
 			backdrop.alternateDrawFaded();
 		}
-		
+
 		//draw the hand where the user's hand is (if it has one)
 		if (receiver.whichHand() != -1) {
 			imageMode(CENTER);
@@ -319,7 +318,7 @@ public class HomeScreen extends ProcessingModule {
 			element.checkClicks(millis);
 		}
 	}
-	
+
 	/**
 	 * randomly picks an available backdrop to display
 	 */
@@ -328,15 +327,15 @@ public class HomeScreen extends ProcessingModule {
 		int randBackdrop = rand.nextInt(backdrops.size());
 		backdrop = backdrops.get(randBackdrop);
 	}
-	
+
 	public static float getHandX() {
 		return handX;
 	}
-	
+
 	public static float getHandY() {
 		return handY;
 	}
-	
+
 	public MyHandReceiver getReceiver() {
 		return receiver;
 	}
