@@ -27,6 +27,16 @@ public class WeatherDisplay extends DisplayElement {
 	
 	private static Logger logger = LogManager.getLogger(WeatherDisplay.class);
 
+    //number of pixels to move away from edge
+    public static int INITIAL_OFFSET = 10;
+    //number of pixels between elements
+    public static int PADDING = 20;
+
+    public static float TEMP_RATIO = 0.20f;
+    public static float DESCRIPTION_RATIO = 0.20f;
+    public static float WIND_RATIO = 0.60f;
+    public static float TEXT_RATIO = 0.075f;
+
 	//time (in minutes) to reload weather information
 	public static final int TIME_TO_REFRESH = 10;
 	//stores current weather information (main display)
@@ -39,8 +49,9 @@ public class WeatherDisplay extends DisplayElement {
 	private List<PImage> forecastImgs;
 	//stores millis, to check when to refresh the weather data
 	private int lastUpdate;
+    private int textSize;
 
-	public WeatherDisplay(PApplet parent, double weight) {
+	public WeatherDisplay(PApplet parent, double weight, int textSize) {
 		super(parent, weight);
 		lastUpdate = parent.millis();
 		WeatherLoader.loadWeatherInfo();
@@ -51,6 +62,7 @@ public class WeatherDisplay extends DisplayElement {
 		for (int i = 0; i < forecastInfo.size(); ++i) {
 			forecastImgs.add(parent.loadImage(forecastInfo.get(i).getPicture()));
 		}
+        this.textSize = textSize;
 	}
 
 	@Override
@@ -81,30 +93,46 @@ public class WeatherDisplay extends DisplayElement {
 		parent.fill(84, 84, 84);
 		parent.noStroke();
 		parent.rect(originX, originY, width, height);
+
+        // Setup the strings to display
 		char deg = "\u00b0".toCharArray()[0]; //degree symbol in Unicode
 		String temps = currentInfo.getTempF() + "" + deg + "F (" + currentInfo.getTempC() + "" + deg + "C)";
 		String description = currentInfo.getDescription();
 		String windString = "Wind Speed: " + currentInfo.getWindspeed() + " mph   Humidity: " + currentInfo.getHumidity() + "%";
+
+        // setup the text alignment
 		parent.textAlign(PApplet.LEFT, PApplet.CENTER);
+        // TODO change sizing
+
+		parent.textSize(textSize);
+
 		//off-white text
 		parent.fill(200, 200, 200);
-		//scale text size to match 32 pt on a 1600 x 900 screen
-		parent.textSize((int) (32.0/900 * parent.height));
-		//number of pixels to move away from edge
-		int initialOffset = 10;
-		//number of pixels between elements
-		int padding = 20;
-		parent.text(temps, originX + initialOffset, originY + height/2);
-		parent.text(description, originX + parent.textWidth(temps) + initialOffset + padding, originY + height/2);
+
+        float pictureWidth = height; //make the image square
+        float remainingWidthAfterImage = width - pictureWidth;
+        float tempWidth = TEMP_RATIO * remainingWidthAfterImage;
+        float descriptionWidth = DESCRIPTION_RATIO * remainingWidthAfterImage;
+        float windWidth = WIND_RATIO * remainingWidthAfterImage;
+        float currentX  = originX + INITIAL_OFFSET;
+
+		parent.text(temps, currentX, originY, tempWidth, height);
+        currentX += tempWidth + PADDING;
+
 		parent.imageMode(PApplet.CORNERS);
-		int imgOffsetX = (int) (parent.textWidth(temps) + parent.textWidth(description) + initialOffset + 2 * padding - 10);
 		if( img != null ) { 
-			parent.image(img, originX + imgOffsetX,	originY, originX + imgOffsetX + height, originY + height); //make the image square
+			parent.image(img, currentX,	originY, currentX + pictureWidth, originY + height);
 		} else {
 			logger.warn("Could not load weather icon");
 		}
+
+        currentX += pictureWidth + PADDING;
+		parent.text(description, currentX, originY, descriptionWidth, height);
+        currentX += descriptionWidth + PADDING;
+
+
 		parent.imageMode(PApplet.CORNER);
-		parent.text(windString, originX + imgOffsetX + height + padding, originY + height/2);
+		parent.text(windString, currentX, originY, windWidth, height );
 	}
 
 

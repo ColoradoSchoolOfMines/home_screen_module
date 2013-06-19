@@ -11,14 +11,17 @@ import processing.core.PApplet;
  */
 public class TimeDisplay extends DisplayElement {
 
+    public static int PADDING = 10;
+
 	private int hour;
 	private int minute;
 	private int second;
 	private int day;
 	private int month;
 	private int year;
+    private int textSize;
 	
-	public TimeDisplay(PApplet parent, double weight) {
+	public TimeDisplay(PApplet parent, double weight, int textSize) {
 		super(parent, weight);
 		//load the time
 		hour = PApplet.hour();
@@ -29,6 +32,9 @@ public class TimeDisplay extends DisplayElement {
 		day = PApplet.day();
 		month = PApplet.month();
 		year = PApplet.year();
+
+        // set the text size
+        this.textSize = textSize;
 	}
 	/**
 	 * Update, called continuously before draw
@@ -60,8 +66,7 @@ public class TimeDisplay extends DisplayElement {
 		parent.fill(200, 200, 200);
 		//center-align text
 		parent.textAlign(PApplet.RIGHT, PApplet.CENTER);
-		//scale text size to match 32 pt on a 1600 x 900 screen
-		parent.textSize((int) (32.0/900 * parent.height));
+		parent.textSize(textSize);
 		//add a 0 to minute/second if it's between 0 and 9
 		String minuteString = "" + PApplet.nf(minute, 2);
 		String secondString = "" + PApplet.nf(second, 2);
@@ -69,8 +74,7 @@ public class TimeDisplay extends DisplayElement {
 		String time = hour + ":" + minuteString + ":" + secondString;
 		//concatenate date
 		String date = month + "/" + day + "/" + year;
-		parent.text(time + "  " + date, originX + width - 10, originY + height / 2);
-		parent.textAlign(PApplet.LEFT, PApplet.TOP);
+		parent.text(time + "  " + date, originX, originY, width - PADDING, height);
 	}
 
 }
