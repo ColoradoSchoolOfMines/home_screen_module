@@ -173,8 +173,12 @@ public class HomeScreen extends ProcessingModule {
 		//add Weather/Time display
 		LinearLayout weatherAndTime = new LinearLayout(Orientation.HORIZONTAL, this, 10.0);
 		int textSize = (int) (width * BOTTOM_BAR_TEXT_RATIO);
-		weatherAndTime.add(new WeatherDisplay(this, 75.0, textSize));
-		weatherAndTime.add(new TimeDisplay(this, 25.0, textSize));
+
+		// TODO add back in when Weather decides to stop throwing NPE
+		//weatherAndTime.add(new WeatherDisplay(this, 75.0, textSize));
+		//weatherAndTime.add(new TimeDisplay(this, 25.0, textSize));
+		
+		weatherAndTime.add(new TimeDisplay(this, 100.0, textSize));
 
 		rootLayout.add(twitter);
 		rootLayout.add(weatherAndTime);
