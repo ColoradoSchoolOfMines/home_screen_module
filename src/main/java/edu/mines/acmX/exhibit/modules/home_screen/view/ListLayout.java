@@ -145,7 +145,7 @@ public class ListLayout extends DisplayElement {
 		// if the layout was constructed using the background option draw the background
 		if (this.drawBackground) {
 			parent.fill(this.backgroundColor);
-			parent.rect(this.originX, this.originY, this.width, this.height, this.width / ROUNDEDNESS, this.height / ROUNDEDNESS );
+			parent.rect(this.originX, this.originY, this.width, this.height, this.width / ROUNDEDNESS);
 		}
 		if (orientation == Orientation.HORIZONTAL) {
 			for (DisplayElement element: elements) {

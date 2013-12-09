@@ -1,19 +1,17 @@
 package edu.mines.acmX.exhibit.modules.home_screen;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import edu.mines.acmX.exhibit.input_services.hardware.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.input_services.events.EventManager;
 import edu.mines.acmX.exhibit.input_services.events.EventType;
-import edu.mines.acmX.exhibit.input_services.hardware.BadFunctionalityRequestException;
-import edu.mines.acmX.exhibit.input_services.hardware.HardwareManager;
-import edu.mines.acmX.exhibit.input_services.hardware.HardwareManagerManifestException;
-import edu.mines.acmX.exhibit.input_services.hardware.UnknownDriverRequest;
 import edu.mines.acmX.exhibit.input_services.hardware.devicedata.HandTrackerInterface;
 import edu.mines.acmX.exhibit.input_services.hardware.drivers.InvalidConfigurationFileException;
 import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
@@ -77,7 +75,6 @@ public class HomeScreen extends ProcessingModule {
 	private static final float BOTTOM_BAR_TEXT_RATIO = 0.01875f;
 
 	//interfaces with input services components
-	private static HardwareManager hardwareManager;
 	private static EventManager eventManager;
 	private HandTrackerInterface driver;
 	private MyHandReceiver receiver;
@@ -123,7 +120,12 @@ public class HomeScreen extends ProcessingModule {
 		moduleElements = new ArrayList<ModuleElement>();
 		//builds the layout for displaying modules
 		moduleListLayout = new ListLayout(Orientation.HORIZONTAL, this, 88.0, 1.0, 5,color(124,145,156, 64));
-		String[] packageNames = getAllAvailableModules();
+		String[] packageNames = new String[0];
+		try {
+			packageNames = getAllAvailableModules();
+		} catch ( RemoteException e ) {
+			e.printStackTrace();
+		}
 
 		// This is the image that will be displayed in the upper right of a
 		// module to indicate a hotspot for extra information
@@ -132,11 +134,20 @@ public class HomeScreen extends ProcessingModule {
 		// Iterates through the array of package names and loads each module's icon.
 		for (int i = 0; i < packageNames.length; ++i) {
 			//removes the home screen module from the list of displayed modules
-			if (packageNames[i].equals( this.getCurrentModulePackageName() ) ) {
-				continue;
+			try {
+				if (packageNames[i].equals( getCurrentModulePackageName() ) ) {
+					continue;
+				}
+			} catch ( RemoteException e ) {
+				e.printStackTrace();
 			}
 			//tries to load specified icon from module
-			ModuleMetaData mToLoad = getModuleMetaData(packageNames[i]);
+			ModuleMetaData mToLoad = null;
+			try {
+				mToLoad = getModuleMetaData(packageNames[i]);
+			} catch ( RemoteException e ) {
+				e.printStackTrace();
+			}
 			PImage tempImage = loadImage( mToLoad.getIconPath(), mToLoad);
 			//load default if this fails
 			if (tempImage == null) {
@@ -144,8 +155,13 @@ public class HomeScreen extends ProcessingModule {
 				tempImage = loadImage("question.png");
 			}
 			// storing icons and package names into their respective ModuleElements.
-			ModuleElement tempElement = new ModuleElement(this, tempImage, infoImage,
-					packageNames[i], getModuleMetaData(packageNames[i]), 1.0);
+			ModuleElement tempElement = null;
+			try {
+				tempElement = new ModuleElement(this, tempImage, infoImage,
+						packageNames[i], getModuleMetaData(packageNames[i]), 1.0);
+			} catch ( RemoteException e ) {
+				e.printStackTrace();
+			}
 			moduleElements.add(tempElement);
 			moduleListLayout.add(tempElement);
 		}
@@ -188,15 +204,8 @@ public class HomeScreen extends ProcessingModule {
 		rootLayout.setHeight(height);
 		rootLayout.setWidth(width);
 		lastInput = millis();
-		// hardware stuff
 		try {
-			hardwareManager = HardwareManager.getInstance();
-		} catch (HardwareManagerManifestException e) {
-			log.error("Hardware manager manifest is malformed");
-			e.printStackTrace();
-		}
-		try {
-			driver = (HandTrackerInterface) hardwareManager.getInitialDriver("handtracking");
+			driver = (HandTrackerInterface) getInitialDriver("handtracking");
 
 		} catch (BadFunctionalityRequestException e) {
 			log.error("Asked for nonexistent functionality");
@@ -206,6 +215,10 @@ public class HomeScreen extends ProcessingModule {
 			e.printStackTrace();
 		} catch (UnknownDriverRequest e) {
 			log.error("Trying to access unknown driver");
+			e.printStackTrace();
+		} catch ( RemoteException e ) {
+			e.printStackTrace();
+		} catch ( BadDeviceFunctionalityRequestException e ) {
 			e.printStackTrace();
 		}
 
