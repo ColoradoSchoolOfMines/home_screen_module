@@ -26,8 +26,8 @@ public class GridBackdrop extends Backdrop {
 	public GridBackdrop(HomeScreen p) {
 		super(p);
 		
-		size_w = (int) (Math.floor(p.screenWidth / SIZE));
-		size_h = (int) (Math.floor(p.screenHeight / SIZE));
+		size_w = (int) (Math.floor(p.width / SIZE));
+		size_h = (int) (Math.floor(p.height / SIZE));
 		
 		tiles = new boolean[size_w][size_h];
 		setup();

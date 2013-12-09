@@ -2,7 +2,6 @@ package edu.mines.acmX.exhibit.modules.home_screen.view;
 
 import processing.core.PApplet;
 import processing.core.PImage;
-import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
@@ -159,11 +158,6 @@ public class ModuleElement extends DisplayElement {
      * TODO Note that this function is very similar to
      * drawModuleIconWithLeftSideCut and should potentially be combined into a
      * single function. 
-	 * 
-	 * @param x
-	 * @param y
-	 * @param cutWidth
-	 * @param cutHeight
 	 */
 	private void drawModuleIconWithRightSideCut() {
 		int cutWidth = (int) (width - edgeLength);
@@ -365,7 +359,7 @@ public class ModuleElement extends DisplayElement {
 		parent.stroke(153, 153);
 		parent.noFill();
 		parent.rect(originX, originY, width, height,
-				(float) (width / BORDER_CURVE), (float) (height / BORDER_CURVE));
+				(float) (width / BORDER_CURVE));
 
         // draw the image icon for the module
         parent.tint(255, tint);
@@ -386,8 +380,7 @@ public class ModuleElement extends DisplayElement {
 		parent.fill(HINT_BACKGROUND, alpha);
 		// draw info box
 		parent.rect((float) originX, (float) originY, (float) width,
-				(float) height, (float) (width / RECT_CURVE),
-				(float) (height / RECT_CURVE));
+				(float) height, (float) (width / RECT_CURVE));
 		// set color to black
 		parent.fill(240, 240, 240, alpha);
 		// draw Title
@@ -421,8 +414,7 @@ public class ModuleElement extends DisplayElement {
                 (float) (info.getY()),
                 (float) (info.getWidth()),
                 (float) (info.getHeight()),
-                (float) (info.getWidth() / BORDER_CURVE),
-                (float) (info.getHeight() / BORDER_CURVE));
+                (float) (info.getWidth() / BORDER_CURVE));
 
         // draw an icon in the center of the hit box
         int paddingX = info.getWidth() / INFO_IMAGE_PADDING;
@@ -445,8 +437,7 @@ public class ModuleElement extends DisplayElement {
 		// draw the start module hint rect
 		parent.rect((float) startGame.getX(), (float) startGame.getY(),
 				(float) startGame.getWidth(), (float) startGame.getHeight(),
-				(float) (startGame.getWidth() / RECT_CURVE),
-				(float) (startGame.getHeight() / RECT_CURVE));
+				(float) (startGame.getWidth() / RECT_CURVE));
         // Draw some text to provide additional hints on launching
 		parent.textSize(48);
 		parent.fill(0, 102, 153, 220);
@@ -479,8 +470,7 @@ public class ModuleElement extends DisplayElement {
 		// check for a module start click
 		if (startGame.durationCompleted(millis)) {
 			try {
-				ModuleManager manager = ModuleManager.getInstance();
-				manager.setNextModule(packageName);
+				((HomeScreen) parent).setNextModule(packageName);
 				((HomeScreen) parent).getReceiver().killHand();
 				parent.exit();
 			} catch (Exception e) {
