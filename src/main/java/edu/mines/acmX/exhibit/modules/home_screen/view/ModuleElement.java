@@ -1,5 +1,6 @@
 package edu.mines.acmX.exhibit.modules.home_screen.view;
 
+import edu.mines.acmX.exhibit.module_management.ModuleManager;
 import processing.core.PApplet;
 import processing.core.PImage;
 import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
@@ -472,7 +473,7 @@ public class ModuleElement extends DisplayElement {
 			try {
 				((HomeScreen) parent).setNextModule(packageName);
 				((HomeScreen) parent).getReceiver().killHand();
-				parent.exit();
+                ModuleManager.getInstance().run();
 			} catch (Exception e) {
 				// TODO log
 				e.printStackTrace();
