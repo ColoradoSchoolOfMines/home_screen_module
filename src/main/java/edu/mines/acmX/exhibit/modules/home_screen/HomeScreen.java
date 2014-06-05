@@ -76,7 +76,7 @@ public class HomeScreen extends ProcessingModule {
 
 	//interfaces with input services components
 	private static EventManager eventManager;
-	private HandTrackerInterface driver;
+	private HandTrackerInterface driver = null;
 	private MyHandReceiver receiver;
 
 	/**
@@ -206,7 +206,6 @@ public class HomeScreen extends ProcessingModule {
 		lastInput = millis();
 		try {
 			driver = (HandTrackerInterface) getInitialDriver("handtracking");
-
 		} catch (BadFunctionalityRequestException e) {
 			log.error("Asked for nonexistent functionality");
 			e.printStackTrace();
@@ -220,7 +219,11 @@ public class HomeScreen extends ProcessingModule {
 			e.printStackTrace();
 		} catch ( BadDeviceFunctionalityRequestException e ) {
 			e.printStackTrace();
-		}
+		} finally {
+            if(driver == null) {
+
+            }
+        }
 
 		//builds the event manager, and sets the receiver to look for hand events
 		eventManager = EventManager.getInstance();

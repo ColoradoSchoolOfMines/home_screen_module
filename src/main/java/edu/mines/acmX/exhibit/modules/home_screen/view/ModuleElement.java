@@ -7,6 +7,8 @@ import edu.mines.acmX.exhibit.module_management.metas.ModuleMetaData;
 import edu.mines.acmX.exhibit.modules.home_screen.HomeScreen;
 import edu.mines.acmX.exhibit.modules.home_screen.view.inputmethod.VirtualRectClick;
 
+import java.util.concurrent.SynchronousQueue;
+
 /**
  * This class is reponsible for displaying a visual representation of a Module.
  * TODO many of the static configs should be abstracted into a configuration
@@ -473,6 +475,7 @@ public class ModuleElement extends DisplayElement {
 			try {
 				((HomeScreen) parent).setNextModule(packageName);
 				((HomeScreen) parent).getReceiver().killHand();
+                System.out.println(new Throwable().getStackTrace());
                 ModuleManager.getInstance().run();
 			} catch (Exception e) {
 				// TODO log

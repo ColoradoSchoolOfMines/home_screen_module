@@ -4,6 +4,8 @@ import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate3D;
 import edu.mines.acmX.exhibit.stdlib.graphics.HandPosition;
 import edu.mines.acmX.exhibit.stdlib.input_processing.receivers.HandReceiver;
 
+import java.awt.*;
+
 public class MyHandReceiver extends HandReceiver {
 
 	private Coordinate3D position;
@@ -12,14 +14,16 @@ public class MyHandReceiver extends HandReceiver {
 	public MyHandReceiver() {
 		position = new Coordinate3D(0, 0, 0);
 	}
-	
+
+    @Override
 	public void handCreated(HandPosition pos) {
 		if (handID == -1) {
 			handID = pos.getId();
 		}
 		position = pos.getPosition();
 	}
-	
+
+    @Override
 	public void handUpdated(HandPosition pos) {
 		if (handID == -1)  {
 			handID = pos.getId();
@@ -28,7 +32,8 @@ public class MyHandReceiver extends HandReceiver {
 			position = pos.getPosition();
 		}
 	}	
-	
+
+    @Override
 	public void handDestroyed(int id) {
 		if (id == handID) {
 			handID = -1;
