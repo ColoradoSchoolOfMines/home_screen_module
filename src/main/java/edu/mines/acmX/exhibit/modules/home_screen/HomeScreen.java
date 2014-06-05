@@ -219,11 +219,7 @@ public class HomeScreen extends ProcessingModule {
 			e.printStackTrace();
 		} catch ( BadDeviceFunctionalityRequestException e ) {
 			e.printStackTrace();
-		} finally {
-            if(driver == null) {
-
-            }
-        }
+		}
 
 		//builds the event manager, and sets the receiver to look for hand events
 		eventManager = EventManager.getInstance();
