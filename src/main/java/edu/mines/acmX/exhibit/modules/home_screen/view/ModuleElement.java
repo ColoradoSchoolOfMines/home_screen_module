@@ -475,7 +475,7 @@ public class ModuleElement extends DisplayElement {
 			try {
 				((HomeScreen) parent).setNextModule(packageName);
 				((HomeScreen) parent).getReceiver().killHand();
-                System.out.println(new Throwable().getStackTrace());
+				((HomeScreen) parent).getDriver().clearAllHands();
                 ModuleManager.getInstance().run();
 			} catch (Exception e) {
 				// TODO log

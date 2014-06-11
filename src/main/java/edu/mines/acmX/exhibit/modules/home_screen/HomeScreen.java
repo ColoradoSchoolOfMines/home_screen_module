@@ -355,4 +355,6 @@ public class HomeScreen extends ProcessingModule {
 	public MyHandReceiver getReceiver() {
 		return receiver;
 	}
+
+	public HandTrackerInterface getDriver() { return driver; }
 }

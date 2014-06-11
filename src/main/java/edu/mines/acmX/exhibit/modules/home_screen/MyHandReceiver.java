@@ -1,5 +1,7 @@
 package edu.mines.acmX.exhibit.modules.home_screen;
 
+import edu.mines.acmX.exhibit.input_services.events.EventManager;
+import edu.mines.acmX.exhibit.input_services.events.EventType;
 import edu.mines.acmX.exhibit.stdlib.graphics.Coordinate3D;
 import edu.mines.acmX.exhibit.stdlib.graphics.HandPosition;
 import edu.mines.acmX.exhibit.stdlib.input_processing.receivers.HandReceiver;
